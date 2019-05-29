@@ -4,7 +4,8 @@ from win32api import *
 from win32process import *
 from win32con import *
 class OtherJobs:
-
+    def __init__(self):
+        self.i = 0
     def thread_add(self,func,*args):
         tt2 = threading.Thread(target=func,args=args)
         tt2.setDaemon(True)
@@ -23,14 +24,7 @@ class OtherJobs:
         else:
             print("is not exist")
             return False
-    def mouse_click_order(self,handle,num):
-        handleDetail = win32gui.GetWindowRect(handle)
-        x = handleDetail[0]
-        y = handleDetail[1]
-        if num == 0:
-            x = handleDetail[0] - 300
-            y = handleDetail[1] - 200
-        time.sleep(0.5)
+    def mouse_click_order(self,x,y):
         win32api.SetCursorPos((x, y))
         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, 0, 0)
         time.sleep(0.05)
@@ -44,29 +38,27 @@ class OtherJobs:
     def mouse_input_remote_onup(self,outstr):
         win32api.keybd_event(outstr, 0, 0, 0)
         win32api.keybd_event(outstr, 0, win32con.KEYEVENTF_KEYUP, 0)
-    def input_stream_remote(self,strip_ckcode):
-        for i, ch in enumerate(strip_ckcode):
-            print(ch)
-            if ch == '.':
-                outstr = 110
-            else:
-                outstr = ord(ch)#ord
-            print(outstr)
-            self.mouse_input_remote_onup(outstr)#outstr
-    def save_winfile(self):
+    def save_WinSearchFile(self,path):
         time.sleep(0.5)
-        hld = win32gui.FindWindow(None,'导出结果列表')
+        hld = win32gui.FindWindow(None,u'导出结果列表')
         time.sleep(0.5)
-        hld_filename = win32gui.FindWindowEx(hld,None,u'Button',u'保存(&S)')
-        #hld_filepath = win32gui.FindWindowEx(hld,None,'ToolbarWindow32','地址: 桌面')
-        print(hld)
-        #print(hld_filepath)dp
-        print(hld_filename)
-        self.mouse_click_order(hld_filename,0)
-        #hld_filepath_num = [68,58,92,80,121,116,104,111,110,92,72,111,117,116,105,111,110,84,111,111,108,115,92,70,105,108,101,115]
-        path = 'D:\Python\HoutianTools\Files\search_result.txt'
-        self.input_stream_remote(path)
-        time.sleep(2)
+        hld1 = win32gui.FindWindowEx(hld,None,"DUIViewWndClassName",None)
+        hld2 = win32gui.FindWindowEx(hld1, None, "DirectUIHWND", None)
+        hld3 = win32gui.FindWindowEx(hld2, None, "FloatNotifySink", None)
+        hld4 = win32gui.FindWindowEx(hld3, None, "ComboBox", None)
+        hld5 = win32gui.FindWindowEx(hld4, None, "Edit", None)
+        win32gui.SendMessage(hld5, win32con.WM_SETTEXT, None, path)
+        hwnd_save = win32gui.FindWindowEx(hld, None, "Button",u'保存(&S)')
+        win32gui.PostMessage(hwnd_save, win32con.WM_KEYDOWN, win32con.VK_RETURN, 0)
+        win32gui.PostMessage(hwnd_save, win32con.WM_KEYUP, win32con.VK_RETURN, 0)
+        try:
+            self.mouse_input_remote_on([18,89])
+            self.mouse_input_remote_up([18,89])
+        except Exception as msg:
+            print(msg)
+    def print_File_Content(self,path):
+        for line in open(path,encoding='utf-8'):
+            print(line,end='')
+
 if __name__ == '__main__':
     a = OtherJobs()
-    a.save_winfile()

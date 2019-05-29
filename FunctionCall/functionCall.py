@@ -8,21 +8,30 @@ class FunctionCall:
     def BaiduSearch(self):
         baidu_object = self.overall.get_value(0)
         baidu_object_content = self.otherjob_fun.get_entryContent(baidu_object)
-        self.function_baidusearch = BaiDuSearch()
-        self.function_baidusearch.baidu_search(baidu_object_content)
+        function_baidusearch = BaiDuSearch()
+        function_baidusearch.baidu_search(baidu_object_content)
     def OpenFiles(self):
         openfile_object = self.overall.get_value(1)
         openfile_object_content = self.otherjob_fun.get_entryContent(openfile_object)
-        print(openfile_object_content)
-        self.function_newfile = NewFiles()
-        self.function_newfile.open_file(openfile_object_content)
+        function_newfile = NewFiles()
+        function_newfile.open_file(openfile_object_content)
     def SearchFiles(self):
         searchfile_object = self.overall.get_value(2)
         searchfile_object_content = self.otherjob_fun.get_entryContent(searchfile_object)
-        print(searchfile_object_content)
-        self.function_search_files = LocateSearch()
-        self.function_search_files.locate_search(searchfile_object_content)
+        function_search_files = LocateSearch()
+        function_search_files.locate_search(searchfile_object_content)
     def LoginWechat(self):
-        pass
+        default_Login_User_object = self.overall.get_value(3)
+        default_Login_User_num = self.otherjob_fun.get_entryContent(default_Login_User_object)
+        function_LoginWechat = WeiChat()
+        function_LoginWechat.LoginWechat(default_Login_User_num)
     def PlayMusic(self):
-        pass
+        play_Music_Name_object = self.overall.get_value(4)
+        play_Music_Name_Names = self.otherjob_fun.get_entryContent(play_Music_Name_object)
+        play_Music_Name_Kugou = KuGouMusic()
+        play_Music_Name_Kugou.play_Music_Name(play_Music_Name_Names)
+    def Garbage_Clear(self):
+        Garbage_Clear_object = self.overall.get_value(5)
+        Garbage_Clear_Value = self.otherjob_fun.get_entryContent(Garbage_Clear_object)
+        Garbage_Clear_360 = LaJiQingLi()
+        Garbage_Clear_360.Clear_All(Garbage_Clear_Value)
