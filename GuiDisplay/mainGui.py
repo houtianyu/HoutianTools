@@ -6,7 +6,7 @@ class MainGui:
     def __init__(self):
         self.list_var = []
         self.root = Tk()
-        self.otherJob = OtherJobs()
+        self.otherJob = OtherJobs(self.root)
         self.functioncall = FunctionCall()
         self.overall = OverAll()
     def return_var(self,i):
@@ -15,7 +15,8 @@ class MainGui:
         self.root.title('HoutianTools')
         self.root.geometry('800x300')
         frame_v= [[0,'v_baidu','frame_baidu'],[1,'v_files','frame_files'],[2,'v_search','frame_search'],[3,'v_weixin','frame_weixin'],\
-                     [4,'v_kugou','frame_kugou'],[5,'v_garbage','frame_garbage'],[6,['v_mails_login_user','v_mails_login_passwd','v_mails_types'],'frame_mails']]
+                     [4,'v_kugou','frame_kugou'],[5,'v_garbage','frame_garbage'],[6,['v_mails_login_user','v_mails_login_passwd',
+                     'v_mails_types'],'frame_mails'],[7,'v_monitor','frame_monitor']]
         for value in frame_v:
             if value[0] == 6:
                 value[1][0] = StringVar()
@@ -74,6 +75,20 @@ class MainGui:
         member.config(menu=mailmenu)
         Button(frame_v[6][2], text="登录", state='normal', width=10,command=lambda: self.otherJob.thread_add(self.functioncall.LoginEmail)). \
             grid(padx=5,row=6, column=7, sticky=W)
+        #磁盘、内存、CPU、邮件
+        Button(frame_v[7][2], text="磁盘占用", state='normal', width=10,command=lambda: self.otherJob.thread_add(self.functioncall.Disk_Used)). \
+            grid(padx=5, row=7, column=0, sticky=W)
+        Button(frame_v[7][2], text="CPU占用", state='normal', width=10,command=lambda: self.otherJob.thread_add(self.functioncall.Cpu_Used)). \
+            grid(padx=1, row=7, column=1, sticky=W)
+        Button(frame_v[7][2], text="内存占用", state='normal', width=10,command=lambda: self.otherJob.thread_add(self.functioncall.Mem_Used)). \
+            grid(padx=1, row=7, column=2, sticky=W)
+        Button(frame_v[7][2], text="未读邮件", state='normal', width=10,command=lambda: self.otherJob.thread_add(self.functioncall.Mails_Unread)). \
+            grid(padx=1, row=7, column=3, sticky=W)
+        Button(frame_v[7][2], text="启动监控", state='normal', width=10,command=lambda: self.otherJob.thread_add(self.functioncall.Up_Monitor)). \
+            grid(padx=5, row=7, column=7, sticky=W)
+        #显示
+
+
         mainloop()
 
 if __name__ == '__main__':

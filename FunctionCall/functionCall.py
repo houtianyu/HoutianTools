@@ -5,6 +5,7 @@ class FunctionCall:
     def __init__(self):
         self.otherjob_fun = OtherJobs()
         self.overall = OverAll()
+        self.inter_fun_mon = Resource_Monitor()
     def BaiduSearch(self):
         baidu_object = self.overall.get_value(0)
         baidu_object_content = self.otherjob_fun.get_entryContent(baidu_object)
@@ -37,8 +38,23 @@ class FunctionCall:
         Garbage_Clear_360.Clear_All(Garbage_Clear_Value)
     def LoginEmail(self):
         login_email_object = self.overall.get_value(6)
+        print(login_email_object)
         login_email_user = self.otherjob_fun.get_entryContent(login_email_object[0])
         login_email_passwd = self.otherjob_fun.get_entryContent(login_email_object[1])
         login_email_mailType = self.otherjob_fun.get_entryContent(login_email_object[2])
         login_eamil_mail_operate = Mails_operate()
-        login_eamil_mail_operate.LoginEmail(login_email_mailType,login_email_user,login_email_mailType)
+        login_eamil_mail_operate.LoginEmail(login_email_mailType,login_email_user,login_email_passwd)
+    def Disk_Used(self):
+        disk_used_msg = self.inter_fun_mon.GetCpan()
+        self.otherjob_fun.Resource_show(disk_used_msg)
+    def Cpu_Used(self):
+        cpu_used_msg = self.inter_fun_mon.GetCpu()
+        self.otherjob_fun.Resource_show(cpu_used_msg)
+    def Mem_Used(self):
+        mem_used_msg = self.inter_fun_mon.GetMemory()
+        self.otherjob_fun.Resource_show(mem_used_msg)
+    def Mails_Unread(self):
+        mails_used_msg = self.inter_fun_mon.Get_Unreadmails_Num()
+        self.otherjob_fun.Resource_show(mails_used_msg)
+    def Up_Monitor(self):
+        up_monitor = self.inter_fun_mon.Monitor()

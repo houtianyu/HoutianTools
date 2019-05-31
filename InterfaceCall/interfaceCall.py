@@ -106,7 +106,7 @@ class Mails_operate:
         input_login_username_qq = self.inter_other_mails.Get_Config_Info('element_xpath', 'input_login_username_qq')
         input_login_password_qq = self.inter_other_mails.Get_Config_Info('element_xpath', 'input_login_password_qq')
         click_login_button_qq = self.inter_other_mails.Get_Config_Info('element_xpath', 'click_login_button_qq')
-        if mail_addr == 1:
+        if int(mail_addr) == 1:
             mail_yeah_url = self.inter_other_mails.Get_Config_Info('mails_info','yeah_mail_url')
             dr = webdriver.Chrome()
             dr.get(mail_yeah_url)
@@ -121,7 +121,7 @@ class Mails_operate:
             dr.find_element_by_xpath(click_login_confirm_126).click()
             time.sleep(600)
             dr.close()
-        if mail_addr == 2:
+        if int(mail_addr) == 2:
             mail_yeah_url = self.inter_other_mails.Get_Config_Info('mails_info', '126_mail_url')
             dr = webdriver.Chrome()
             dr.get(mail_yeah_url)
@@ -133,7 +133,7 @@ class Mails_operate:
             dr.find_element_by_xpath(click_login_button_yeah).click()
             time.sleep(600)
             dr.close()
-        if mail_addr == 3:
+        if int(mail_addr) == 3:
             mail_yeah_url = self.inter_other_mails.Get_Config_Info('mails_info', 'qq_mail_url')
             dr = webdriver.Chrome()
             dr.get(mail_yeah_url)
@@ -145,33 +145,7 @@ class Mails_operate:
             dr.find_element_by_xpath(click_login_button_qq).click()
             time.sleep(600)
             dr.close()
-    def Get_Unreadmails_Num(self):
-        cookies_file_path = self.inter_other_mails.Get_Config_Info('file_name', 'save_cookies_path')  #
-        cookies_file_path_all = os.getcwd() + cookies_file_path
-        yeah_url = self.inter_other_mails.Get_Config_Info('mails_info', 'yeah_url')  #
-        element_xpath_get_unread_num = self.inter_other_mails.Get_Config_Info('element_xpath', 'unread_mails_yeah')  #
-        chrome_options = Options()
-        chrome_options.add_argument('--headless')
-        chrome_options.add_argument('--disable-gpu')
-        dr = webdriver.Chrome(chrome_options=chrome_options)
-        self.inter_other_mails.Save_Cookies(dr,cookies_file_path_all, yeah_url)
-        # dr = webdriver.Chrome()
-        dr.get(yeah_url)
-        dr.maximize_window()
-        try:
-            self.inter_other_mails.Read_Cookies(dr, cookies_file_path)
-        except Exception as msg:
-            print(msg)
-            cookies_noused = self.inter_other_mails.Get_Config_Info('Tips','cookies_noused')
-            print(cookies_noused)
-            os.remove(cookies_file_path)
-            self.Get_Unreadmails_Num()
-        else:
-            time.sleep(0.5)
-            unread_mails_num = dr.find_element_by_xpath(element_xpath_get_unread_num).text
-            time.sleep(2)
-            dr.close()
-        return unread_mails_num
+
 class Resource_Monitor:
     def __init__(self):
         self.resource_monitor = OtherJobs()
@@ -223,12 +197,41 @@ class Resource_Monitor:
                         print(disk_used_value)
                         alert.append(key + ' ' + value)
             self.resource_monitor.SendMail(alert, diskcost)
-            if float(str(cpucost['使用率']).split('%')[0]) > 20:
+            if float(str(cpucost['使用率']).split('%')[0]) > 70:
                 cpu_alert = 'CPU使用率：' + cpucost['使用率']
                 print(cpu_alert)
                 self.resource_monitor.SendMail(cpu_alert, cpucost)
-            if float(str(memorycost['使用率']).split('%')[0]) > 20:
+            if float(str(memorycost['使用率']).split('%')[0]) > 70:
                 mem_alert = '内存使用率：' + memorycost['使用率']
                 print(mem_alert)
                 self.resource_monitor.SendMail(mem_alert, memorycost)
             time.sleep(3600)
+    def Get_Unreadmails_Num(self):
+        cookies_file_path = self.resource_monitor.Get_Config_Info('file_name', 'save_cookies_path')  #
+        cookies_file_path_all = os.path.dirname(os.path.dirname(__file__))+ cookies_file_path
+        print(cookies_file_path_all)
+        yeah_url = self.resource_monitor.Get_Config_Info('mails_info', 'yeah_mail_url')  #
+        element_xpath_get_unread_num = self.resource_monitor.Get_Config_Info('element_xpath', 'unread_mails_yeah')  #
+        chrome_options = Options()
+        chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--disable-gpu')
+        dr = webdriver.Chrome(chrome_options=chrome_options)
+        self.resource_monitor.Save_Cookies(cookies_file_path_all, yeah_url)
+        # dr = webdriver.Chrome()
+        dr.get(yeah_url)
+        dr.maximize_window()
+        try:
+            self.resource_monitor.Read_Cookies(dr, cookies_file_path_all)
+        except Exception as msg:
+            print(msg)
+            cookies_noused = self.resource_monitor.Get_Config_Info('tips','cookies_noused')
+            print(cookies_noused)
+            os.remove(cookies_file_path_all)
+            self.Get_Unreadmails_Num()
+        else:
+            time.sleep(0.5)
+            unread_mails_num = dr.find_element_by_xpath(element_xpath_get_unread_num).text
+            time.sleep(2)
+            dr.close()
+        unread_mails_num_show = '未读邮件：' + unread_mails_num + '条。'
+        return unread_mails_num_show

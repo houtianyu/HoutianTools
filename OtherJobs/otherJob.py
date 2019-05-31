@@ -1,13 +1,16 @@
 import threading,win32com.client,win32api,win32con,win32gui,os,time,configparser
 import email.mime.multipart,logging,datetime,smtplib
 import email.mime.text,json
+from tkinter import *
+from selenium import webdriver
 from win32gui import *
 from win32api import *
 from win32process import *
 from win32con import *
 class OtherJobs:
-    def __init__(self):
+    def __init__(self,tk=None):
         self.i = 0
+        self.tk = tk
     def thread_add(self,func,*args):
         tt2 = threading.Thread(target=func,args=args)
         tt2.setDaemon(True)
@@ -71,7 +74,8 @@ class OtherJobs:
             print(line,end='')
     def Get_Config_Info(self, label, infos):
         cf = configparser.ConfigParser()
-        cf.read('D:\\python\\test\\files\\Config.ini', encoding='UTF-8')
+        config_ini = os.path.dirname(os.path.dirname(__file__) ) + '\\files\\Config.ini'
+        cf.read(config_ini, encoding='UTF-8')
         return cf.get(label, infos)
     def SendMail(self, alert_value, detail):
         print('告警')
@@ -95,11 +99,12 @@ class OtherJobs:
         smtp.sendmail(from_username_yeah, to_username_yeah, str(msg))
         smtp.quit()
 
-    def Save_Cookies(self,dr,cookies_name, url):
+    def Save_Cookies(self,cookies_name, url):
         if os.path.exists(cookies_name):
             pass
         else:
-            dr.get(url)
+            dr_s = webdriver.Chrome()
+            dr_s.get(url)
             get_cookies_tips = self.Get_Config_Info('tips', 'get_cookies')  #
             input(get_cookies_tips)
             # elementi = dr.find_element_by_xpath('//*[@frameborder="0"]')
@@ -114,7 +119,7 @@ class OtherJobs:
             with open(cookies_name, 'w') as f:
                 f.write(jsonCookies)
             time.sleep(1)
-            dr.close()
+            dr_s.close()
 
     def Read_Cookies(self, dr, cookies_name):
         with open(cookies_name, 'r', encoding='utf8') as f:
@@ -129,6 +134,16 @@ class OtherJobs:
                 "value": cookie['value']
             })
         dr.refresh()  # 读取完cookie刷新页面
+    def Resource_show(self,msg):
+        try:
+            textlabel.grid_forget()
+        except Exception as msgs:
+            pass
+        v_monitor = StringVar()
+        frame_monitor = Frame(self.tk,height=5,relief=GROOVE).grid(padx=1,row=8,column=0,columnspan=8,sticky=W)
+        v_monitor.set(msg)
+        textlabel = Message(frame_monitor, textvariable=v_monitor, justify=LEFT, padx=20, pady=5, width=600, font=("华康少女字体", 10),fg="red")
+        textlabel.grid(row=8, column=0, columnspan=8, sticky=W)
 
 class Logs:
     def __init__(self):
@@ -136,7 +151,7 @@ class Logs:
         self.logger = logging.getLogger()
         self.logger.setLevel(logging.DEBUG)
         base_dir = self.get_info.Get_Config_Info('file_name','logs_base_dir')
-        base_dir_path = os.getcwd() + base_dir
+        base_dir_path = os.path.dirname(os.path.dirname(__file__)) + base_dir
         log_file_dir = base_dir_path + '_' + datetime.datetime.now().strftime('%Y_%m_%d') + '.log'
         self.file_logs = logging.FileHandler(log_file_dir,'a',encoding='utf-8')
         formatter = logging.Formatter('%(asctime)s %(filename)s %(funcName)s %(levelno)s %(levelname)s<->%(message)s')
