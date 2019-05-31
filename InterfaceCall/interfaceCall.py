@@ -1,16 +1,20 @@
 from selenium import webdriver
 from OtherJobs.otherJob import OtherJobs
-import os,sys,win32process,win32gui,time,win32con
+import os,sys,win32process,win32gui,time,win32con,collections,psutil
 from win32api import *
+from selenium.webdriver.chrome.options import Options
 class BaiDuSearch:
     def __init__(self):
         self.dr = webdriver.Chrome()
-        self.url = 'https://www.baidu.com/'
+        self.inter_other_baidu = OtherJobs()
+        self.url = self.inter_other_baidu.Get_Config_Info('url_info','baidu_url')
     def baidu_search(self,contents):
+        baidu_input = self.inter_other_baidu.Get_Config_Info('element_xpath','baidu_input')
+        baidu_click = self.inter_other_baidu.Get_Config_Info('element_xpath','baidu_click')
         self.dr.get(self.url)
         self.dr.maximize_window()
-        self.dr.find_element_by_id('kw').send_keys(contents)
-        self.dr.find_element_by_id('su').click()
+        self.dr.find_element_by_id(baidu_input).send_keys(contents)
+        self.dr.find_element_by_id(baidu_click).click()
 class NewFiles:
     def open_file(self,filepanth):
         if os.path.exists(filepanth):
@@ -23,8 +27,10 @@ class LocateSearch:
     def __init__(self):
         self.inter_other = OtherJobs()
     def locate_search(self,search_content):
-        search_all = 'E:\\softinstall\\Everything\\Everything.exe -search ' + search_content
-        search_close = 'E:\\softinstall\\Everything\\Everything.exe -close'
+        search_all_cmd = self.inter_other.Get_Config_Info('file_name','search_all_cmd')
+        search_close_cmd = self.inter_other.Get_Config_Info('file_name','search_close_cmd')
+        save_path_searchresult = self.inter_other.Get_Config_Info('file_name','save_path_searchresult')
+        search_all = search_all_cmd + search_content
         os.system(search_all)
         time.sleep(0.3)
         num_list0 = [18,70]
@@ -33,7 +39,7 @@ class LocateSearch:
         self.inter_other.mouse_input_remote_up(num_list0)
         self.inter_other.mouse_input_remote_on(num_list1)
         self.inter_other.mouse_input_remote_up(num_list1)
-        save_Path = 'D:\Python\HoutianTools\Files' + '\\' + search_content + '.txt'
+        save_Path = save_path_searchresult + search_content + '.txt'
         try:
             self.inter_other.save_WinSearchFile(save_Path)
             time.sleep(0.5)
@@ -42,16 +48,19 @@ class LocateSearch:
         else:
             self.inter_other.print_File_Content(save_Path)
             time.sleep(3)
-            os.system(search_close)
+            os.system(search_close_cmd)
 class WeiChat:
     def __init__(self):
         self.inter_other_wc = OtherJobs()
     def LoginWechat(self,num):
-        win32process.CreateProcess('E:\\软件\\WeChat\\WeChat.exe', '',None, None, 0, win32process.CREATE_NO_WINDOW, None, None,\
+        wechat_path = self.inter_other_wc.Get_Config_Info('file_name','wechat_path')
+        wChat_Conversation_window_class = self.inter_other_wc.Get_Config_Info('windows','wChat_Conversation_window_class')
+        wChat_Login_window_class = self.inter_other_wc.Get_Config_Info('windows','wChat_Login_window_class')
+        win32process.CreateProcess(wechat_path, '',None, None, 0, win32process.CREATE_NO_WINDOW, None, None,\
                                    win32process.STARTUPINFO())
         time.sleep(0.5)
-        wChat_Conversation_hld = win32gui.FindWindow('uWeChatMainWndForPC',None)
-        wChat_Login_hld = win32gui.FindWindow('WeChatLoginWndForPC',None)
+        wChat_Conversation_hld = win32gui.FindWindow(wChat_Conversation_window_class,None)
+        wChat_Login_hld = win32gui.FindWindow(wChat_Login_window_class,None)
         if wChat_Conversation_hld:
             pass
         if wChat_Login_hld:
@@ -64,8 +73,9 @@ class KuGouMusic:
     def __init__(self):
         self.inter_other_kugou = OtherJobs()
     def play_Music_Name(self,music_name):
+        kugou_music_path = self.inter_other_kugou.Get_Config_Info('file_name','kugou_music_path')
         print(music_name)
-        win32process.CreateProcess('E:\KGMusic\KuGou.exe', '', None, None, 0, win32process.CREATE_NO_WINDOW, None,None, \
+        win32process.CreateProcess(kugou_music_path, '', None, None, 0, win32process.CREATE_NO_WINDOW, None,None, \
                                    win32process.STARTUPINFO())
         self.inter_other_kugou.mouse_input_remote_on([18,116])
         self.inter_other_kugou.mouse_input_remote_up([18,116])
@@ -73,6 +83,149 @@ class LaJiQingLi:
     def __init__(self):
         self.inter_other_Garbage = OtherJobs()
     def Clear_All(self,value):
+        qh360_grabage_path = self.inter_other_Garbage.Get_Config_Info('file_name', 'qh360_grabage_path')
         print(value)
-        win32process.CreateProcess('E:\\软件\\360\\360Safe\\360Safe.exe', '', None, None, 0, win32process.CREATE_NO_WINDOW, None, None, \
+        win32process.CreateProcess(qh360_grabage_path, '', None, None, 0, win32process.CREATE_NO_WINDOW, None, None, \
                                    win32process.STARTUPINFO())
+class Mails_operate:
+    def __init__(self):
+        self.inter_other_mails = OtherJobs()
+    def LoginEmail(self, mail_addr, user_name, user_passwd):
+        get_frame_state_126 = self.inter_other_mails.Get_Config_Info('element_xpath', 'get_frame_state_126')
+        get_login_state_126 = self.inter_other_mails.Get_Config_Info('element_xpath', 'get_login_state_126')
+        input_login_username_126 = self.inter_other_mails.Get_Config_Info('element_xpath', 'input_login_username_126')
+        input_login_password_126 = self.inter_other_mails.Get_Config_Info('element_xpath', 'input_login_password_126')
+        click_login_button_126 = self.inter_other_mails.Get_Config_Info('element_xpath', 'click_login_button_126')
+        click_login_confirm_126 = self.inter_other_mails.Get_Config_Info('element_xpath', 'click_login_confirm_126')
+        get_frame_state_yeah = self.inter_other_mails.Get_Config_Info('element_xpath', 'get_frame_state_yeah')
+        input_login_username_yeah = self.inter_other_mails.Get_Config_Info('element_xpath', 'input_login_username_yeah')
+        input_login_password_yeah = self.inter_other_mails.Get_Config_Info('element_xpath', 'input_login_password_yeah')
+        click_login_button_yeah = self.inter_other_mails.Get_Config_Info('element_xpath', 'click_login_button_yeah')
+        get_frame_state_qq = self.inter_other_mails.Get_Config_Info('element_xpath', 'get_frame_state_qq')
+        input_login_username_qq = self.inter_other_mails.Get_Config_Info('element_xpath', 'input_login_username_qq')
+        input_login_password_qq = self.inter_other_mails.Get_Config_Info('element_xpath', 'input_login_password_qq')
+        click_login_button_qq = self.inter_other_mails.Get_Config_Info('element_xpath', 'click_login_button_qq')
+        if mail_addr == 1:
+            mail_yeah_url = self.inter_other_mails.Get_Config_Info('mails_info','yeah_mail_url')
+            dr = webdriver.Chrome()
+            dr.get(mail_yeah_url)
+            dr.maximize_window()
+            dr.find_element_by_xpath(get_login_state_126).click()
+            elementi = dr.find_element_by_xpath(get_frame_state_126)
+            dr.switch_to_frame(elementi)  # 切换frame
+            dr.find_element_by_xpath(input_login_username_126).send_keys(user_name)
+            dr.find_element_by_xpath(input_login_password_126).send_keys(user_passwd)
+            dr.find_element_by_xpath(click_login_button_126).click()
+            time.sleep(1)
+            dr.find_element_by_xpath(click_login_confirm_126).click()
+            time.sleep(600)
+            dr.close()
+        if mail_addr == 2:
+            mail_yeah_url = self.inter_other_mails.Get_Config_Info('mails_info', '126_mail_url')
+            dr = webdriver.Chrome()
+            dr.get(mail_yeah_url)
+            dr.maximize_window()
+            elementi = dr.find_element_by_xpath(get_frame_state_yeah)
+            dr.switch_to_frame(elementi)  # 切换frame
+            dr.find_element_by_xpath(input_login_username_yeah).send_keys(user_name)
+            dr.find_element_by_xpath(input_login_password_yeah).send_keys(user_passwd)
+            dr.find_element_by_xpath(click_login_button_yeah).click()
+            time.sleep(600)
+            dr.close()
+        if mail_addr == 3:
+            mail_yeah_url = self.inter_other_mails.Get_Config_Info('mails_info', 'qq_mail_url')
+            dr = webdriver.Chrome()
+            dr.get(mail_yeah_url)
+            dr.maximize_window()
+            elementi = dr.find_element_by_xpath(get_frame_state_qq)
+            dr.switch_to_frame(elementi)  # 切换frame
+            dr.find_element_by_xpath(input_login_username_qq).send_keys(user_name)
+            dr.find_element_by_xpath(input_login_password_qq).send_keys(user_passwd)
+            dr.find_element_by_xpath(click_login_button_qq).click()
+            time.sleep(600)
+            dr.close()
+    def Get_Unreadmails_Num(self):
+        cookies_file_path = self.inter_other_mails.Get_Config_Info('file_name', 'save_cookies_path')  #
+        yeah_url = self.inter_other_mails.Get_Config_Info('mails_info', 'yeah_url')  #
+        element_xpath_get_unread_num = self.inter_other_mails.Get_Config_Info('element_xpath', 'unread_mails_yeah')  #
+        chrome_options = Options()
+        chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--disable-gpu')
+        dr = webdriver.Chrome(chrome_options=chrome_options)
+        self.inter_other_mails.Save_Cookies(dr,cookies_file_path, yeah_url)
+        # dr = webdriver.Chrome()
+        dr.get('https://mail.yeah.net')
+        dr.maximize_window()
+        try:
+            self.inter_other_mails.Read_Cookies(dr, cookies_file_path)
+        except Exception as msg:
+            print(msg)
+            print("cookies失效。")
+            os.remove(cookies_file_path)
+            self.Get_Unreadmails_Num()
+        else:
+            time.sleep(0.5)
+            unread_mails_num = dr.find_element_by_xpath(element_xpath_get_unread_num).text
+            time.sleep(2)
+            dr.close()
+        return unread_mails_num
+class Resource_Monitor:
+    def __init__(self):
+        self.resource_monitor = OtherJobs()
+    def GetCpan(self):
+        disk_used = collections.OrderedDict()
+        for id in psutil.disk_partitions():
+            if 'cdrom' in id.opts or id.fstype == '':
+                continue
+            disk_name = id.device.split(':')
+            s = disk_name[0]
+            disk_info = psutil.disk_usage(id.device)
+            disk_used[s + '盘使用率：'] = '{}%'.format(disk_info.percent)
+            disk_used[s + '剩余空间：'] = '{}GB'.format(disk_info.free // 1024 // 1024 // 1024)
+        # print(self.disk_used)
+        return disk_used
+
+    def GetCpu(self):
+        cpu_times = psutil.cpu_times()
+        cpu_info = {'用户': 0, '系统': 0, '闲置': 0, '使用率': 0}
+        cpu_info['用户'] = cpu_times.user
+        cpu_info['系统'] = cpu_times.system
+        cpu_info['闲置'] = cpu_times.idle
+        cpu_info['使用率'] = '{}%'.format(psutil.cpu_percent(interval=2))
+        print(cpu_info)
+        return cpu_info
+
+    def GetMemory(self):
+        mem_info = psutil.virtual_memory()
+        memory_info = {'总共': 0, '可用': 0, '使用率': 0, '使用': 0, '空闲': 0}
+        memory_info['总共'] = '{}MB'.format(mem_info.total // 1024 // 1024)
+        memory_info['可用'] = '{}MB'.format(mem_info.available // 1024 // 1024)
+        memory_info['使用率'] = '{}%'.format(mem_info.percent)
+        memory_info['使用'] = '{}MB'.format(mem_info.used // 1024 // 1024)
+        memory_info['空闲'] = '{}MB'.format(mem_info.free // 1024 // 1024)
+        print(memory_info)
+        return memory_info
+
+    def Monitor(self):
+        while True:
+            diskcost = self.GetCpan()
+            cpucost = self.GetCpu()
+            memorycost = self.GetCpu()
+            alert = []
+            for key, value in diskcost.items():
+                if "%" in value:
+                    # print(value)
+                    disk_used_value = value.split('%')[0]
+                    if float(disk_used_value) > 80:
+                        print(disk_used_value)
+                        alert.append(key + ' ' + value)
+            self.resource_monitor.SendMail(alert, diskcost)
+            if float(str(cpucost['使用率']).split('%')[0]) > 20:
+                cpu_alert = 'CPU使用率：' + cpucost['使用率']
+                print(cpu_alert)
+                self.resource_monitor.SendMail(cpu_alert, cpucost)
+            if float(str(memorycost['使用率']).split('%')[0]) > 20:
+                mem_alert = '内存使用率：' + memorycost['使用率']
+                print(mem_alert)
+                self.resource_monitor.SendMail(mem_alert, memorycost)
+            time.sleep(3600)

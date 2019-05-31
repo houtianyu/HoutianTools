@@ -31,7 +31,14 @@ class FunctionCall:
         play_Music_Name_Kugou = KuGouMusic()
         play_Music_Name_Kugou.play_Music_Name(play_Music_Name_Names)
     def Garbage_Clear(self):
-        Garbage_Clear_object = self.overall.get_value(5)
-        Garbage_Clear_Value = self.otherjob_fun.get_entryContent(Garbage_Clear_object)
+        garbage_Clear_object = self.overall.get_value(5)
+        Garbage_Clear_Value = self.otherjob_fun.get_entryContent(garbage_Clear_object)
         Garbage_Clear_360 = LaJiQingLi()
         Garbage_Clear_360.Clear_All(Garbage_Clear_Value)
+    def LoginEmail(self):
+        login_email_object = self.overall.get_value(6)
+        login_email_user = self.otherjob_fun.get_entryContent(login_email_object[0])
+        login_email_passwd = self.otherjob_fun.get_entryContent(login_email_object[1])
+        login_email_mailType = self.otherjob_fun.get_entryContent(login_email_object[2])
+        login_eamil_mail_operate = Mails_operate()
+        login_eamil_mail_operate.LoginEmail(login_email_mailType,login_email_user,login_email_mailType)
