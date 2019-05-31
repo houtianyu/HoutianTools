@@ -136,7 +136,8 @@ class Logs:
         self.logger = logging.getLogger()
         self.logger.setLevel(logging.DEBUG)
         base_dir = self.get_info.Get_Config_Info('file_name','logs_base_dir')
-        log_file_dir = base_dir + '_' + datetime.datetime.now().strftime('%Y_%m_%d') + '.log'
+        base_dir_path = os.getcwd() + base_dir
+        log_file_dir = base_dir_path + '_' + datetime.datetime.now().strftime('%Y_%m_%d') + '.log'
         self.file_logs = logging.FileHandler(log_file_dir,'a',encoding='utf-8')
         formatter = logging.Formatter('%(asctime)s %(filename)s %(funcName)s %(levelno)s %(levelname)s<->%(message)s')
         self.file_logs.setFormatter(formatter)

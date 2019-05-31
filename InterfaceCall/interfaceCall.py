@@ -30,6 +30,7 @@ class LocateSearch:
         search_all_cmd = self.inter_other.Get_Config_Info('file_name','search_all_cmd')
         search_close_cmd = self.inter_other.Get_Config_Info('file_name','search_close_cmd')
         save_path_searchresult = self.inter_other.Get_Config_Info('file_name','save_path_searchresult')
+        save_path_search_result_path = os.getcwd() + save_path_searchresult
         search_all = search_all_cmd + search_content
         os.system(search_all)
         time.sleep(0.3)
@@ -39,7 +40,7 @@ class LocateSearch:
         self.inter_other.mouse_input_remote_up(num_list0)
         self.inter_other.mouse_input_remote_on(num_list1)
         self.inter_other.mouse_input_remote_up(num_list1)
-        save_Path = save_path_searchresult + search_content + '.txt'
+        save_Path = save_path_search_result_path + search_content + '.txt'
         try:
             self.inter_other.save_WinSearchFile(save_Path)
             time.sleep(0.5)
@@ -146,21 +147,23 @@ class Mails_operate:
             dr.close()
     def Get_Unreadmails_Num(self):
         cookies_file_path = self.inter_other_mails.Get_Config_Info('file_name', 'save_cookies_path')  #
+        cookies_file_path_all = os.getcwd() + cookies_file_path
         yeah_url = self.inter_other_mails.Get_Config_Info('mails_info', 'yeah_url')  #
         element_xpath_get_unread_num = self.inter_other_mails.Get_Config_Info('element_xpath', 'unread_mails_yeah')  #
         chrome_options = Options()
         chrome_options.add_argument('--headless')
         chrome_options.add_argument('--disable-gpu')
         dr = webdriver.Chrome(chrome_options=chrome_options)
-        self.inter_other_mails.Save_Cookies(dr,cookies_file_path, yeah_url)
+        self.inter_other_mails.Save_Cookies(dr,cookies_file_path_all, yeah_url)
         # dr = webdriver.Chrome()
-        dr.get('https://mail.yeah.net')
+        dr.get(yeah_url)
         dr.maximize_window()
         try:
             self.inter_other_mails.Read_Cookies(dr, cookies_file_path)
         except Exception as msg:
             print(msg)
-            print("cookies失效。")
+            cookies_noused = self.inter_other_mails.Get_Config_Info('Tips','cookies_noused')
+            print(cookies_noused)
             os.remove(cookies_file_path)
             self.Get_Unreadmails_Num()
         else:

@@ -1,9 +1,0 @@
-Filename,Size,Date Modified,Date Created,Attributes
-"D:\Python\HoutianTools",,132035380868833228,,16
-"C:\Users\Admin\.PyCharm2017.3\config\tasks\HoutianTools.contexts.zip",139,132031054360359019,,0
-"C:\Users\Admin\.PyCharm2017.3\config\tasks\HoutianTools.tasks.zip",139,132031054360469237,,0
-"C:\Users\Admin\.PyCharm2017.3\system\conversion\HoutianToolse21d3ba5.xml",985,132035985230074920,,0
-"C:\Users\Admin\AppData\Roaming\Microsoft\Windows\Recent\houtian.txt.lnk",809,132036055918602777,,0
-"C:\Users\Admin\AppData\Roaming\Microsoft\Windows\Recent\HoutianTools.lnk",555,132035380872154970,,0
-"D:\Python\HoutianTools\.idea\HoutianTools.iml",478,132033101995787030,,0
-"D:\Python\HoutianTools\Files\houtian.txt",676,132036055917695343,,0
