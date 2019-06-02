@@ -204,11 +204,11 @@ class OtherJobs:
         except Exception as msgs:
             pass
         v_monitor = StringVar()
-        frame_monitor = Frame(self.tk,height=5,relief=GROOVE).grid(padx=1,row=8,column=0,columnspan=8,sticky=W)
+        frame_monitor = Frame(self.tk,height=5,relief=GROOVE).grid(padx=1,row=9,column=0,columnspan=8,sticky=W)
         v_monitor.set(msg)
-        textlabel = Message(frame_monitor, textvariable=v_monitor, justify=LEFT, padx=20, pady=5, width=600, font=("华康少女字体", 10),fg="red")
+        textlabel = Message(frame_monitor, textvariable=v_monitor, justify=LEFT, padx=5, pady=5, width=600, font=("华康少女字体", 10),fg="red")
         self.other_all.set_label_value(textlabel)
-        textlabel.grid(row=8, column=0, columnspan=8, sticky=W)
+        textlabel.grid(row=9, column=0, columnspan=8, sticky=W)
 
 if __name__ == '__main__':
     a = OtherJobs()

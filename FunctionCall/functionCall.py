@@ -8,11 +8,11 @@ class FunctionCall:
         self.other_job_log = Logs()
         self.overall = OverAll()
         self.inter_fun_mon = Resource_Monitor()
+        self.function_baidusearch = BaiDuSearch()
     def BaiduSearch(self):
         baidu_object = self.overall.get_value(0)
         baidu_object_content = self.otherjob_fun.get_entryContent(baidu_object)
-        function_baidusearch = BaiDuSearch()
-        function_baidusearch.baidu_search(baidu_object_content)
+        self.function_baidusearch.baidu_search(baidu_object_content)
     def OpenFiles(self):
         openfile_object = self.overall.get_value(1)
         openfile_object_content = self.otherjob_fun.get_entryContent(openfile_object)
@@ -40,7 +40,6 @@ class FunctionCall:
         Garbage_Clear_360.Clear_All(Garbage_Clear_Value)
     def LoginEmail(self):
         login_email_object = self.overall.get_value(6)
-        print(login_email_object)
         login_email_user = self.otherjob_fun.get_entryContent(login_email_object[0])
         login_email_passwd = self.otherjob_fun.get_entryContent(login_email_object[1])
         login_email_mailType = self.otherjob_fun.get_entryContent(login_email_object[2])
@@ -74,3 +73,7 @@ class FunctionCall:
         self.otherjob_fun.Resource_show(up_monitor_job)
         self.other_job_log.LogsSave(up_monitor_job)
         self.inter_fun_mon.Monitor()
+    def Open_Websit(self):
+        open_websuit_object = self.overall.get_value(8)
+        open_websuilt_type = self.otherjob_fun.get_entryContent(open_websuit_object)
+        self.function_baidusearch.open_websuit_com(open_websuilt_type)

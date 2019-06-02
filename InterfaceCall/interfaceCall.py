@@ -14,21 +14,71 @@ class BaiDuSearch:
             self.inter_other_baidu.Resource_show(tips_baidu)
             self.other_job_log_baidu.LogsSave(tips_baidu)
         else:
-            self.dr = webdriver.Chrome()
+            dr = webdriver.Chrome()
             self.url = self.inter_other_baidu.Get_Config_Info('url_info', 'baidu_url')
             baidu_input = self.inter_other_baidu.Get_Config_Info('element_xpath','baidu_input')
             baidu_click = self.inter_other_baidu.Get_Config_Info('element_xpath','baidu_click')
             try:
-                self.dr.get(self.url)
-                self.dr.maximize_window()
-                self.dr.find_element_by_id(baidu_input).send_keys(contents)
-                self.dr.find_element_by_id(baidu_click).click()
+                dr.get(self.url)
+                dr.maximize_window()
+                dr.find_element_by_id(baidu_input).send_keys(contents)
+                dr.find_element_by_id(baidu_click).click()
             except Exception as msg:
                 print(msg)
                 self.other_job_log_baidu.LogsSave(msg)
                 tips_baidu_err = '打开百度搜索失败。'
                 print(tips_baidu_err)
                 self.other_job_log_baidu.LogsSave(tips_baidu_err)
+    def open_websuit_com(self,num):
+        try:
+            if int(num) == 1:
+                pass
+        except Exception as msg:
+            open_websute_err = '请选择需要打开的网站！'
+            print(msg)
+            print(open_websute_err)
+            self.inter_other_baidu.Resource_show(open_websute_err)
+            self.other_job_log_baidu.LogsSave(msg)
+            self.other_job_log_baidu.LogsSave(msg)
+        else:
+            houtian_blog = self.inter_other_baidu.Get_Config_Info('url_info','houtian_blog')
+            bilibili=self.inter_other_baidu.Get_Config_Info('url_info','bilibili')
+            jinxuexiaofang = self.inter_other_baidu.Get_Config_Info('url_info', 'jinxuexiaofang')
+            mokecom = self.inter_other_baidu.Get_Config_Info('url_info', 'mokecom')
+            github = self.inter_other_baidu.Get_Config_Info('url_info', 'github')
+            baidufanyi = self.inter_other_baidu.Get_Config_Info('url_info', 'baidufanyi')
+            dr = webdriver.Chrome()
+            dr.maximize_window()
+            if int(num) == 1:
+                tips_houtian_blog = '正在打开后天博客网站！'
+                self.inter_other_baidu.Resource_show(tips_houtian_blog)
+                self.other_job_log_baidu.LogsSave(tips_houtian_blog)
+                dr.get(houtian_blog)
+            elif int(num) == 2:
+                tips_bilibili = '正在打开哔哩哔哩网站！'
+                self.inter_other_baidu.Resource_show(tips_bilibili)
+                self.other_job_log_baidu.LogsSave(tips_bilibili)
+                dr.get(bilibili)
+            elif int(num) == 3:
+                tips_jinxuexiaofang = '正在打开简学消防网站！'
+                self.inter_other_baidu.Resource_show(tips_jinxuexiaofang)
+                self.other_job_log_baidu.LogsSave(tips_jinxuexiaofang)
+                dr.get(jinxuexiaofang)
+            elif int(num) == 4:
+                tips_mokecom = '正在打开慕课网站！'
+                self.inter_other_baidu.Resource_show(tips_mokecom)
+                self.other_job_log_baidu.LogsSave(tips_mokecom)
+                dr.get(mokecom)
+            elif int(num) == 5:
+                tips_github = '正在打开github网站！'
+                self.inter_other_baidu.Resource_show(tips_github)
+                self.other_job_log_baidu.LogsSave(tips_github)
+                dr.get(github)
+            elif int(num) == 6:
+                tips_baidufanyi = '正在打开github网站！'
+                self.inter_other_baidu.Resource_show(tips_baidufanyi)
+                self.other_job_log_baidu.LogsSave(tips_baidufanyi)
+                dr.get(baidufanyi)
 class NewFiles:
     def __init__(self):
         self.inter_newfile = OtherJobs()
