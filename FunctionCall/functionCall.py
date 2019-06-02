@@ -1,9 +1,11 @@
-from OtherJobs.otherJob import OtherJobs
+from OtherJobs.otherJob import *
+from Logs.logs import Logs
 from OverAll.overAll import OverAll
 from InterfaceCall.interfaceCall import *
 class FunctionCall:
     def __init__(self):
         self.otherjob_fun = OtherJobs()
+        self.other_job_log = Logs()
         self.overall = OverAll()
         self.inter_fun_mon = Resource_Monitor()
     def BaiduSearch(self):
@@ -45,16 +47,30 @@ class FunctionCall:
         login_eamil_mail_operate = Mails_operate()
         login_eamil_mail_operate.LoginEmail(login_email_mailType,login_email_user,login_email_passwd)
     def Disk_Used(self):
+        self.otherjob_fun.Resource_show('请等待。。。')
+        tt_disk_used = self.otherjob_fun.thread_add(self.otherjob_fun.Count_Down,15)
         disk_used_msg = self.inter_fun_mon.GetCpan()
+        disk_used_msg = str(disk_used_msg).split('OrderedDict')[-1].split('([')[-1].split('])')[0]
         self.otherjob_fun.Resource_show(disk_used_msg)
+        self.otherjob_fun.Stop_Thread_add(tt_disk_used)
     def Cpu_Used(self):
+        self.otherjob_fun.Resource_show('请等待。。。')
+        tt_cpu_used = self.otherjob_fun.thread_add(self.otherjob_fun.Count_Down, 15)
         cpu_used_msg = self.inter_fun_mon.GetCpu()
         self.otherjob_fun.Resource_show(cpu_used_msg)
+        self.otherjob_fun.Stop_Thread_add(tt_cpu_used)
     def Mem_Used(self):
+        self.otherjob_fun.Resource_show('请等待。。。')
         mem_used_msg = self.inter_fun_mon.GetMemory()
         self.otherjob_fun.Resource_show(mem_used_msg)
     def Mails_Unread(self):
+        self.otherjob_fun.Resource_show('请等待。。。')
+        tt_mails_unread = self.otherjob_fun.thread_add(self.otherjob_fun.Count_Down, 30)
         mails_used_msg = self.inter_fun_mon.Get_Unreadmails_Num()
         self.otherjob_fun.Resource_show(mails_used_msg)
+        self.otherjob_fun.Stop_Thread_add(tt_mails_unread)
     def Up_Monitor(self):
-        up_monitor = self.inter_fun_mon.Monitor()
+        up_monitor_job = '监控进程已经启动！'
+        self.otherjob_fun.Resource_show(up_monitor_job)
+        self.other_job_log.LogsSave(up_monitor_job)
+        self.inter_fun_mon.Monitor()
