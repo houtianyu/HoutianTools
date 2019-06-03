@@ -4,6 +4,10 @@ from Logs.logs import Logs
 import os,sys,win32process,win32gui,time,win32con,collections,psutil
 from win32api import *
 from selenium.webdriver.chrome.options import Options
+from bs4 import BeautifulSoup
+import time,urllib.request,random,sys,importlib
+from urllib.parse import quote
+import urllib
 class BaiDuSearch:
     def __init__(self):
         self.inter_other_baidu = OtherJobs()
@@ -79,6 +83,36 @@ class BaiDuSearch:
                 self.inter_other_baidu.Resource_show(tips_baidufanyi)
                 self.other_job_log_baidu.LogsSave(tips_baidufanyi)
                 dr.get(baidufanyi)
+    def baidu_search_title_auto(self,contents):
+        if not contents:
+            tips_baidu = '未输入百度搜索内容。'
+            self.inter_other_baidu.Resource_show(tips_baidu)
+            self.other_job_log_baidu.LogsSave(tips_baidu)
+        user_agents_baidu_search_auto = self.inter_other_baidu.Get_Config_Info('other_info','user_agents_baidu_search_auto')
+        url_baidu_search_auto = self.inter_other_baidu.Get_Config_Info('url_info','url_baidu_search_auto')
+        for i in range(2):
+            url_baidu_search__auto_format = url_baidu_search_auto + urllib.parse.quote(contents) + '&pn=' + str(i*100)
+            req = urllib.request.Request(url_baidu_search__auto_format,None,headers=user_agents_baidu_search_auto)
+            response = urllib.request.urlopen(req, None, 30)  # 设置超时时间
+            try:
+                html = response.read().decode('utf-8')
+            except Exception as msg:
+                print(msg)
+                return msg
+            else:
+                # 提取搜索结果SERP的标题
+                soup = BeautifulSoup(''.join(html))
+                for i in soup.findAll("h3"):
+                    title = i.text
+                    if '百度' in title:
+                        try:
+                            title = title.split('\n')[1]
+                        except Exception as msg:
+                            # print(msg)
+                            pass
+                        print(title)
+                    else:
+                        print(title)
 class NewFiles:
     def __init__(self):
         self.inter_newfile = OtherJobs()

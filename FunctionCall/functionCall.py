@@ -13,6 +13,10 @@ class FunctionCall:
         baidu_object = self.overall.get_value(0)
         baidu_object_content = self.otherjob_fun.get_entryContent(baidu_object)
         self.function_baidusearch.baidu_search(baidu_object_content)
+    def BaiduSearch_Auto(self):
+        baidu_auto_object = self.overall.get_value(0)
+        baidu_object_content = self.otherjob_fun.get_entryContent(baidu_auto_object)
+        self.function_baidusearch.baidu_search_title_auto(baidu_object_content)
     def OpenFiles(self):
         openfile_object = self.overall.get_value(1)
         openfile_object_content = self.otherjob_fun.get_entryContent(openfile_object)

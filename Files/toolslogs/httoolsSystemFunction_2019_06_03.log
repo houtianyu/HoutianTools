@@ -1040,3 +1040,157 @@
 2019-06-03 01:03:05,471 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:53904/session/e00cf44ce94d2033acea8985cb22333a/url {"url": "https://mail.yeah.net", "sessionId": "e00cf44ce94d2033acea8985cb22333a"}
 2019-06-03 01:03:05,471 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:53904/session/e00cf44ce94d2033acea8985cb22333a/url {"url": "https://mail.yeah.net", "sessionId": "e00cf44ce94d2033acea8985cb22333a"}
 2019-06-03 01:03:05,471 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:53904/session/e00cf44ce94d2033acea8985cb22333a/url {"url": "https://mail.yeah.net", "sessionId": "e00cf44ce94d2033acea8985cb22333a"}
+2019-06-03 13:59:39,457 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session {"capabilities": {"firstMatch": [{}], "alwaysMatch": {"browserName": "chrome", "platformName": "any", "goog:chromeOptions": {"extensions": [], "args": []}}}, "desiredCapabilities": {"browserName": "chrome", "version": "", "platform": "ANY", "goog:chromeOptions": {"extensions": [], "args": []}}}
+2019-06-03 13:59:39,457 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session {"capabilities": {"firstMatch": [{}], "alwaysMatch": {"browserName": "chrome", "platformName": "any", "goog:chromeOptions": {"extensions": [], "args": []}}}, "desiredCapabilities": {"browserName": "chrome", "version": "", "platform": "ANY", "goog:chromeOptions": {"extensions": [], "args": []}}}
+2019-06-03 13:59:39,457 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session {"capabilities": {"firstMatch": [{}], "alwaysMatch": {"browserName": "chrome", "platformName": "any", "goog:chromeOptions": {"extensions": [], "args": []}}}, "desiredCapabilities": {"browserName": "chrome", "version": "", "platform": "ANY", "goog:chromeOptions": {"extensions": [], "args": []}}}
+2019-06-03 13:59:39,457 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session {"capabilities": {"firstMatch": [{}], "alwaysMatch": {"browserName": "chrome", "platformName": "any", "goog:chromeOptions": {"extensions": [], "args": []}}}, "desiredCapabilities": {"browserName": "chrome", "version": "", "platform": "ANY", "goog:chromeOptions": {"extensions": [], "args": []}}}
+2019-06-03 13:59:39,457 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session {"capabilities": {"firstMatch": [{}], "alwaysMatch": {"browserName": "chrome", "platformName": "any", "goog:chromeOptions": {"extensions": [], "args": []}}}, "desiredCapabilities": {"browserName": "chrome", "version": "", "platform": "ANY", "goog:chromeOptions": {"extensions": [], "args": []}}}
+2019-06-03 13:59:39,457 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session {"capabilities": {"firstMatch": [{}], "alwaysMatch": {"browserName": "chrome", "platformName": "any", "goog:chromeOptions": {"extensions": [], "args": []}}}, "desiredCapabilities": {"browserName": "chrome", "version": "", "platform": "ANY", "goog:chromeOptions": {"extensions": [], "args": []}}}
+2019-06-03 13:59:39,457 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session {"capabilities": {"firstMatch": [{}], "alwaysMatch": {"browserName": "chrome", "platformName": "any", "goog:chromeOptions": {"extensions": [], "args": []}}}, "desiredCapabilities": {"browserName": "chrome", "version": "", "platform": "ANY", "goog:chromeOptions": {"extensions": [], "args": []}}}
+2019-06-03 13:59:39,507 connectionpool.py _new_conn 10 DEBUG<->Starting new HTTP connection (1): 127.0.0.1:11136
+2019-06-03 13:59:39,507 connectionpool.py _new_conn 10 DEBUG<->Starting new HTTP connection (1): 127.0.0.1:11136
+2019-06-03 13:59:39,507 connectionpool.py _new_conn 10 DEBUG<->Starting new HTTP connection (1): 127.0.0.1:11136
+2019-06-03 13:59:39,507 connectionpool.py _new_conn 10 DEBUG<->Starting new HTTP connection (1): 127.0.0.1:11136
+2019-06-03 13:59:39,507 connectionpool.py _new_conn 10 DEBUG<->Starting new HTTP connection (1): 127.0.0.1:11136
+2019-06-03 13:59:39,507 connectionpool.py _new_conn 10 DEBUG<->Starting new HTTP connection (1): 127.0.0.1:11136
+2019-06-03 13:59:39,507 connectionpool.py _new_conn 10 DEBUG<->Starting new HTTP connection (1): 127.0.0.1:11136
+2019-06-03 13:59:46,327 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session HTTP/1.1" 200 963
+2019-06-03 13:59:46,327 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session HTTP/1.1" 200 963
+2019-06-03 13:59:46,327 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session HTTP/1.1" 200 963
+2019-06-03 13:59:46,327 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session HTTP/1.1" 200 963
+2019-06-03 13:59:46,327 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session HTTP/1.1" 200 963
+2019-06-03 13:59:46,327 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session HTTP/1.1" 200 963
+2019-06-03 13:59:46,327 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session HTTP/1.1" 200 963
+2019-06-03 13:59:46,328 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 13:59:46,328 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 13:59:46,328 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 13:59:46,328 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 13:59:46,328 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 13:59:46,328 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 13:59:46,328 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 13:59:46,464 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/url {"url": "https://www.baidu.com/", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 13:59:46,464 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/url {"url": "https://www.baidu.com/", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 13:59:46,464 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/url {"url": "https://www.baidu.com/", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 13:59:46,464 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/url {"url": "https://www.baidu.com/", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 13:59:46,464 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/url {"url": "https://www.baidu.com/", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 13:59:46,464 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/url {"url": "https://www.baidu.com/", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 13:59:46,464 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/url {"url": "https://www.baidu.com/", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:06,350 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/url HTTP/1.1" 200 72
+2019-06-03 14:00:06,350 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/url HTTP/1.1" 200 72
+2019-06-03 14:00:06,350 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/url HTTP/1.1" 200 72
+2019-06-03 14:00:06,350 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/url HTTP/1.1" 200 72
+2019-06-03 14:00:06,350 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/url HTTP/1.1" 200 72
+2019-06-03 14:00:06,350 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/url HTTP/1.1" 200 72
+2019-06-03 14:00:06,350 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/url HTTP/1.1" 200 72
+2019-06-03 14:00:06,351 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:06,351 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:06,351 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:06,351 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:06,351 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:06,351 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:06,351 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:06,351 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/window/current/maximize {"windowHandle": "current", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:06,351 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/window/current/maximize {"windowHandle": "current", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:06,351 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/window/current/maximize {"windowHandle": "current", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:06,351 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/window/current/maximize {"windowHandle": "current", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:06,351 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/window/current/maximize {"windowHandle": "current", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:06,351 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/window/current/maximize {"windowHandle": "current", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:06,351 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/window/current/maximize {"windowHandle": "current", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:07,601 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/window/current/maximize HTTP/1.1" 200 110
+2019-06-03 14:00:07,601 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/window/current/maximize HTTP/1.1" 200 110
+2019-06-03 14:00:07,601 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/window/current/maximize HTTP/1.1" 200 110
+2019-06-03 14:00:07,601 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/window/current/maximize HTTP/1.1" 200 110
+2019-06-03 14:00:07,601 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/window/current/maximize HTTP/1.1" 200 110
+2019-06-03 14:00:07,601 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/window/current/maximize HTTP/1.1" 200 110
+2019-06-03 14:00:07,601 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/window/current/maximize HTTP/1.1" 200 110
+2019-06-03 14:00:07,601 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:07,601 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:07,601 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:07,601 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:07,601 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:07,601 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:07,601 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:07,602 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/element {"using": "id", "value": "kw", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:07,602 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/element {"using": "id", "value": "kw", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:07,602 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/element {"using": "id", "value": "kw", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:07,602 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/element {"using": "id", "value": "kw", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:07,602 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/element {"using": "id", "value": "kw", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:07,602 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/element {"using": "id", "value": "kw", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:07,602 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/element {"using": "id", "value": "kw", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:07,617 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/element HTTP/1.1" 200 102
+2019-06-03 14:00:07,617 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/element HTTP/1.1" 200 102
+2019-06-03 14:00:07,617 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/element HTTP/1.1" 200 102
+2019-06-03 14:00:07,617 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/element HTTP/1.1" 200 102
+2019-06-03 14:00:07,617 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/element HTTP/1.1" 200 102
+2019-06-03 14:00:07,617 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/element HTTP/1.1" 200 102
+2019-06-03 14:00:07,617 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/element HTTP/1.1" 200 102
+2019-06-03 14:00:07,618 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:07,618 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:07,618 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:07,618 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:07,618 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:07,618 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:07,618 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:07,618 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/element/0.7527652977512731-1/value {"text": "\u641c\u7d22", "value": ["\u641c", "\u7d22"], "id": "0.7527652977512731-1", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:07,618 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/element/0.7527652977512731-1/value {"text": "\u641c\u7d22", "value": ["\u641c", "\u7d22"], "id": "0.7527652977512731-1", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:07,618 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/element/0.7527652977512731-1/value {"text": "\u641c\u7d22", "value": ["\u641c", "\u7d22"], "id": "0.7527652977512731-1", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:07,618 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/element/0.7527652977512731-1/value {"text": "\u641c\u7d22", "value": ["\u641c", "\u7d22"], "id": "0.7527652977512731-1", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:07,618 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/element/0.7527652977512731-1/value {"text": "\u641c\u7d22", "value": ["\u641c", "\u7d22"], "id": "0.7527652977512731-1", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:07,618 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/element/0.7527652977512731-1/value {"text": "\u641c\u7d22", "value": ["\u641c", "\u7d22"], "id": "0.7527652977512731-1", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:07,618 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/element/0.7527652977512731-1/value {"text": "\u641c\u7d22", "value": ["\u641c", "\u7d22"], "id": "0.7527652977512731-1", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:08,260 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/element/0.7527652977512731-1/value HTTP/1.1" 200 72
+2019-06-03 14:00:08,260 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/element/0.7527652977512731-1/value HTTP/1.1" 200 72
+2019-06-03 14:00:08,260 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/element/0.7527652977512731-1/value HTTP/1.1" 200 72
+2019-06-03 14:00:08,260 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/element/0.7527652977512731-1/value HTTP/1.1" 200 72
+2019-06-03 14:00:08,260 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/element/0.7527652977512731-1/value HTTP/1.1" 200 72
+2019-06-03 14:00:08,260 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/element/0.7527652977512731-1/value HTTP/1.1" 200 72
+2019-06-03 14:00:08,260 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/element/0.7527652977512731-1/value HTTP/1.1" 200 72
+2019-06-03 14:00:08,261 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:08,261 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:08,261 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:08,261 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:08,261 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:08,261 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:08,261 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:08,262 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/element {"using": "id", "value": "su", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:08,262 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/element {"using": "id", "value": "su", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:08,262 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/element {"using": "id", "value": "su", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:08,262 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/element {"using": "id", "value": "su", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:08,262 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/element {"using": "id", "value": "su", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:08,262 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/element {"using": "id", "value": "su", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:08,262 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/element {"using": "id", "value": "su", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:08,276 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/element HTTP/1.1" 200 102
+2019-06-03 14:00:08,276 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/element HTTP/1.1" 200 102
+2019-06-03 14:00:08,276 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/element HTTP/1.1" 200 102
+2019-06-03 14:00:08,276 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/element HTTP/1.1" 200 102
+2019-06-03 14:00:08,276 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/element HTTP/1.1" 200 102
+2019-06-03 14:00:08,276 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/element HTTP/1.1" 200 102
+2019-06-03 14:00:08,276 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/element HTTP/1.1" 200 102
+2019-06-03 14:00:08,277 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:08,277 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:08,277 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:08,277 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:08,277 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:08,277 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:08,277 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:08,277 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/element/0.7527652977512731-2/click {"id": "0.7527652977512731-2", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:08,277 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/element/0.7527652977512731-2/click {"id": "0.7527652977512731-2", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:08,277 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/element/0.7527652977512731-2/click {"id": "0.7527652977512731-2", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:08,277 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/element/0.7527652977512731-2/click {"id": "0.7527652977512731-2", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:08,277 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/element/0.7527652977512731-2/click {"id": "0.7527652977512731-2", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:08,277 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/element/0.7527652977512731-2/click {"id": "0.7527652977512731-2", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:08,277 remote_connection.py _request 10 DEBUG<->POST http://127.0.0.1:11136/session/c455663975b79823dd0d880315495350/element/0.7527652977512731-2/click {"id": "0.7527652977512731-2", "sessionId": "c455663975b79823dd0d880315495350"}
+2019-06-03 14:00:08,426 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/element/0.7527652977512731-2/click HTTP/1.1" 200 72
+2019-06-03 14:00:08,426 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/element/0.7527652977512731-2/click HTTP/1.1" 200 72
+2019-06-03 14:00:08,426 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/element/0.7527652977512731-2/click HTTP/1.1" 200 72
+2019-06-03 14:00:08,426 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/element/0.7527652977512731-2/click HTTP/1.1" 200 72
+2019-06-03 14:00:08,426 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/element/0.7527652977512731-2/click HTTP/1.1" 200 72
+2019-06-03 14:00:08,426 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/element/0.7527652977512731-2/click HTTP/1.1" 200 72
+2019-06-03 14:00:08,426 connectionpool.py _make_request 10 DEBUG<->http://127.0.0.1:11136 "POST /session/c455663975b79823dd0d880315495350/element/0.7527652977512731-2/click HTTP/1.1" 200 72
+2019-06-03 14:00:08,427 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:08,427 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:08,427 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:08,427 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:08,427 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:08,427 remote_connection.py _request 10 DEBUG<->Finished Request
+2019-06-03 14:00:08,427 remote_connection.py _request 10 DEBUG<->Finished Request
