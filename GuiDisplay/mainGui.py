@@ -113,7 +113,7 @@ class MainGui:
         Button(self.frame_v[8][2],text='打开网站',state='normal',width=8,bg='LightGreen',command=lambda:self.otherJob.thread_add(self.functioncall.Open_Websit)).\
             grid(padx=1,row=8,column=7,sticky=W)
         #初始化配置
-        Button(self.frame_v[9][2], text='INIT', state='normal', width=8, bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Open_Websit)). \
+        Button(self.frame_v[9][2], text='INIT', state='normal', width=8, bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Init_Config)). \
             grid(padx=1, row=9, column=7, sticky=W)
         mainloop()
 

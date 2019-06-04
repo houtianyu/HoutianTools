@@ -2,14 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="58f9d95b-6244-4d3a-b99b-7f9e00aa6380" name="默认的" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/encodings.xml" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Files/Config.ini" afterPath="$PROJECT_DIR$/Files/Config.ini" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/FunctionCall/functionCall.py" afterPath="$PROJECT_DIR$/FunctionCall/functionCall.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Files/search/360.exe.txt" afterPath="$PROJECT_DIR$/Files/search/360.exe.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Files/search/KuGou.exe.txt" afterPath="$PROJECT_DIR$/Files/search/KuGou.exe.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Files/search/WeChat.exe.txt" afterPath="$PROJECT_DIR$/Files/search/WeChat.exe.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Files/toolslogs/httoolsSystemFunction_2019_06_04.log" afterPath="$PROJECT_DIR$/Files/toolslogs/httoolsSystemFunction_2019_06_04.log" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/GuiDisplay/mainGui.py" afterPath="$PROJECT_DIR$/GuiDisplay/mainGui.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/InterfaceCall/interfaceCall.py" afterPath="$PROJECT_DIR$/InterfaceCall/interfaceCall.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OtherJobs/otherJob.py" afterPath="$PROJECT_DIR$/OtherJobs/otherJob.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test.py" afterPath="$PROJECT_DIR$/test.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -19,9 +19,9 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/HoutianTools$mainGui.coverage" NAME="mainGui Coverage Results" MODIFIED="1559635069605" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/GuiDisplay" />
+    <SUITE FILE_PATH="coverage/HoutianTools$mainGui.coverage" NAME="mainGui Coverage Results" MODIFIED="1559666603746" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/GuiDisplay" />
     <SUITE FILE_PATH="coverage/HoutianTools$otherJob.coverage" NAME="otherJob Coverage Results" MODIFIED="1559142897369" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/OtherJobs" />
-    <SUITE FILE_PATH="coverage/HoutianTools$test.coverage" NAME="test Coverage Results" MODIFIED="1559633565466" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/HoutianTools$test.coverage" NAME="test Coverage Results" MODIFIED="1559666537484" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="ExportToHTMLSettings">
@@ -32,8 +32,8 @@
       <file leaf-file-name="mainGui.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/GuiDisplay/mainGui.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="560">
-              <caret line="116" column="30" lean-forward="false" selection-start-line="116" selection-start-column="30" selection-end-line="116" selection-end-column="30" />
+            <state relative-caret-position="164">
+              <caret line="115" column="159" lean-forward="false" selection-start-line="115" selection-start-column="159" selection-end-line="115" selection-end-column="159" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
               </folding>
@@ -44,8 +44,8 @@
       <file leaf-file-name="functionCall.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/FunctionCall/functionCall.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="736">
-              <caret line="99" column="60" lean-forward="true" selection-start-line="99" selection-start-column="60" selection-end-line="99" selection-end-column="60" />
+            <state relative-caret-position="200">
+              <caret line="92" column="19" lean-forward="false" selection-start-line="92" selection-start-column="8" selection-end-line="92" selection-end-column="19" />
               <folding>
                 <element signature="e#0#32#0" expanded="true" />
               </folding>
@@ -56,7 +56,7 @@
       <file leaf-file-name="interfaceCall.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/InterfaceCall/interfaceCall.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="286">
+            <state relative-caret-position="244">
               <caret line="151" column="19" lean-forward="false" selection-start-line="151" selection-start-column="19" selection-end-line="151" selection-end-column="19" />
               <folding>
                 <element signature="e#16#46#0" expanded="true" />
@@ -76,8 +76,8 @@
       <file leaf-file-name="otherJob.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/OtherJobs/otherJob.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="626">
-              <caret line="223" column="89" lean-forward="false" selection-start-line="223" selection-start-column="89" selection-end-line="223" selection-end-column="89" />
+            <state relative-caret-position="316">
+              <caret line="273" column="89" lean-forward="true" selection-start-line="273" selection-start-column="89" selection-end-line="273" selection-end-column="89" />
               <folding>
                 <element signature="e#16#96#0" expanded="true" />
                 <element signature="e#1076#1799#0" expanded="false" />
@@ -90,9 +90,8 @@
                 <element signature="e#6073#7512#0" expanded="false" />
                 <element signature="e#7571#10175#0" expanded="false" />
                 <element signature="e#10230#10690#0" expanded="false" />
-                <element signature="e#11342#14359#0" expanded="false" />
-                <marker date="1559635069499" expanded="true" signature="415:14406" ph="..." />
-                <marker date="1559635069499" expanded="true" signature="2035:2078" ph="select * fro... Win32_Process" />
+                <marker date="1559666603696" expanded="true" signature="415:14407" ph="..." />
+                <marker date="1559666603696" expanded="true" signature="2035:2078" ph="select * fro... Win32_Process" />
               </folding>
             </state>
           </provider>
@@ -156,9 +155,9 @@
         <option value="$PROJECT_DIR$/OverAll/overAll.py" />
         <option value="$PROJECT_DIR$/Logs/logs.py" />
         <option value="$PROJECT_DIR$/test.py" />
-        <option value="$PROJECT_DIR$/Files/Config.ini" />
         <option value="$PROJECT_DIR$/InterfaceCall/interfaceCall.py" />
         <option value="$PROJECT_DIR$/FunctionCall/functionCall.py" />
+        <option value="$PROJECT_DIR$/Files/Config.ini" />
         <option value="$PROJECT_DIR$/GuiDisplay/mainGui.py" />
         <option value="$PROJECT_DIR$/OtherJobs/otherJob.py" />
       </list>
@@ -173,8 +172,8 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
-    <option name="width" value="1936" />
-    <option name="height" value="1056" />
+    <option name="width" value="1296" />
+    <option name="height" value="696" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -456,7 +455,8 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1296" height="696" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25788197" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32911393" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -464,7 +464,7 @@
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32911393" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3282313" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -564,9 +564,8 @@
             <element signature="e#6073#7512#0" expanded="false" />
             <element signature="e#7571#10175#0" expanded="false" />
             <element signature="e#10230#10690#0" expanded="false" />
-            <element signature="e#11342#14359#0" expanded="false" />
-            <marker date="1559635069499" expanded="true" signature="415:14406" ph="..." />
-            <marker date="1559635069499" expanded="true" signature="2035:2078" ph="select * fro... Win32_Process" />
+            <marker date="1559666603696" expanded="true" signature="415:14407" ph="..." />
+            <marker date="1559666603696" expanded="true" signature="2035:2078" ph="select * fro... Win32_Process" />
           </folding>
         </state>
       </provider>
@@ -648,9 +647,8 @@
             <element signature="e#6073#7512#0" expanded="false" />
             <element signature="e#7571#10175#0" expanded="false" />
             <element signature="e#10230#10690#0" expanded="false" />
-            <element signature="e#11342#14359#0" expanded="false" />
-            <marker date="1559635069499" expanded="true" signature="415:14406" ph="..." />
-            <marker date="1559635069499" expanded="true" signature="2035:2078" ph="select * fro... Win32_Process" />
+            <marker date="1559666603696" expanded="true" signature="415:14407" ph="..." />
+            <marker date="1559666603696" expanded="true" signature="2035:2078" ph="select * fro... Win32_Process" />
           </folding>
         </state>
       </provider>
@@ -725,9 +723,8 @@
             <element signature="e#6073#7512#0" expanded="false" />
             <element signature="e#7571#10175#0" expanded="false" />
             <element signature="e#10230#10690#0" expanded="false" />
-            <element signature="e#11342#14359#0" expanded="false" />
-            <marker date="1559635069499" expanded="true" signature="415:14406" ph="..." />
-            <marker date="1559635069499" expanded="true" signature="2035:2078" ph="select * fro... Win32_Process" />
+            <marker date="1559666603696" expanded="true" signature="415:14407" ph="..." />
+            <marker date="1559666603696" expanded="true" signature="2035:2078" ph="select * fro... Win32_Process" />
           </folding>
         </state>
       </provider>
@@ -794,9 +791,8 @@
             <element signature="e#6073#7512#0" expanded="false" />
             <element signature="e#7571#10175#0" expanded="false" />
             <element signature="e#10230#10690#0" expanded="false" />
-            <element signature="e#11342#14359#0" expanded="false" />
-            <marker date="1559635069499" expanded="true" signature="415:14406" ph="..." />
-            <marker date="1559635069499" expanded="true" signature="2035:2078" ph="select * fro... Win32_Process" />
+            <marker date="1559666603696" expanded="true" signature="415:14407" ph="..." />
+            <marker date="1559666603696" expanded="true" signature="2035:2078" ph="select * fro... Win32_Process" />
           </folding>
         </state>
       </provider>
@@ -885,9 +881,8 @@
             <element signature="e#6073#7512#0" expanded="false" />
             <element signature="e#7571#10175#0" expanded="false" />
             <element signature="e#10230#10690#0" expanded="false" />
-            <element signature="e#11342#14359#0" expanded="false" />
-            <marker date="1559635069499" expanded="true" signature="415:14406" ph="..." />
-            <marker date="1559635069499" expanded="true" signature="2035:2078" ph="select * fro... Win32_Process" />
+            <marker date="1559666603696" expanded="true" signature="415:14407" ph="..." />
+            <marker date="1559666603696" expanded="true" signature="2035:2078" ph="select * fro... Win32_Process" />
           </folding>
         </state>
       </provider>
@@ -953,9 +948,8 @@
             <element signature="e#6073#7512#0" expanded="false" />
             <element signature="e#7571#10175#0" expanded="false" />
             <element signature="e#10230#10690#0" expanded="false" />
-            <element signature="e#11342#14359#0" expanded="false" />
-            <marker date="1559635069499" expanded="true" signature="415:14406" ph="..." />
-            <marker date="1559635069499" expanded="true" signature="2035:2078" ph="select * fro... Win32_Process" />
+            <marker date="1559666603696" expanded="true" signature="415:14407" ph="..." />
+            <marker date="1559666603696" expanded="true" signature="2035:2078" ph="select * fro... Win32_Process" />
           </folding>
         </state>
       </provider>
@@ -988,7 +982,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
           <caret line="384" column="50" lean-forward="true" selection-start-line="384" selection-start-column="50" selection-end-line="384" selection-end-column="50" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1000,10 +993,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Files/Config.ini">
+    <entry file="file://$PROJECT_DIR$/OverAll/overAll.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
-          <caret line="16" column="0" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+        <state relative-caret-position="88">
+          <caret line="4" column="14" lean-forward="true" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
           <folding />
         </state>
       </provider>
@@ -1018,17 +1011,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/OverAll/overAll.py">
+    <entry file="file://$PROJECT_DIR$/Files/Config.ini">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="4" column="14" lean-forward="true" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
+        <state relative-caret-position="352">
+          <caret line="16" column="0" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/InterfaceCall/interfaceCall.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
+        <state relative-caret-position="244">
           <caret line="151" column="19" lean-forward="false" selection-start-line="151" selection-start-column="19" selection-end-line="151" selection-end-column="19" />
           <folding>
             <element signature="e#16#46#0" expanded="true" />
@@ -1046,8 +1039,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/FunctionCall/functionCall.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="736">
-          <caret line="99" column="60" lean-forward="true" selection-start-line="99" selection-start-column="60" selection-end-line="99" selection-end-column="60" />
+        <state relative-caret-position="200">
+          <caret line="92" column="19" lean-forward="false" selection-start-line="92" selection-start-column="8" selection-end-line="92" selection-end-column="19" />
           <folding>
             <element signature="e#0#32#0" expanded="true" />
           </folding>
@@ -1056,8 +1049,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/GuiDisplay/mainGui.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="560">
-          <caret line="116" column="30" lean-forward="false" selection-start-line="116" selection-start-column="30" selection-end-line="116" selection-end-column="30" />
+        <state relative-caret-position="164">
+          <caret line="115" column="159" lean-forward="false" selection-start-line="115" selection-start-column="159" selection-end-line="115" selection-end-column="159" />
           <folding>
             <element signature="e#0#21#0" expanded="true" />
           </folding>
@@ -1066,8 +1059,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/OtherJobs/otherJob.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="626">
-          <caret line="223" column="89" lean-forward="false" selection-start-line="223" selection-start-column="89" selection-end-line="223" selection-end-column="89" />
+        <state relative-caret-position="316">
+          <caret line="273" column="89" lean-forward="true" selection-start-line="273" selection-start-column="89" selection-end-line="273" selection-end-column="89" />
           <folding>
             <element signature="e#16#96#0" expanded="true" />
             <element signature="e#1076#1799#0" expanded="false" />
@@ -1080,9 +1073,8 @@
             <element signature="e#6073#7512#0" expanded="false" />
             <element signature="e#7571#10175#0" expanded="false" />
             <element signature="e#10230#10690#0" expanded="false" />
-            <element signature="e#11342#14359#0" expanded="false" />
-            <marker date="1559635069499" expanded="true" signature="415:14406" ph="..." />
-            <marker date="1559635069499" expanded="true" signature="2035:2078" ph="select * fro... Win32_Process" />
+            <marker date="1559666603696" expanded="true" signature="415:14407" ph="..." />
+            <marker date="1559666603696" expanded="true" signature="2035:2078" ph="select * fro... Win32_Process" />
           </folding>
         </state>
       </provider>

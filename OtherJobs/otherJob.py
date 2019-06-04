@@ -225,7 +225,7 @@ class OtherJobs:
         self.other_all.set_label_value(textlabel)
         textlabel.grid(padx=5, pady=1, row=9, column=0, columnspan=9, sticky=W)
     def Init_Exe_Path(self):
-        init_infos = {'kugou_music_path':'KuGou.exe','qh360_grabage_path':'360.exe','wechat_path':'WeChat.exe'}
+        init_infos = {'kugou_music_path':'KuGou.exe','qh360_grabage_path':'360Safe.exe','wechat_path':'WeChat.exe'}
         for search_content_info,search_content in init_infos.items():
             search_all_cmd = self.Get_Config_Info('file_name','search_all_cmd')
             search_close_cmd = self.Get_Config_Info('file_name','search_close_cmd')
@@ -260,11 +260,11 @@ class OtherJobs:
                             path = path.replace("\\", '\\\\')
                             if path.split('.')[-1] == 'exe':
                                 print(path)
-                                #self.Modify_Config_Info('file_name',search_content_info,path)
+                                self.Modify_Config_Info('file_name',search_content_info,path)
                                 break
                             else:
                                 print('第一次未找到%s的执行文件！' % search_content)
-                                #self.Resource_show('未找到%s的执行文件！' % search_content)
+                                self.Resource_show('未找到%s的执行文件！' % search_content)
                                 self.other_job_log.LogsSave('第一次未找到%s的执行文件！' % search_content)
                     if i == 2:
                         path = line.split(',')[0].split('"')[1].split('"')[0]
@@ -275,7 +275,7 @@ class OtherJobs:
                             break
                         else:
                             print('第二次未找到%s的执行文件！' % search_content)
-                            #self.Resource_show('未找到%s的执行文件！' % search_content)
+                            self.Resource_show('未找到%s的执行文件！' % search_content)
                             self.other_job_log.LogsSave('第二次未找到%s的执行文件！' % search_content)
                     i += 1
                 time.sleep(1.2)

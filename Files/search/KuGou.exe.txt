@@ -5,5 +5,5 @@ Filename,Size,Date Modified,Date Created,Attributes
 "C:\Windows\Prefetch\KUGOU.EXE-2B729C20.pf",4518,132041064424377077,,0
 "C:\Windows\Prefetch\KUGOU.EXE-5776475D.pf",14442,132041060158237548,,0
 "C:\Windows\Prefetch\KUGOU.EXE-B32D883C.pf",29938,132041060058433324,,0
-"D:\python\HoutianTools\Files\search\KuGou.exe.txt",712,132041070788264049,,0
-"C:\Users\AT\AppData\Roaming\Microsoft\Windows\Recent\KuGou.exe.txt.lnk",916,132041070788027884,,0
+"D:\python\HoutianTools\Files\search\KuGou.exe.txt",691,132041401404498223,,0
+"C:\Users\AT\AppData\Roaming\Microsoft\Windows\Recent\KuGou.exe.txt.lnk",916,132041401404667769,,0
