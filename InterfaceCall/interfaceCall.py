@@ -85,6 +85,7 @@ class BaiDuSearch:
                 self.other_job_log_baidu.LogsSave(tips_baidufanyi)
                 dr.get(baidufanyi)
     def baidu_search_title_auto(self,contents):
+        title_all = {}
         if not contents:
             tips_baidu = '未输入百度搜索内容。'
             self.inter_other_baidu.Resource_show(tips_baidu)
@@ -112,13 +113,14 @@ class BaiDuSearch:
                             title = title.split('\n')[1]
                         except Exception as msg:
                             pass
-                        print(title)
-                        self.inter_other_baidu.Resource_show(title)#需要修改
+                        title_all[title] = '内容需要完善'
                         self.other_job_log_baidu.LogsSave(title)#需要修改
                     else:
-                        print(title)
-                        self.inter_other_baidu.Resource_show(title)#需要修改
+                        title_all[title] = '内容需要完善'
                         self.other_job_log_baidu.LogsSave(title)#需要修改
+        print(title_all)
+        self.inter_other_baidu.Resource_show(title_all)
+        self.other_job_log_baidu.LogsSave(title_all)
 class NewFiles:
     def __init__(self):
         self.inter_newfile = OtherJobs()
@@ -205,21 +207,28 @@ class WeiChat:
             print(tips_open_wechat_err)
             self.other_job_log_wechat.LogsSave(msg)
             self.other_job_log_wechat.LogsSave(tips_open_wechat_err)
-        time.sleep(1)
-        wChat_Conversation_hld = win32gui.FindWindow(wChat_Conversation_window_class,None)
-        wChat_Login_hld = win32gui.FindWindow(wChat_Login_window_class,None)
-        if wChat_Conversation_hld:
-            pass
-        if wChat_Login_hld:
-            #handleDetail = win32gui.GetWindowRect(wChat_Login_hld)
-            if  not num or int(num) == 1:
-                self.inter_other_wc.mouse_input_remote_onup(13)
-                #self.inter_other_wc.mouse_click_order(680, 410)
-            else:
-                #self.inter_other_wc.mouse_click_order(660, 485)
-                self.inter_other_wc.mouse_input_remote_onup(9)
-                time.sleep(0.1)
-                self.inter_other_wc.mouse_input_remote_onup(13)
+        else:
+            time.sleep(1)
+            wChat_Conversation_hld = win32gui.FindWindow(wChat_Conversation_window_class,None)#绘画窗口
+            print(wChat_Conversation_hld)
+            wChat_Login_hld = win32gui.FindWindow(wChat_Login_window_class,None)
+            if wChat_Conversation_hld:
+                print(num)
+                if not num or int(num) == 1:
+                    pass
+                else:
+                    current_locate = win32gui.GetWindowRect(wChat_Conversation_hld)
+                    print(current_locate)
+            elif wChat_Login_hld:
+                #handleDetail = win32gui.GetWindowRect(wChat_Login_hld)
+                if  not num or int(num) == 1:
+                    self.inter_other_wc.mouse_input_remote_onup(13)
+                    #self.inter_other_wc.mouse_click_order(680, 410)
+                else:
+                    #self.inter_other_wc.mouse_click_order(660, 485)
+                    self.inter_other_wc.mouse_input_remote_onup(9)
+                    time.sleep(0.1)
+                    self.inter_other_wc.mouse_input_remote_onup(13)
 class KuGouMusic:
     def __init__(self):
         self.inter_other_kugou = OtherJobs()

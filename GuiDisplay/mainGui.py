@@ -114,7 +114,7 @@ class MainGui:
             grid(padx=1,row=8,column=7,sticky=W)
         #初始化配置
         Button(self.frame_v[9][2], text='INIT', state='normal', width=8, bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Init_Config)). \
-            grid(padx=1, row=9, column=7, sticky=W)
+            grid(padx=1, row=9, column=7, sticky=NW)
         mainloop()
 
 if __name__ == '__main__':

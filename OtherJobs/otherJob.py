@@ -227,12 +227,19 @@ class OtherJobs:
     def Init_Exe_Path(self):
         init_infos = {'kugou_music_path':'KuGou.exe','qh360_grabage_path':'360Safe.exe','wechat_path':'WeChat.exe'}
         for search_content_info,search_content in init_infos.items():
-            search_all_cmd = self.Get_Config_Info('file_name','search_all_cmd')
-            search_close_cmd = self.Get_Config_Info('file_name','search_close_cmd')
+            search_all_cmd = self.Get_Config_Info('file_name','search_all_init_cmd')
+            search_close_cmd = self.Get_Config_Info('file_name','search_close_init_cmd')
             save_path_searchresult = self.Get_Config_Info('file_name','save_path_searchresult')
             save_path_search_result_path = os.path.dirname(os.path.dirname(__file__)) + save_path_searchresult
             search_all = search_all_cmd + ' ' + search_content
-            subprocess.Popen(search_all)
+            try:
+                subprocess.Popen(search_all)
+            except Exception as msg:
+                print(msg)
+                print('配置文件中Everything程序路径不正确，请检查。')
+                self.Resource_show('配置文件中Everything程序路径不正确，请检查。')
+                self.other_job_log.LogsSave('配置文件中Everything程序路径不正确，请检查。')
+                self.other_job_log.LogsSave(msg)
             time.sleep(0.3)
             num_list0 = [18,70]
             num_list1 = [17,69]
@@ -264,7 +271,7 @@ class OtherJobs:
                                 break
                             else:
                                 print('第一次未找到%s的执行文件！' % search_content)
-                                self.Resource_show('未找到%s的执行文件！' % search_content)
+                                self.Resource_show('第一次未找到%s的执行文件！' % search_content)
                                 self.other_job_log.LogsSave('第一次未找到%s的执行文件！' % search_content)
                     if i == 2:
                         path = line.split(',')[0].split('"')[1].split('"')[0]
@@ -275,7 +282,7 @@ class OtherJobs:
                             break
                         else:
                             print('第二次未找到%s的执行文件！' % search_content)
-                            self.Resource_show('未找到%s的执行文件！' % search_content)
+                            self.Resource_show('第二次未找到%s的执行文件！' % search_content)
                             self.other_job_log.LogsSave('第二次未找到%s的执行文件！' % search_content)
                     i += 1
                 time.sleep(1.2)

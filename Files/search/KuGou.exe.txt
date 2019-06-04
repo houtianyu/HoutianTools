@@ -1,9 +1,7 @@
 Filename,Size,Date Modified,Date Created,Attributes
-"C:\Users\AT\AppData\Roaming\KuGou8\AppStore\6\KuGou.exe",431576,132004042938173914,,0
-"E:\software_install\KGMusic\KuGou.exe",431576,132004042938173914,,0
-"E:\software_install\KGMusic\8.3.73.21433\KuGou.exe",431576,132004042938173914,,0
-"C:\Windows\Prefetch\KUGOU.EXE-2B729C20.pf",4518,132041064424377077,,0
-"C:\Windows\Prefetch\KUGOU.EXE-5776475D.pf",14442,132041060158237548,,0
-"C:\Windows\Prefetch\KUGOU.EXE-B32D883C.pf",29938,132041060058433324,,0
-"D:\python\HoutianTools\Files\search\KuGou.exe.txt",691,132041401404498223,,0
-"C:\Users\AT\AppData\Roaming\Microsoft\Windows\Recent\KuGou.exe.txt.lnk",916,132041401404667769,,0
+"E:\KGMusic\KuGou.exe",423384,131929651378441398,,0
+"E:\KGMusic\8.3.26.21181\KuGou.exe",423384,131929651378441398,,0
+"C:\Windows\Prefetch\KUGOU.EXE-9B0505E0.pf",22907,132039610305895150,,0
+"C:\Windows\Prefetch\KUGOU.EXE-A0162206.pf",7840,132039554076665571,,0
+"D:\Python\HoutianTools\Files\search\KuGou.exe.txt",499,132041432008102838,,0
+"C:\Users\Admin\AppData\Roaming\Microsoft\Windows\Recent\KuGou.exe.txt.lnk",922,132041432007992554,,0

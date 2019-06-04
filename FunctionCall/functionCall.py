@@ -91,6 +91,9 @@ class FunctionCall:
         open_websuilt_type = self.otherjob_fun.get_entryContent(open_websuit_object)
         self.function_baidusearch.open_websuit_com(open_websuilt_type)
     def Init_Config(self):
+        print('准备初始化，请确保配置文件中Everything路径的准确性！')
+        self.otherjob_fun.Resource_show('准备初始化，请确保配置文件中Everything路径的准确性！')
+        self.other_job_log.LogsSave('准备初始化，请确保配置文件中Everything路径的准确性！')
         init_config_tips = '正在初始化配置！'
         tt_init_config = self.otherjob_fun.thread_add(self.otherjob_fun.Count_Down, 60,init_config_tips)
         self.other_job_log.LogsSave(init_config_tips)
