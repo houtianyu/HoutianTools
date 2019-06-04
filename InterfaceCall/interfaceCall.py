@@ -1,3 +1,4 @@
+# coding: utf-8
 from selenium import webdriver
 from OtherJobs.otherJob import *
 from Logs.logs import Logs
@@ -7,7 +8,7 @@ from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 import time,urllib.request,random,sys,importlib
 from urllib.parse import quote
-import urllib
+import urllib,subprocess
 class BaiDuSearch:
     def __init__(self):
         self.inter_other_baidu = OtherJobs()
@@ -89,16 +90,18 @@ class BaiDuSearch:
             self.inter_other_baidu.Resource_show(tips_baidu)
             self.other_job_log_baidu.LogsSave(tips_baidu)
         user_agents_baidu_search_auto = self.inter_other_baidu.Get_Config_Info('other_info','user_agents_baidu_search_auto')
+        #user_agents_baidu_search_auto = dict(user_agents_baidu_search_auto)
         url_baidu_search_auto = self.inter_other_baidu.Get_Config_Info('url_info','url_baidu_search_auto')
         for i in range(2):
             url_baidu_search__auto_format = url_baidu_search_auto + urllib.parse.quote(contents) + '&pn=' + str(i*100)
-            req = urllib.request.Request(url_baidu_search__auto_format,None,headers=user_agents_baidu_search_auto)
+            req = urllib.request.Request(url_baidu_search__auto_format)#,None,headers=user_agents_baidu_search_auto
             response = urllib.request.urlopen(req, None, 30)  # 设置超时时间
             try:
                 html = response.read().decode('utf-8')
             except Exception as msg:
-                print(msg)
-                return msg
+                print('获取失败,请重试！ %s'% msg)
+                self.inter_other_baidu.Resource_show('获取失败,请重试！ %s'% msg)
+                self.other_job_log_baidu.LogsSave('获取失败,请重试！ %s'% msg)
             else:
                 # 提取搜索结果SERP的标题
                 soup = BeautifulSoup(''.join(html))
@@ -108,11 +111,14 @@ class BaiDuSearch:
                         try:
                             title = title.split('\n')[1]
                         except Exception as msg:
-                            # print(msg)
                             pass
                         print(title)
+                        self.inter_other_baidu.Resource_show(title)#需要修改
+                        self.other_job_log_baidu.LogsSave(title)#需要修改
                     else:
                         print(title)
+                        self.inter_other_baidu.Resource_show(title)#需要修改
+                        self.other_job_log_baidu.LogsSave(title)#需要修改
 class NewFiles:
     def __init__(self):
         self.inter_newfile = OtherJobs()
@@ -133,6 +139,16 @@ class NewFiles:
                 with open(filepanth,'w') as f:
                     f.close()
             os.system(filepanth)
+    def open_dir_windows(self,path):
+        if not path:
+            path = r'C:\Users'
+        elif '.' in path:
+            path = os.path.split(path)[0]
+        win32api.ShellExecute(0, 'open', path, '', '', 1)
+        lists = os.listdir(path)
+        print('%s的目录下内容包括:%s' % (path, lists))
+        self.other_job_log_newfile.LogsSave('%s的目录下内容包括:%s' % (path, lists))
+        self.inter_newfile.Resource_show('%s的目录下内容包括:%s' % (path, lists))
 class LocateSearch:
     def __init__(self):
         self.inter_other = OtherJobs()
@@ -148,7 +164,7 @@ class LocateSearch:
             save_path_searchresult = self.inter_other.Get_Config_Info('file_name','save_path_searchresult')
             save_path_search_result_path = os.path.dirname(os.path.dirname(__file__)) + save_path_searchresult
             search_all = search_all_cmd + ' ' + search_content
-            os.system(search_all)
+            subprocess.Popen(search_all)
             time.sleep(0.3)
             num_list0 = [18,70]
             num_list1 = [17,69]
@@ -157,6 +173,7 @@ class LocateSearch:
             self.inter_other.mouse_input_remote_on(num_list1)
             self.inter_other.mouse_input_remote_up(num_list1)
             save_Path = save_path_search_result_path + search_content + '.txt'
+            time.sleep(0.5)
             try:
                 self.inter_other.save_WinSearchFile(save_Path)
                 time.sleep(0.5)
@@ -168,8 +185,9 @@ class LocateSearch:
                 self.inter_other_log_ls.LogsSave(save_search_result)
             else:
                 self.inter_other.print_File_Content(save_Path)
-                time.sleep(3)
-                os.system(search_close_cmd)
+                time.sleep(1.5)
+                #os.system(search_close_cmd)
+                subprocess.Popen(search_close_cmd)
 class WeiChat:
     def __init__(self):
         self.inter_other_wc = OtherJobs()

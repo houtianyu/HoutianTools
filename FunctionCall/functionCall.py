@@ -9,6 +9,7 @@ class FunctionCall:
         self.overall = OverAll()
         self.inter_fun_mon = Resource_Monitor()
         self.function_baidusearch = BaiDuSearch()
+
     def BaiduSearch(self):
         baidu_object = self.overall.get_value(0)
         baidu_object_content = self.otherjob_fun.get_entryContent(baidu_object)
@@ -17,16 +18,24 @@ class FunctionCall:
         baidu_auto_object = self.overall.get_value(0)
         baidu_object_content = self.otherjob_fun.get_entryContent(baidu_auto_object)
         self.function_baidusearch.baidu_search_title_auto(baidu_object_content)
+
     def OpenFiles(self):
         openfile_object = self.overall.get_value(1)
         openfile_object_content = self.otherjob_fun.get_entryContent(openfile_object)
         function_newfile = NewFiles()
         function_newfile.open_file(openfile_object_content)
+    def OpenDirWindows(self):
+        openfile_object = self.overall.get_value(1)
+        openfile_object_content = self.otherjob_fun.get_entryContent(openfile_object)
+        function_newfile = NewFiles()
+        function_newfile.open_dir_windows(openfile_object_content)
+
     def SearchFiles(self):
         searchfile_object = self.overall.get_value(2)
         searchfile_object_content = self.otherjob_fun.get_entryContent(searchfile_object)
         function_search_files = LocateSearch()
         function_search_files.locate_search(searchfile_object_content)
+
     def LoginWechat(self):
         default_Login_User_object = self.overall.get_value(3)
         default_Login_User_num = self.otherjob_fun.get_entryContent(default_Login_User_object)
@@ -81,3 +90,12 @@ class FunctionCall:
         open_websuit_object = self.overall.get_value(8)
         open_websuilt_type = self.otherjob_fun.get_entryContent(open_websuit_object)
         self.function_baidusearch.open_websuit_com(open_websuilt_type)
+    def Init_Config(self):
+        init_config_tips = '正在初始化配置！'
+        tt_init_config = self.otherjob_fun.thread_add(self.otherjob_fun.Count_Down, 60,init_config_tips)
+        self.other_job_log.LogsSave(init_config_tips)
+        self.otherjob_fun.Init_Exe_Path()
+        init_config_tips_finish = '初始化配置完成！'
+        self.otherjob_fun.Resource_show(init_config_tips_finish)
+        self.other_job_log.LogsSave(init_config_tips_finish)
+        self.otherjob_fun.Stop_Thread_add(tt_init_config)

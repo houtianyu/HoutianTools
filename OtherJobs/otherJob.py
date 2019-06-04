@@ -1,5 +1,6 @@
+# coding: utf-8
 import threading,win32com.client,win32api,win32con,win32gui,os,time,configparser
-import email.mime.multipart,smtplib
+import email.mime.multipart,smtplib,subprocess
 import email.mime.text,json,inspect,ctypes
 from tkinter import *
 from selenium import webdriver
@@ -15,12 +16,13 @@ class OtherJobs:
         self.tk = tk
         self.other_all = OverAll()
         self.other_job_log = Logs()
-    def Count_Down(self,b):
+        self.cf = configparser.ConfigParser()
+    def Count_Down(self,b,msg=None):
         count = 0
         while (count < b):
             ncount = b - count
-            print('请等待··· %s' % ncount)
-            self.Resource_show('请等待··· %s' % ncount)
+            print(msg + '请等待··· %s' % ncount)
+            self.Resource_show(msg + '请等待··· %s' % ncount)
             time.sleep(1)
             count += 1
     def thread_add(self,func,*args):
@@ -102,15 +104,26 @@ class OtherJobs:
             print(tips_exe_import_search_file)
             self.other_job_log.LogsSave(msg)
             self.other_job_log.LogsSave(tips_exe_import_search_file)
-
     def print_File_Content(self,path):
+        i = 0
         for line in open(path,encoding='utf-8'):
             print(line,end='')
+            if i <= 5:
+                self.Resource_show(line)
+            else:
+                pass
+            i += 1
     def Get_Config_Info(self, label, infos):
-        cf = configparser.ConfigParser()
         config_ini = os.path.dirname(os.path.dirname(__file__) ) + '\\files\\Config.ini'
-        cf.read(config_ini, encoding='UTF-8')
-        return cf.get(label, infos)
+        self.cf.read(config_ini,encoding='ANSI')
+        return self.cf.get(label,infos)
+    def Modify_Config_Info(self,label,infos,values):
+        config_ini = os.path.dirname(os.path.dirname(__file__)) + '\\files\\Config.ini'
+        self.cf.read(config_ini, encoding='ANSI')
+        self.cf.remove_option(label,infos)
+        self.cf.set(label,infos,values)
+        with open(config_ini, "w",encoding='ANSI') as f:
+            self.cf.write(f)
     def SendMail(self, alert_value, detail):
         print('告警')
         from_username_yeah = self.Get_Config_Info('users_login_info', 'user_login_yeah_houtian').split(',')[0]  #
@@ -144,6 +157,8 @@ class OtherJobs:
         username_yeah = self.Get_Config_Info('users_login_info', 'user_login_yeah_houtian').split(',')[0]  #
         passwd_yeah = self.Get_Config_Info('users_login_info', 'user_login_yeah_houtian').split(',')[-1]
         unread_element = self.Get_Config_Info('element_xpath','unread_mails_yeah')
+        global unread_num
+        unread_num = ''
         if os.path.exists(cookies_name):
             pass
         else:
@@ -204,11 +219,66 @@ class OtherJobs:
         except Exception as msgs:
             pass
         v_monitor = StringVar()
-        frame_monitor = Frame(self.tk,height=5,relief=GROOVE).grid(padx=1,row=9,column=0,columnspan=8,sticky=W)
+        frame_monitor = Frame(self.tk,height=5,relief=GROOVE).grid(padx=5,row=9,column=0,columnspan=9,sticky=W)
         v_monitor.set(msg)
-        textlabel = Message(frame_monitor, textvariable=v_monitor, justify=LEFT, padx=5, pady=5, width=600, font=("华康少女字体", 10),fg="red")
+        textlabel = Message(frame_monitor, textvariable=v_monitor, justify=LEFT, width=800, font=("华康少女字体", 10),fg="red")
         self.other_all.set_label_value(textlabel)
-        textlabel.grid(row=9, column=0, columnspan=8, sticky=W)
-
+        textlabel.grid(padx=5, pady=1, row=9, column=0, columnspan=9, sticky=W)
+    def Init_Exe_Path(self):
+        init_infos = {'kugou_music_path':'KuGou.exe','qh360_grabage_path':'360.exe','wechat_path':'WeChat.exe'}
+        for search_content_info,search_content in init_infos.items():
+            search_all_cmd = self.Get_Config_Info('file_name','search_all_cmd')
+            search_close_cmd = self.Get_Config_Info('file_name','search_close_cmd')
+            save_path_searchresult = self.Get_Config_Info('file_name','save_path_searchresult')
+            save_path_search_result_path = os.path.dirname(os.path.dirname(__file__)) + save_path_searchresult
+            search_all = search_all_cmd + ' ' + search_content
+            subprocess.Popen(search_all)
+            time.sleep(0.3)
+            num_list0 = [18,70]
+            num_list1 = [17,69]
+            self.mouse_input_remote_on(num_list0)
+            self.mouse_input_remote_up(num_list0)
+            self.mouse_input_remote_on(num_list1)
+            self.mouse_input_remote_up(num_list1)
+            save_Path = save_path_search_result_path + search_content + '.txt'
+            try:
+                self.save_WinSearchFile(save_Path)
+                time.sleep(0.5)
+            except Exception as msg:
+                print(msg)
+                save_search_result = '保存搜索结果失败！'
+                self.other_job_log.LogsSave(msg)
+                self.other_job_log.LogsSave(save_search_result)
+            else:
+                i = 0
+                for line in open(save_Path,encoding='utf-8'):
+                    if i == 1:
+                        path = line.split(',')[0].split('"')[1].split('"')[0]
+                        if 'Users' in path:
+                            pass
+                        else:
+                            path = path.replace("\\", '\\\\')
+                            if path.split('.')[-1] == 'exe':
+                                print(path)
+                                #self.Modify_Config_Info('file_name',search_content_info,path)
+                                break
+                            else:
+                                print('第一次未找到%s的执行文件！' % search_content)
+                                #self.Resource_show('未找到%s的执行文件！' % search_content)
+                                self.other_job_log.LogsSave('第一次未找到%s的执行文件！' % search_content)
+                    if i == 2:
+                        path = line.split(',')[0].split('"')[1].split('"')[0]
+                        path = path.replace("\\", '\\\\')
+                        if path.split('.')[-1] == 'exe':
+                            print(path)
+                            self.Modify_Config_Info('file_name',search_content_info,path)
+                            break
+                        else:
+                            print('第二次未找到%s的执行文件！' % search_content)
+                            #self.Resource_show('未找到%s的执行文件！' % search_content)
+                            self.other_job_log.LogsSave('第二次未找到%s的执行文件！' % search_content)
+                    i += 1
+                time.sleep(1.2)
+                subprocess.Popen(search_close_cmd)
 if __name__ == '__main__':
     a = OtherJobs()
