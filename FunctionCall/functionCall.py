@@ -9,6 +9,7 @@ class FunctionCall:
         self.overall = OverAll()
         self.inter_fun_mon = Resource_Monitor()
         self.function_baidusearch = BaiDuSearch()
+        self.function_LoginWechat = WeiChat()
 
     def BaiduSearch(self):
         baidu_object = self.overall.get_value(0)
@@ -39,12 +40,30 @@ class FunctionCall:
     def LoginWechat(self):
         default_Login_User_object = self.overall.get_value(3)
         default_Login_User_num = self.otherjob_fun.get_entryContent(default_Login_User_object[0])
-        function_LoginWechat = WeiChat()
-        function_LoginWechat.LoginWechat(default_Login_User_num)
-    def LoginWeChatWebsuit(self):
-        pass
+        self.function_LoginWechat.LoginWechat(default_Login_User_num)
+    def LoginWeChat_Sweepcode(self):
+        self.function_LoginWechat.LoginWeChat_Sweepcode_Method()
     def SearchWeChat_Contacts(self):
-        pass
+        search_contacts_result_object = self.overall.get_wechat_info(0)
+        search_contacts_result = self.otherjob_fun.get_entryContent(search_contacts_result_object)
+        print(search_contacts_result)
+        self.function_LoginWechat.SearchWeChat_Contacts_Method(search_contacts_result)
+    def SendWeChat_Messages(self):
+        sendwechat_msg_object = self.overall.get_wechat_info(1)
+        Contacts_name = self.otherjob_fun.get_entryContent(sendwechat_msg_object[0])
+        Send_contents = self.otherjob_fun.get_entryContent(sendwechat_msg_object[1])
+        self.function_LoginWechat.SendWeChat_Messages_Method(Contacts_name,Send_contents)
+
+    def SendWeChat_Files(self):
+        sendwechat_files_object = self.overall.get_wechat_info(2)
+        Contacts_name = self.otherjob_fun.get_entryContent(sendwechat_files_object[0])
+        Send_contents = self.otherjob_fun.get_entryContent(sendwechat_files_object[1])
+        self.function_LoginWechat.SendWeChat_Messages_Method(Contacts_name, Send_contents)
+
+    def AddWeChat_Contacts(self):
+        add_wechat_contents_object = self.overall.get_wechat_info(3)
+        Contacts_name_num = self.otherjob_fun.get_entryContent(add_wechat_contents_object)
+        self.function_LoginWechat.AddWeChat_Contacts_Methon(Contacts_name_num)
     def PlayMusic(self):
         play_Music_Name_object = self.overall.get_value(4)
         play_Music_Name_Names = self.otherjob_fun.get_entryContent(play_Music_Name_object)

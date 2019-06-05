@@ -8,7 +8,7 @@ from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 import time,urllib.request,random,sys,importlib
 from urllib.parse import quote
-import urllib,subprocess
+import urllib,subprocess,itchat
 class BaiDuSearch:
     def __init__(self):
         self.inter_other_baidu = OtherJobs()
@@ -244,6 +244,40 @@ class WeiChat:
                     self.inter_other_wc.mouse_input_remote_onup(9)
                     time.sleep(0.1)
                     self.inter_other_wc.mouse_input_remote_onup(13)
+    def LoginWeChat_Sweepcode_Method(self):
+        def close_QR_img():
+            hld_QR = win32gui.FindWindow('Windows.UI.Core.CoreWindow', None)
+            print(hld_QR)
+            win32gui.SendMessage(hld_QR, win32con.WM_CLOSE, 0, 0)
+            print('登陆完成')
+        itchat.auto_login(hotReload=True,loginCallback=close_QR_img)#
+        itchat.run()
+    def SearchWeChat_Contacts_Method(self,Contacts_name):
+        result = itchat.search_friends(name=Contacts_name)
+        print(result)
+    def SendWeChat_Messages_Method(self,Contacts_name,Send_contents):
+        user_info = itchat.search_friends(name=Contacts_name)
+        if user_info > 0:
+            user_name = user_info[0]
+            itchat.send_msg(Send_contents,user_name)
+        else:
+            print('联系人昵称不存在')
+
+    def SendWeChat_Files_Method(self,Contacts_name,Send_contents):
+        user_info = itchat.search_friends(name=Contacts_name)
+        if user_info > 0:
+            user_name = user_info[0]
+            if Send_contents.split('.')[-1] in ['jpg','png']:
+                itchat.send_image(Send_contents,user_name)
+            elif Send_contents.split('.')[-1] in ['mp4']:
+                itchat.send_image(Send_contents, user_name)
+            else:
+                itchat.send_file(Send_contents,user_name)
+        else:
+            print('联系人昵称不存在')
+    def AddWeChat_Contacts_Methon(self,Contacts_name_num):
+        pass
+
 class KuGouMusic:
     def __init__(self):
         self.inter_other_kugou = OtherJobs()

@@ -10,7 +10,9 @@ class MainGui:
         self.otherJob = OtherJobs(self.root)
         self.functioncall = FunctionCall()
         self.overall = OverAll()
-        self.WeChatInput = StringVar()
+        for input in ['v_Contacts',['v_Contacts_m','v_send_content'],['v_Contacts_f','v_file_path'],'v_Contacts_num','v_Contacts_get']:
+            input = StringVar()
+            self.overall.set_wechat_info(input)
     def MainPageGui(self):
         self.root.title('HoutianTools_v1.0')
         width=850
@@ -149,8 +151,8 @@ class MainGui:
         self.second_gui.destroy()
     def LoginWeChatGui(self):
         self.SecondGui('登录微信')
-        Button(self.second_gui, text='扫码登录', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.SearchWeChat_Contacts)). \
-            grid(padx=20,pady=280,row=0,column=0, sticky=W)
+        Button(self.second_gui, text='扫码登录', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.LoginWeChat_Sweepcode)). \
+            grid(padx=10,pady=280,row=0,column=0, sticky=W)
         Button(self.second_gui, text='关闭', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.CloseToplevel)).grid(padx=150, pady=280, row=0, column=1, sticky=W)
         time.sleep(30)
         self.second_gui.destroy()
@@ -195,8 +197,20 @@ class MainGui:
         Button(self.second_gui, text='关闭', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.CloseToplevel)).grid(padx=1, pady=180, row=4, column=1,sticky=E)
     def GetWeChatMessages(self):
         self.SecondGui('获取消息')
+        Label(self.second_gui, text='输入联系人姓名：', width=13, bg='LightYellow', justify=LEFT).grid(padx=5, pady=20, row=0,column=0, sticky=W)
+        Entry(self.second_gui, width=30, textvariable=self.WeChatInput, justify=LEFT).grid(padx=1, pady=20, row=0,column=1, sticky=W)
+        Button(self.second_gui, text='获取', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.SearchWeChat_Contacts)). \
+            grid(padx=5, row=4, pady=180, column=0, sticky=W)
+        Button(self.second_gui, text='关闭', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.CloseToplevel)).\
+            grid(padx=1, pady=180, row=4, column=1,sticky=E)
     def CancelWeChat(self):
         self.SecondGui('注销')
+        Button(self.second_gui, text='注销当前账号', width=10, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.SearchWeChat_Contacts)). \
+            grid(padx=10, pady=280, row=0, column=0, sticky=W)
+        Button(self.second_gui, text='关闭', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.CloseToplevel)).\
+            grid(padx=170, pady=280, row=0, column=1,sticky=W)
+        time.sleep(30)
+        self.second_gui.destroy()
 
 
 if __name__ == '__main__':
