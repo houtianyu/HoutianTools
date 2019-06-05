@@ -208,17 +208,32 @@ class WeiChat:
             self.other_job_log_wechat.LogsSave(msg)
             self.other_job_log_wechat.LogsSave(tips_open_wechat_err)
         else:
-            time.sleep(1)
+            time.sleep(0.1)
             wChat_Conversation_hld = win32gui.FindWindow(wChat_Conversation_window_class,None)#绘画窗口
-            print(wChat_Conversation_hld)
             wChat_Login_hld = win32gui.FindWindow(wChat_Login_window_class,None)
             if wChat_Conversation_hld:
-                print(num)
                 if not num or int(num) == 1:
                     pass
                 else:
+                    time.sleep(0.05)
                     current_locate = win32gui.GetWindowRect(wChat_Conversation_hld)
-                    print(current_locate)
+                    self.inter_other_wc.mouse_click_order(current_locate[0] + 20,current_locate[3] - 20 )
+                    time.sleep(0.1)
+                    for i in range(2):
+                        self.inter_other_wc.mouse_input_remote_onup(9)
+                    self.inter_other_wc.mouse_input_remote_onup(13)
+                    time.sleep(0.3)
+                    self.inter_other_wc.mouse_click_order(950, 350 )
+                    time.sleep(0.1)
+                    for i in range(4):
+                       self.inter_other_wc.mouse_input_remote_onup(9)
+                    self.inter_other_wc.mouse_input_remote_onup(13)
+                    time.sleep(0.05)
+                    self.inter_other_wc.mouse_input_remote_onup(13)
+                    time.sleep(1)
+                    self.inter_other_wc.mouse_input_remote_onup(9)
+                    time.sleep(0.1)
+                    self.inter_other_wc.mouse_input_remote_onup(13)
             elif wChat_Login_hld:
                 #handleDetail = win32gui.GetWindowRect(wChat_Login_hld)
                 if  not num or int(num) == 1:
@@ -411,7 +426,6 @@ class Resource_Monitor:
         unread_num = self.resource_monitor.Save_Cookies(dr,cookies_file_path_all, yeah_url)
         if unread_num:
             unread_mails_num_show = 'houtian_yu@yeah.com的未读邮件：' + unread_num + '条。'
-            #self.other_job_log_rm.LogsSave(unread_mails_num_show)
         else:
             dr.get(yeah_url)
             #dr.maximize_window()

@@ -38,9 +38,13 @@ class FunctionCall:
 
     def LoginWechat(self):
         default_Login_User_object = self.overall.get_value(3)
-        default_Login_User_num = self.otherjob_fun.get_entryContent(default_Login_User_object)
+        default_Login_User_num = self.otherjob_fun.get_entryContent(default_Login_User_object[0])
         function_LoginWechat = WeiChat()
         function_LoginWechat.LoginWechat(default_Login_User_num)
+    def LoginWeChatWebsuit(self):
+        pass
+    def SearchWeChat_Contacts(self):
+        pass
     def PlayMusic(self):
         play_Music_Name_object = self.overall.get_value(4)
         play_Music_Name_Names = self.otherjob_fun.get_entryContent(play_Music_Name_object)
@@ -89,6 +93,8 @@ class FunctionCall:
     def Open_Websit(self):
         open_websuit_object = self.overall.get_value(8)
         open_websuilt_type = self.otherjob_fun.get_entryContent(open_websuit_object)
+        print('111')
+        print(open_websuilt_type)
         self.function_baidusearch.open_websuit_com(open_websuilt_type)
     def Init_Config(self):
         print('准备初始化，请确保配置文件中Everything路径的准确性！')
