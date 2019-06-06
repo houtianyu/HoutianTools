@@ -9,6 +9,8 @@ from bs4 import BeautifulSoup
 import time,urllib.request,random,sys,importlib
 from urllib.parse import quote
 import urllib,subprocess,itchat
+from itchat.content import *
+
 class BaiDuSearch:
     def __init__(self):
         self.inter_other_baidu = OtherJobs()
@@ -194,6 +196,7 @@ class WeiChat:
     def __init__(self):
         self.inter_other_wc = OtherJobs()
         self.other_job_log_wechat = Logs()
+
     def LoginWechat(self,num):
         wechat_path = self.inter_other_wc.Get_Config_Info('file_name','wechat_path')
         wChat_Conversation_window_class = self.inter_other_wc.Get_Config_Info('windows','wChat_Conversation_window_class')
@@ -244,40 +247,127 @@ class WeiChat:
                     self.inter_other_wc.mouse_input_remote_onup(9)
                     time.sleep(0.1)
                     self.inter_other_wc.mouse_input_remote_onup(13)
-    def LoginWeChat_Sweepcode_Method(self):
+    def LoginWeChat_Sweepcode_Method(self,num):
         def close_QR_img():
             hld_QR = win32gui.FindWindow('Windows.UI.Core.CoreWindow', None)
             print(hld_QR)
             win32gui.SendMessage(hld_QR, win32con.WM_CLOSE, 0, 0)
-            print('登陆完成')
-        itchat.auto_login(hotReload=True,loginCallback=close_QR_img)#
+            print('登陆完成！')
+        def loginout_img():
+            print('已退出登录！')
+        if not num or int(num) == 1:
+            value = True
+        else:
+            value = False
+        itchat.auto_login(hotReload=value,loginCallback=close_QR_img,exitCallback=loginout_img)#hotReload=True,
         itchat.run()
     def SearchWeChat_Contacts_Method(self,Contacts_name):
         result = itchat.search_friends(name=Contacts_name)
-        print(result)
+        if not result:
+            print('请确认微信是否已经登录，若已登录，则您当前无此联系人！')
+        else:
+            if result[0]['Sex'] == 2:
+                sex = '女'
+            else:
+                sex = '男'
+            print('查找的好友信息：微信名称：%s，当前昵称：%s，个性签名：%s，性别：%s' % (result[0]['NickName'],result[0]['RemarkName'],result[0]['Signature'],sex))
     def SendWeChat_Messages_Method(self,Contacts_name,Send_contents):
         user_info = itchat.search_friends(name=Contacts_name)
-        if user_info > 0:
-            user_name = user_info[0]
+        if len(user_info) > 0:
+            user_name = user_info[0]['UserName']
             itchat.send_msg(Send_contents,user_name)
         else:
             print('联系人昵称不存在')
 
     def SendWeChat_Files_Method(self,Contacts_name,Send_contents):
         user_info = itchat.search_friends(name=Contacts_name)
-        if user_info > 0:
-            user_name = user_info[0]
+        if len(user_info) > 0:
+            user_name = user_info[0]['UserName']
             if Send_contents.split('.')[-1] in ['jpg','png']:
                 itchat.send_image(Send_contents,user_name)
             elif Send_contents.split('.')[-1] in ['mp4']:
-                itchat.send_image(Send_contents, user_name)
+                itchat.send_video(Send_contents, user_name)
             else:
                 itchat.send_file(Send_contents,user_name)
         else:
             print('联系人昵称不存在')
     def AddWeChat_Contacts_Methon(self,Contacts_name_num):
         pass
+    def GetWeChat_Messages_Method(self,Contacts_name_get,type):
+        # 文件临时存储页
+        rec_tmp_dir = os.path.dirname(os.path.dirname(__file__)) + '\\files\\wechat\\tmp\\'
+        print('111111')
+        print(type)
+        print(Contacts_name_get)
+        if not os.path.exists(rec_tmp_dir):
+            os.mkdir(rec_tmp_dir)
+        # 存储数据的字典
+        rec_msg_dict = {}
+        # 好友信息监听
+        @itchat.msg_register([TEXT, PICTURE, RECORDING, ATTACHMENT, VIDEO], isFriendChat=True)
+        def handle_friend_msg(msg):
+            msg_id = msg['MsgId']
+            msg_from_user = msg['User']['NickName']
+            msg_content = ''
+            # 收到信息的时间
+            msg_time_rec = time.strftime("%Y-%m-%d %H:%M%S", time.localtime())
+            msg_create_time = msg['CreateTime']
+            msg_type = msg['Type']
+            if msg['Type'] == 'Text':
+                msg_content = msg['Content']
+            elif msg['Type'] == 'Picture' \
+                    or msg['Type'] == 'Recording' \
+                    or msg['Type'] == 'Video' \
+                    or msg['Type'] == 'Attachment':
+                msg_content = r"" + msg['FileName']
+                msg['Text'](rec_tmp_dir + msg['FileName'])
+            rec_msg_dict.update({
+                msg_id: {
+                    'msg_from_user': msg_from_user,
+                    'msg_time_rec': msg_time_rec,
+                    'msg_create_time': msg_create_time,
+                    'msg_type': msg_type,
+                    'msg_content': msg_content
+                }
+            })
+            if msg_from_user == Contacts_name_get and type == 0:
+                print('*****和联系人 %s 的最新消息是: %s,时间：%s' % (Contacts_name_get,msg_content,msg['User']['NickName'],msg['CreateTime']))
+            else:
+                print('其他联系人 %s 消息:%s,发送时间：%s' % (msg['User']['NickName'],msg_content,msg['CreateTime']))
+        # 群聊信息监听
+        @itchat.msg_register([TEXT, PICTURE, RECORDING, ATTACHMENT, VIDEO], isGroupChat=True)
+        def information(msg):
+            msg_id = msg['MsgId']
+            msg_from_user = msg['ActualNickName']
+            msg_content = ''
+            # 收到信息的时间
+            msg_time_rec = time.strftime("%Y-%m-%d %H:%M%S", time.localtime())
+            msg_create_time = msg['CreateTime']
+            msg_type = msg['Type']
 
+            if msg['Type'] == 'Text':
+                msg_content = msg['Content']
+            elif msg['Type'] == 'Picture' \
+                    or msg['Type'] == 'Recording' \
+                    or msg['Type'] == 'Video' \
+                    or msg['Type'] == 'Attachment':
+                msg_content = r"" + msg['FileName']
+                msg['Text'](rec_tmp_dir + msg['FileName'])
+            rec_msg_dict.update({
+                msg_id: {
+                    'msg_from_user': msg_from_user,
+                    'msg_time_rec': msg_time_rec,
+                    'msg_create_time': msg_create_time,
+                    'msg_type': msg_type,
+                    'msg_content': msg_content
+                }
+            })
+            if msg_from_user == Contacts_name_get and type == 0:
+                print('*****%s昵称的群成员最新消息是: %s,发送者群昵称：%s,发送时间：%s' % (Contacts_name_get,msg_content,msg['ActualNickName'],msg['CreateTime']))
+            else:
+                print('其他群消息: %s,发送者群昵称：%s,发送时间：%s' % (msg_content,msg['ActualNickName'],msg['CreateTime']))
+    def CancelWeChat_LoginOut_Method(self):
+        itchat.logout()
 class KuGouMusic:
     def __init__(self):
         self.inter_other_kugou = OtherJobs()

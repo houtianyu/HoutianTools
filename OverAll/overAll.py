@@ -4,6 +4,7 @@ global _global_wechat_info
 _global_dict = []
 _global_frame = []
 _global_wechat_info = []
+
 class OverAll:
     def __init__(self):#初始化
         pass
@@ -29,4 +30,5 @@ class OverAll:
     def get_wechat_info(self,i):
         return _global_wechat_info[i]
     def show_len(self):
-        print(len(_global_dict))
+        print(len(_global_wechat_info))
+        return _global_wechat_info
