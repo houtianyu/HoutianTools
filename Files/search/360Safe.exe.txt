@@ -1,5 +1,6 @@
 Filename,Size,Date Modified,Date Created,Attributes
 "E:\软件\360\360Safe\360Safe.exe",1276000,131569596510476642,,0
-"C:\Windows\Prefetch\360SAFE.EXE-6015059D.pf",17163,132041420446393864,,0
-"D:\Python\HoutianTools\Files\search\360Safe.exe.txt",276,132041420573198437,,0
-"C:\Users\Admin\AppData\Roaming\Microsoft\Windows\Recent\360Safe.exe.txt.lnk",930,132041420573203454,,0
+"C:\Windows\Prefetch\360SAFE.EXE-6015059D.pf",36689,132045294610902712,,0
+"D:\Python\HoutianTools\Files\search\360Safe.exe.txt",469,132045308440363937,,0
+"C:\Users\Admin\AppData\Roaming\Microsoft\Windows\Recent\360Safe.exe.txt (2).lnk",930,132045308438659400,,0
+"C:\Users\Admin\AppData\Roaming\Microsoft\Windows\Recent\360Safe.exe.txt.lnk",930,132041432039774658,,0

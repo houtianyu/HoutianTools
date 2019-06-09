@@ -17,7 +17,7 @@ class OtherJobs:
         self.other_all = OverAll()
         self.other_job_log = Logs()
         self.cf = configparser.ConfigParser()
-    def Count_Down(self,b,msg=None):
+    def Count_Down(self,b,msg=' '):
         count = 0
         while (count < b):
             ncount = b - count
@@ -240,13 +240,16 @@ class OtherJobs:
                 self.Resource_show('配置文件中Everything程序路径不正确，请检查。')
                 self.other_job_log.LogsSave('配置文件中Everything程序路径不正确，请检查。')
                 self.other_job_log.LogsSave(msg)
-            time.sleep(0.3)
-            num_list0 = [18,70]
-            num_list1 = [17,69]
-            self.mouse_input_remote_on(num_list0)
-            self.mouse_input_remote_up(num_list0)
-            self.mouse_input_remote_on(num_list1)
-            self.mouse_input_remote_up(num_list1)
+            time.sleep(0.5)
+            #num_list0 = [18,70]
+            #num_list1 = [17,69]
+            num_list2 = [17,83]
+            #self.mouse_input_remote_on(num_list0)
+            #self.mouse_input_remote_up(num_list0)
+            #self.mouse_input_remote_on(num_list1)
+            #self.mouse_input_remote_up(num_list1)
+            self.mouse_input_remote_on(num_list2)
+            self.mouse_input_remote_up(num_list2)
             save_Path = save_path_search_result_path + search_content + '.txt'
             try:
                 self.save_WinSearchFile(save_Path)
@@ -287,5 +290,8 @@ class OtherJobs:
                     i += 1
                 time.sleep(1.2)
                 subprocess.Popen(search_close_cmd)
+    #def Display_login_Sweepcode(self):
+        #os.path.dirname(os.path.dirname(__file__)) + '\\GuiDisplay\\QR.png'
+
 if __name__ == '__main__':
     a = OtherJobs()

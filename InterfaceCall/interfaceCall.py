@@ -10,6 +10,19 @@ import time,urllib.request,random,sys,importlib
 from urllib.parse import quote
 import urllib,subprocess,itchat
 from itchat.content import *
+from PIL import Image, ImageTk
+import tkinter as tk
+from tkinter import filedialog
+import requests
+import tkinter.messagebox
+from lxml import etree
+from urllib.request import urlretrieve
+from tkinter.filedialog import askdirectory
+import json,mp3play
+import requests,urllib.request,json
+import mp3play
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
 class BaiDuSearch:
     def __init__(self):
@@ -196,7 +209,7 @@ class WeiChat:
     def __init__(self):
         self.inter_other_wc = OtherJobs()
         self.other_job_log_wechat = Logs()
-
+        self.text_contents = []
     def LoginWechat(self,num):
         wechat_path = self.inter_other_wc.Get_Config_Info('file_name','wechat_path')
         wChat_Conversation_window_class = self.inter_other_wc.Get_Config_Info('windows','wChat_Conversation_window_class')
@@ -247,57 +260,104 @@ class WeiChat:
                     self.inter_other_wc.mouse_input_remote_onup(9)
                     time.sleep(0.1)
                     self.inter_other_wc.mouse_input_remote_onup(13)
-    def LoginWeChat_Sweepcode_Method(self,num):
+    def Show_Msg_WeChat(self,top,contents,row):
+        try:
+            textlabel.grid_forget()
+        except Exception as msg:
+            print(msg)
+            pass
+        v_monitor = StringVar()
+        v_monitor.set(contents)
+        textlabel = Message(top, textvariable=v_monitor, justify=LEFT, width=347, font=("华康少女字体", 10),fg="red")
+        textlabel.grid(padx=5, pady=1, row=row, column=0, columnspan=3, sticky=W)
+    def LoginWeChat_Sweepcode_Method(self,num,top):
         def close_QR_img():
             hld_QR = win32gui.FindWindow('Windows.UI.Core.CoreWindow', None)
             print(hld_QR)
             win32gui.SendMessage(hld_QR, win32con.WM_CLOSE, 0, 0)
-            print('登陆完成！')
+            #creat_time_2 = os.path.getctime(wechat_qr_path)
+            #print(wechat_qr_path)
+            #if creat_time_1 != creat_time_2:
+            #render = PhotoImage(file=wechat_qr_path)
+            #img = Label(top, image=render)
+            #img.grid(padx=1, pady=5, row=1, column=1, columnspan=3, sticky=W)
+            userinfo = itchat.web_init()
+            print('登陆完成！账号为：%s!' % userinfo['User']['NickName'])
+            self.Show_Msg_WeChat(top,('登陆完成！账号为：%s!' % userinfo['User']['NickName']),1)
         def loginout_img():
             print('已退出登录！')
+            self.Show_Msg_WeChat(top, '登陆完成！', 1)
         if not num or int(num) == 1:
             value = True
         else:
             value = False
+        #wechat_qr_path = os.path.dirname(os.path.dirname(__file__)) + '\\GuiDisplay\\QR.png'
+        #creat_time_1 = os.path.getctime(wechat_qr_path)
         itchat.auto_login(hotReload=value,loginCallback=close_QR_img,exitCallback=loginout_img)#hotReload=True,
         itchat.run()
-    def SearchWeChat_Contacts_Method(self,Contacts_name):
+    def SearchWeChat_Contacts_Method(self,Contacts_name,top):
         result = itchat.search_friends(name=Contacts_name)
         if not result:
-            print('请确认微信是否已经登录，若已登录，则您当前无此联系人！')
+            contacts_msg = '请确认微信是否已经登录，若已登录，则您当前无此联系人！'
+            print(contacts_msg)
+            self.Show_Msg_WeChat(top,contacts_msg,2)
         else:
             if result[0]['Sex'] == 2:
                 sex = '女'
             else:
                 sex = '男'
-            print('查找的好友信息：微信名称：%s，当前昵称：%s，个性签名：%s，性别：%s' % (result[0]['NickName'],result[0]['RemarkName'],result[0]['Signature'],sex))
-    def SendWeChat_Messages_Method(self,Contacts_name,Send_contents):
+            contacts_msg = '查找的好友信息：微信名称：'+ result[0]['NickName'] +' 当前昵称：' + result[0]['RemarkName'] + \
+                           ' 个性签名：' + result[0]['Signature'] + ' 性别：' + sex
+            print(contacts_msg)
+            try:
+                self.Show_Msg_WeChat(top,contacts_msg,2)
+            except Exception as msg:
+                print(msg)
+                print('用户信息包含特殊文字，微信名：%s' % result[0]['NickName'])
+                self.Show_Msg_WeChat(top,('用户信息包含特殊文字，微信名：%s' % result[0]['NickName']),2)
+    def SendWeChat_Messages_Method(self,Contacts_name,Send_contents,top):
         user_info = itchat.search_friends(name=Contacts_name)
         if len(user_info) > 0:
             user_name = user_info[0]['UserName']
             itchat.send_msg(Send_contents,user_name)
         else:
             print('联系人昵称不存在')
-
-    def SendWeChat_Files_Method(self,Contacts_name,Send_contents):
-        user_info = itchat.search_friends(name=Contacts_name)
-        if len(user_info) > 0:
-            user_name = user_info[0]['UserName']
-            if Send_contents.split('.')[-1] in ['jpg','png']:
-                itchat.send_image(Send_contents,user_name)
-            elif Send_contents.split('.')[-1] in ['mp4']:
-                itchat.send_video(Send_contents, user_name)
+            self.Show_Msg_WeChat(top, '联系人昵称不存在', 4)
+    def SendWeChat_Files_Method(self,Contacts_name,Send_contents,top):
+        def send_files(contents):
+            if contents.split('.')[-1] in ['jpg', 'png']:
+                itchat.send_image(contents, user_name)
+            elif contents.split('.')[-1] in ['mp4']:
+                itchat.send_video(contents, user_name)
             else:
-                itchat.send_file(Send_contents,user_name)
+                itchat.send_file(contents, user_name)
+        user_info = itchat.search_friends(name=Contacts_name)
+        if not self.text_contents and not Send_contents:
+            print('请选择或输入要发送的文件！')
         else:
-            print('联系人昵称不存在')
-    def AddWeChat_Contacts_Methon(self,Contacts_name_num):
-        pass
-    def GetWeChat_Messages_Method(self,Contacts_name_get,type):
+            if len(user_info) > 0:
+                user_name = user_info[0]['UserName']
+                if Send_contents:
+                    Send_contents = unicode(Send_contents,'utf-8')
+                    send_files(Send_contents)
+                    print('%s文件发送成功！' % Send_contents.split('/')[-1])
+                if self.text_contents:
+                    for text in self.text_contents:
+                        send_files(text)
+                        print('%s文件发送成功！' % text.split('/')[-1])
+            else:
+                print('联系人昵称不存在')
+                self.Show_Msg_WeChat(top, '联系人昵称不存在', 4)
+    def ChoiseWeChat_Files_Method(self,top,text):
+        selectFiles = tk.filedialog.askopenfilenames(title='可选择1个或多个文件')  # askopenfilename 1次上传1个；askopenfilenames1次上传多个
+        for selectFile in selectFiles:
+            text.insert(tk.END, selectFile + '\n')  # 更新text中内容
+            text.update()
+        self.text_contents= text.get('0.0', 'end').split('\n')[0:-2]
+        print(self.text_contents)
+    def GetWeChat_Messages_Method(self,Contacts_name_get,type,top):
         # 文件临时存储页
         rec_tmp_dir = os.path.dirname(os.path.dirname(__file__)) + '\\files\\wechat\\tmp\\'
-        print('111111')
-        print(type)
         print(Contacts_name_get)
         if not os.path.exists(rec_tmp_dir):
             os.mkdir(rec_tmp_dir)
@@ -331,9 +391,11 @@ class WeiChat:
                 }
             })
             if msg_from_user == Contacts_name_get and type == 0:
-                print('*****和联系人 %s 的最新消息是: %s,时间：%s' % (Contacts_name_get,msg_content,msg['User']['NickName'],msg['CreateTime']))
+                print('*****和联系人 %s 的最新消息是: %s,时间：%s' % (Contacts_name_get,msg_content,msg['CreateTime']))
+                self.Show_Msg_WeChat(top,('*****和联系人 %s 的最新消息是: %s,时间：%s' % (Contacts_name_get,msg_content,msg['CreateTime'])),2)
             else:
                 print('其他联系人 %s 消息:%s,发送时间：%s' % (msg['User']['NickName'],msg_content,msg['CreateTime']))
+                self.Show_Msg_WeChat(top, ('其他联系人 %s 消息:%s,发送时间：%s' % (msg['User']['NickName'],msg_content,msg['CreateTime'])), 2)
         # 群聊信息监听
         @itchat.msg_register([TEXT, PICTURE, RECORDING, ATTACHMENT, VIDEO], isGroupChat=True)
         def information(msg):
@@ -364,21 +426,219 @@ class WeiChat:
             })
             if msg_from_user == Contacts_name_get and type == 0:
                 print('*****%s昵称的群成员最新消息是: %s,发送者群昵称：%s,发送时间：%s' % (Contacts_name_get,msg_content,msg['ActualNickName'],msg['CreateTime']))
+                self.Show_Msg_WeChat(top, ('*****%s昵称的群成员最新消息是: %s,发送者群昵称：%s,发送时间：%s' % (Contacts_name_get,msg_content,msg['ActualNickName'],msg['CreateTime'])), 2)
             else:
                 print('其他群消息: %s,发送者群昵称：%s,发送时间：%s' % (msg_content,msg['ActualNickName'],msg['CreateTime']))
-    def CancelWeChat_LoginOut_Method(self):
+                self.Show_Msg_WeChat(top,('其他群消息: %s,发送者群昵称：%s,发送时间：%s' % (msg_content,msg['ActualNickName'],msg['CreateTime'])),2)
+    def CancelWeChat_LoginOut_Method(self,top):
         itchat.logout()
+        print('正在注销！')
+        self.Show_Msg_WeChat(top, '正在注销！', 2)
 class KuGouMusic:
     def __init__(self):
         self.inter_other_kugou = OtherJobs()
-    def play_Music_Name(self,music_name):
+        self.mp3_info = {} #全局变量，存放歌曲名和hash
+        self.music_download_path = os.path.dirname(os.path.dirname(__file__)) + '\\files\\music_download\\'
+        self.music_status = None
+    def play_Music_Name(self,type):
         kugou_music_path = self.inter_other_kugou.Get_Config_Info('file_name','kugou_music_path')
-        print(music_name)
-        win32process.CreateProcess(kugou_music_path, '', None, None, 0, win32process.CREATE_NO_WINDOW, None,None, \
-                                   win32process.STARTUPINFO())
-        time.sleep(2)
-        self.inter_other_kugou.mouse_input_remote_on([18,116])
-        self.inter_other_kugou.mouse_input_remote_up([18,116])
+        if type == 0:
+            win32process.CreateProcess(kugou_music_path, '', None, None, 0, win32process.CREATE_NO_WINDOW, None, None,win32process.STARTUPINFO())
+            time.sleep(2)
+            self.inter_other_kugou.mouse_input_remote_on([18,116])
+            self.inter_other_kugou.mouse_input_remote_up([18,116])
+            global status
+            status = 0
+        elif type == 1:
+            if status == 0:
+                self.inter_other_kugou.mouse_input_remote_on([18, 37])
+                self.inter_other_kugou.mouse_input_remote_up([18, 37])
+            else:
+                print('请先播放音乐！')
+        elif type == 2:
+            if status == 0:
+                self.inter_other_kugou.mouse_input_remote_on([18, 39])
+                self.inter_other_kugou.mouse_input_remote_up([18, 39])
+            else:
+                print('请先播放音乐！')
+        elif type == 3:
+            if status == 0:
+                self.inter_other_kugou.mouse_input_remote_on([18, 38])
+                self.inter_other_kugou.mouse_input_remote_up([18, 38])
+            else:
+                print('请先播放音乐！')
+        elif type == 4:
+            if status == 0:
+                self.inter_other_kugou.mouse_input_remote_on([18, 40])
+                self.inter_other_kugou.mouse_input_remote_up([18, 40])
+            else:
+                print('请先播放音乐！')
+        elif type == 5:
+            if status == 0:
+                self.inter_other_kugou.mouse_input_remote_on([17, 18,88])
+                self.inter_other_kugou.mouse_input_remote_up([17, 18,88])
+                time.sleep(1)
+                download_hld = win32gui.FindWindow(None,'下载窗口')
+                print(download_hld)
+                if download_hld:
+                    for i in range(11):
+                        self.inter_other_kugou.mouse_input_remote_onup(9)
+                    self.inter_other_kugou.mouse_input_remote_onup(13)
+                    print('歌曲已下载至“D:\KuGou\”目录！')
+                else:
+                    print('此歌曲无法下载！')
+            else:
+                print('请先播放音乐！')
+        else:
+            pass
+    def Show_Msg_Kugou_Music(self,top,contents,row):
+        try:
+            textlabel.grid_forget()
+        except Exception as msg:
+            print(msg)
+            pass
+        v_monitor = StringVar()
+        v_monitor.set(contents)
+        textlabel = Message(top, textvariable=v_monitor, justify=LEFT, width=325, font=("华康少女字体", 10),fg="red")
+        textlabel.grid(padx=5, pady=10, row=row, column=0, columnspan=7, sticky=W)
+    def Play_Music_More_Method(self,top,names,text_music,type):
+        if not names:
+            print('请输入需要播放的歌曲！')
+            self.Show_Msg_Kugou_Music(top,'请输入需要播放的歌曲！',3)
+        else:
+            def show_music_result():
+                text_music.delete(0, END)
+                song = names  # 获得歌曲名
+                url = "http://songsearch.kugou.com/song_search_v2?callback=jQuery112407470964083509348_1534929985284&keyword={}&" \
+                      "page=1&pagesize=30&userid=-1&clientver=&platform=WebFilter&tag=em&filter=2&iscorrection=1&privilege_filte" \
+                      "r=0&_=1534929985286".format(song)
+                res = requests.get(url).text  # 收到的数据 type(res)是个str 把不必要地方去掉 因为loads方法的字符串应该形如字典{}
+                js = json.loads(res[res.index('(') + 1:-2])
+                data = js['data']['lists']  # 这是一个列表
+                for i in range(len(data)):
+                    text_music.insert(END, ">>" + str(data[i]['FileName']).replace('<em>', '').replace('</em>', ''))
+                    text_music.see(END)
+                    text_music.update()
+                    name = str(data[i]['FileName']).replace('<em>', '').replace('</em>', '')
+                    fhash = str(data[i]['FileHash'])
+                    self.mp3_info[name] = fhash
+            def start_music(num_cu_type=None):
+                if self.music_status == None or self.music_status == 2:
+                    if names:
+                        try:
+                            num = text_music.curselection()[0]  # 结果是一个一维元组如(5,)获取当前鼠标位置
+                        except Exception as msg:
+                            print(msg)
+                            print('请选择歌曲！')
+                        else:
+                            if num != None:  # 选择的是num首歌，对应的data[num] ，listbox下标从0开始
+                                if num_cu_type == None:
+                                    num_cu = num
+                                elif num_cu_type == 0:
+                                    if num == 0:
+                                        mp3_name1 = text_music.get(0)[3:]
+                                        print('当前%s是第一首歌，无法进行上一曲！' % mp3_name1)
+                                        self.Show_Msg_Kugou_Music(top,('当前%s是第一首歌，无法进行上一曲！' % mp3_name1), 3)
+                                        num_cu = num
+                                    else:
+                                        num_cu = num - 1
+                                else:
+                                    if num == 29:
+                                        mp3_name1 = text_music.get(29)[3:]
+                                        print('当前%s是最后一首歌，无法进行下一曲！' % mp3_name1)
+                                        self.Show_Msg_Kugou_Music(top,('当前%s是最后一首歌，无法进行下一曲！' % mp3_name1), 3)
+                                        num_cu = num
+                                    else:
+                                        num_cu = num + 1
+                                global mp3_name
+                                mp3_name = text_music.get(num_cu)[2:]  # 因为前三个符号是>>>用于提示，剔除后才是真正的歌名
+                                mp3_hash = self.mp3_info.get(mp3_name)  # hash码
+                                url2 = 'https://www.kugou.com/song/#hash=' + mp3_hash
+                                print('请等待播放:%s' % mp3_name)
+                                self.Show_Msg_Kugou_Music(top,('请等待播放:%s' % mp3_name), 3)
+                                chrome_options = Options()
+                                chrome_options.add_argument('--headless')
+                                chrome_options.add_argument('--disable-gpu')
+                                global driver
+                                driver = webdriver.Chrome(chrome_options=chrome_options)
+                                #driver = webdriver.Chrome()
+                                driver.get(url2)
+                                driver.find_element_by_xpath('//*[@id="toggle"]').click()
+                                self.music_status = 0
+                                print('正在播放:%s 歌曲' % mp3_name)
+                                self.Show_Msg_Kugou_Music(top,('正在播放:%s 歌曲' % mp3_name), 3)
+                else:
+                    print('请先停止当前音乐:%s' % mp3_name)
+                    self.Show_Msg_Kugou_Music(top,('请先停止当前音乐:%s' % mp3_name),3)
+            def download_music():
+                if names:
+                    num = text_music.curselection()[0]  # 结果是一个一维元组如(5,)
+                    if num != None:  # 选择的是num首歌，对应的data[num] ，listbox下标从0开始
+                        mp3_name = text_music.get(num)[3:]  # 因为前三个符号是>>>用于提示，剔除后才是真正的歌名
+                        mp3_hash = self.mp3_info.get(mp3_name)  # hash码
+                        url2 = 'https://wwwapi.kugou.com/yy/index.php?r=play/getdata&hash=' + mp3_hash + '&album_id=&dfid=1su9ai3vuKEp0AvUgT0sXDoE&mid=8a2d9e872bdbd1b9d25aa62d1473aa1f&platid=4&_=1559998974444'
+                        req = urllib.request.Request(url2)  #
+                        response = urllib.request.urlopen(req, None, 30)  # 设置超时时间
+                        html = response.read().decode('utf-8')
+                        html = json.loads(html)
+                        play_url = html['data']['play_url']
+                        try:
+                            path = self.music_download_path + mp3_name + '.mp3'#+ '/'
+                            if '\\' in path:
+                                path = path.replace('\\', '/')
+                            urlretrieve(play_url, path)
+                            tkinter.messagebox._show('提示', '下载成功')
+                            self.Show_Msg_Kugou_Music(top,'下载成功', 3)
+                            return
+                        except Exception as e:
+                            print("写入文件失败,原因：%s" % e)
+                            self.Show_Msg_Kugou_Music(top,("写入文件失败,原因：%s" % e), 3)
+                            return
+            def cleartxt_music():
+                text_music.delete(0, END)
+            def help_info():
+                tkinter.messagebox._show('帮助','输入下载的歌曲名，单曲搜索结果选中某行后再进行下载,重新搜索记得清空列表!')
+            def suspend_music():
+                if self.music_status == 0 or self.music_status == 1:
+                    driver.find_element_by_xpath('//*[@id="toggle"]').click()
+                    self.music_status = 1
+                else:
+                    print('请先播放音乐！')
+                    self.Show_Msg_Kugou_Music(top,'请先播放音乐！', 3)
+            def stop_music():
+                if self.music_status == 0 or self.music_status ==1:
+                    driver.close()
+                    self.music_status = 2
+                else:
+                    print('音乐未播放，无需停止！')
+                    self.Show_Msg_Kugou_Music(top,'音乐未播放，无需停止！', 3)
+            def last_music():
+                driver.close()
+                self.music_status = 2
+                start_music(0)
+            def next_music():
+                driver.close()
+                self.music_status = 2
+                start_music(1)
+            if type == 0:
+                show_music_result()
+            elif type == 1:
+                start_music()
+            elif type == 2:
+                download_music()
+            elif type == 3:
+                cleartxt_music()
+            elif type == 4:
+                help_info()
+            elif type == 5:
+                stop_music()
+            elif type == 6:
+                suspend_music()
+            elif type == 7:
+                last_music()
+            elif type == 8:
+                next_music()
+
 class LaJiQingLi:
     def __init__(self):
         self.inter_other_Garbage = OtherJobs()

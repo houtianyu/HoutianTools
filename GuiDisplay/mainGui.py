@@ -26,7 +26,7 @@ class MainGui:
         # 获取屏幕尺寸以计算布局参数，使窗口居屏幕中央
         screenwidth = self.root.winfo_screenwidth()
         screenheight = self.root.winfo_screenheight()
-        alignstr = '%dx%d+%d+%d' % (width, height, (screenwidth - width) / 2, (screenheight - height) / 2 - 150)
+        alignstr = '%dx%d+%d+%d' % (width, height, (screenwidth - width) / 2 - 180, (screenheight - height) / 2 - 100)
         self.root.geometry(alignstr)
         # 设置窗口是否可变长、宽，True：可变，False：不可变
         self.root.resizable(width=True, height=True)
@@ -71,7 +71,7 @@ class MainGui:
         Button(self.frame_v[2][2],text="本地搜索",state='normal',width=8,bg='LightGreen',command=lambda:self.otherJob.thread_add(self.functioncall.SearchFiles)).\
             grid(padx=1,row=2,column=7,sticky=W)
         #微信
-        Label(self.frame_v[3][2], text="请点击登陆微信！", width=16,bg='LightYellow',justify = LEFT).grid(padx=5,row=3, column=0,columnspan=2, sticky=W)
+        Label(self.frame_v[3][2], text="请点击登陆微信！", width=14,bg='LightYellow',justify = LEFT).grid(padx=5,row=3, column=0,columnspan=2, sticky=W)
         Checkbutton(self.frame_v[3][2], text='默认登陆(后天)', width=14,variable=self.frame_v[3][1][0],bg='LightYellow',justify = LEFT).grid(padx=1,row=3,column=2,columnspan=2,sticky=W)
         Button(self.frame_v[3][2], text="客户端登录", state='normal', width=8, bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.LoginWechat)). \
             grid(padx=1, row=3, column=7, sticky=W)
@@ -82,15 +82,25 @@ class MainGui:
         wechat_menu.add_radiobutton(label='搜索联系人', variable=self.frame_v[3][1][1], selectcolor="Crimson",activebackground='Pink', command=lambda: self.otherJob.thread_add(self.SearchWeChatContacts),value=2)
         wechat_menu.add_radiobutton(label='发送消息', variable=self.frame_v[3][1][1], selectcolor="Crimson",activebackground='Pink', command=lambda: self.otherJob.thread_add(self.SendWeChatMessages),value=3)
         wechat_menu.add_radiobutton(label='发送文件', variable=self.frame_v[3][1][1], selectcolor="Crimson",activebackground='Pink', command=lambda: self.otherJob.thread_add(self.SendWeChatFiles),value=4)
-        wechat_menu.add_radiobutton(label='添加联系人', variable=self.frame_v[3][1][1], selectcolor="Crimson",activebackground='Pink', command=lambda: self.otherJob.thread_add(self.AddWeChatContacts),value=5)
         wechat_menu.add_radiobutton(label='获取消息', variable=self.frame_v[3][1][1], selectcolor="Crimson",activebackground='Pink',command=lambda: self.otherJob.thread_add(self.GetWeChatMessages), value=6)
-        wechat_menu.add_radiobutton(label='注销', variable=self.frame_v[3][1][1], selectcolor="Crimson",activebackground='Pink', command=lambda: self.otherJob.thread_add(self.CancelWeChat),value=7)
         wechat_member.config(menu=wechat_menu)
         #酷狗
-        Label(self.frame_v[4][2], text="音乐名称:", width=8,bg='LightYellow',justify = LEFT).grid(padx=5,row=4, column=0, sticky=W)
-        Entry(self.frame_v[4][2], width=15, textvariable=self.frame_v[4][1],justify = LEFT).grid(padx=1,row=4, column=1, columnspan=2,sticky=W)
-        Button(self.frame_v[4][2], text="播放", state='normal', width=8,bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.PlayMusic)). \
-            grid(padx=1,row=4, column=7, sticky=W)
+        Label(self.frame_v[4][2], text="酷狗音乐:", width=8,bg='LightYellow',justify = LEFT).grid(padx=5,row=4, column=0, sticky=W)
+        #Entry(self.frame_v[4][2], width=15, textvariable=self.frame_v[4][1],justify = LEFT).grid(padx=1,row=4, column=1, columnspan=2,sticky=W)
+        Button(self.frame_v[4][2], text="播放/暂停", state='normal', width=8,bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.PlayMusic,0)). \
+            grid(padx=1,row=4, column=1, sticky=W)
+        Button(self.frame_v[4][2], text="上一曲", state='normal', width=8, bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.PlayMusic,1)). \
+            grid(padx=1, row=4, column=2, sticky=W)
+        Button(self.frame_v[4][2], text="下一曲", state='normal', width=8, bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.PlayMusic,2)). \
+            grid(padx=1, row=4, column=3, sticky=W)
+        Button(self.frame_v[4][2], text="增大音量", state='normal', width=8, bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.PlayMusic,3)). \
+            grid(padx=1, row=4, column=4, sticky=W)
+        Button(self.frame_v[4][2], text="减小音量", state='normal', width=8, bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.PlayMusic,4)). \
+            grid(padx=1, row=4, column=5, sticky=W)
+        Button(self.frame_v[4][2], text="下载", state='normal', width=8, bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.PlayMusic,5)). \
+            grid(padx=1, row=4, column=6, sticky=W)
+        Button(self.frame_v[4][2], text="更多", state='normal', width=8, bg='LightGreen',command=lambda: self.otherJob.thread_add(self.PlayMusicMore)). \
+            grid(padx=1, row=4, column=7, sticky=W)
         #垃圾清理
         Label(self.frame_v[5][2], text="默认360垃圾清理！", width=16,bg='LightYellow',justify = LEFT).grid(padx=5,row=5, column=0,columnspan=2,sticky=W)
         Button(self.frame_v[5][2], text="开始清理", state='normal', width=8,bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Garbage_Clear)). \
@@ -153,73 +163,84 @@ class MainGui:
         # 获取屏幕尺寸以计算布局参数，使窗口居屏幕中央
         screenwidth = self.root.winfo_screenwidth()
         screenheight = self.root.winfo_screenheight()
-        alignstr = '%dx%d+%d+%d' % (width, height, (screenwidth - width) / 2 + 600 , (screenheight - height) / 2 - 150)
+        alignstr = '%dx%d+%d+%d' % (width, height, (screenwidth - width) / 2 + 420 , (screenheight - height) / 2 - 100)
         self.second_gui.geometry(alignstr)
     def CloseToplevel(self):
         self.second_gui.destroy()
     def LoginWeChatGui(self):
         self.SecondGui('登录微信')
-        Button(self.second_gui, text='扫码登录', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.LoginWeChat_Sweepcode)). \
-            grid(padx=10,pady=280,row=0,column=0, sticky=W)
-        Button(self.second_gui, text='关闭', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.CloseToplevel)).grid(padx=150, pady=280, row=0, column=1, sticky=W)
+        Button(self.second_gui, text='登录微信', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.LoginWeChat_Sweepcode,self.second_gui)). \
+            grid(padx=10,pady=20,row=0,column=0, sticky=W)
+        Button(self.second_gui, text='注销当前账号', width=10, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.CancelWeChat_LoginOut, self.second_gui)). \
+            grid(padx=170, pady=20, row=0, column=3, sticky=E)
         #time.sleep(30)
         #self.second_gui.destroy()
     def SearchWeChatContacts(self):
         self.SecondGui('查看联系人')
-        Label(self.second_gui, text='输入联系人姓名：',width=13,bg='LightYellow',justify=LEFT).grid(padx=5,pady=20,row=0,column=0,sticky=W)
-        Entry(self.second_gui,width=22,textvariable=self.wechat_contents[0][1],justify=LEFT).grid(padx=1,pady=20,row=0,column=1,sticky=W)
-        Button(self.second_gui,text='查找',width=8,state='normal',bg='LightGreen',command=lambda :self.otherJob.thread_add(self.functioncall.SearchWeChat_Contacts)).\
-            grid(padx=8,pady=20,row=0,column=2,sticky=W)
+        Label(self.second_gui, text='输入联系人姓名：',width=13,bg='LightYellow',justify=LEFT).grid(padx=5,pady=10,row=0,column=0,sticky=W)
+        Entry(self.second_gui,width=22,textvariable=self.wechat_contents[0][1],justify=LEFT).grid(padx=1,pady=10,row=0,column=1,sticky=W)
+        Button(self.second_gui,text='查找',width=8,state='normal',bg='LightGreen',command=lambda :self.otherJob.thread_add(self.functioncall.SearchWeChat_Contacts,self.second_gui)).\
+            grid(padx=8,pady=10,row=0,column=2,sticky=W)
         # functioncall.SearchWeChat_Contacts
         Button(self.second_gui, text='发送消息', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.SendWeChatMessages)). \
-            grid(padx=5, row=1, column=0,sticky=W)
+            grid(padx=5, pady=10,row=1, column=0,sticky=W)
         Button(self.second_gui, text='发送文件', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.SendWeChatFiles)). \
-            grid(padx=8, row=1, column=2,sticky=W)
-        Button(self.second_gui, text='关闭', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.CloseToplevel)).grid(padx=8, pady=180, row=8, column=2, sticky=W)
+            grid(padx=8, pady=10,row=1, column=2,sticky=W)
     def SendWeChatMessages(self):
         self.SecondGui('发送消息')
-        Label(self.second_gui, text='输入联系人姓名：', width=13, bg='LightYellow', justify=LEFT).grid(padx=5, pady=20, row=0,column=0, sticky=W)
-        Entry(self.second_gui, width=22, textvariable=self.wechat_contents[1][1], justify=LEFT).grid(padx=1, pady=20, row=0,column=1, sticky=W)
-        Label(self.second_gui, text='输入发送的内容：', width=13, bg='LightYellow', justify=LEFT).grid(padx=5, pady=20, row=2,column=0, sticky=W)
-        Entry(self.second_gui, width=33, textvariable=self.wechat_contents[1][2], justify=LEFT).grid(padx=1, pady=20, row=2,column=1, sticky=W)
-        Button(self.second_gui, text='发送消息', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.SendWeChat_Messages)). \
-            grid(padx=5, row=4, pady=140,column=0, sticky=W)
-        Button(self.second_gui, text='关闭', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.CloseToplevel)).grid(padx=1, pady=140, row=4, column=1, sticky=E)
+        Label(self.second_gui, text='输入联系人姓名：', width=13, bg='LightYellow', justify=LEFT).grid(padx=5, pady=10, row=0,column=0, sticky=W)
+        Entry(self.second_gui, width=22, textvariable=self.wechat_contents[1][1], justify=LEFT).grid(padx=1, pady=10, row=0,column=1, sticky=W)
+        Label(self.second_gui, text='输入发送的内容：', width=13, bg='LightYellow', justify=LEFT).grid(padx=5, pady=10, row=1,column=0, sticky=W)
+        Entry(self.second_gui, width=40, textvariable=self.wechat_contents[1][2], justify=LEFT).grid(padx=5, pady=10, row=2,column=0, columnspan=3,sticky=W)
+        Button(self.second_gui, text='发送消息', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.SendWeChat_Messages,self.second_gui)). \
+            grid(padx=5, row=3, pady=10,column=0, sticky=W)
     def SendWeChatFiles(self):
         self.SecondGui('发送文件')
-        Label(self.second_gui, text='输入联系人姓名：', width=13, bg='LightYellow', justify=LEFT).grid(padx=5, pady=20, row=0,column=0, sticky=W)
-        Entry(self.second_gui, width=22, textvariable=self.wechat_contents[2][1], justify=LEFT).grid(padx=1, pady=20, row=0,column=1, sticky=W)
-        Button(self.second_gui, text='选择文件', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.ChoiseWeChat_Files)). \
+        Label(self.second_gui, text='输入联系人姓名：', width=13, bg='LightYellow', justify=LEFT).grid(padx=5, pady=10, row=0,column=0, sticky=W)
+        Entry(self.second_gui, width=22, textvariable=self.wechat_contents[2][1], justify=LEFT).grid(padx=1, pady=10, row=0,column=1, sticky=W)
+        upload_files = Text(self.second_gui, width=30,height=5)
+        upload_files.grid(padx=1, row=1, column=1,columnspan=2, sticky=W)
+        Button(self.second_gui, text='选择文件', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.ChoiseWeChat_Files,self.second_gui,upload_files)). \
             grid(padx=5, row=1, pady=10, column=0, sticky=W)
-        Label(self.second_gui, text='输入发送文件的路径：', width=17, bg='LightYellow', justify=LEFT).grid(padx=5, pady=10, row=2,column=0, sticky=W)
+        Label(self.second_gui, text='输入发送文件的路径：', width=17, bg='LightYellow', justify=LEFT).grid(padx=5, pady=10, row=2,column=0, columnspan=2,sticky=W)
         Entry(self.second_gui, width=40, textvariable=self.wechat_contents[2][2], justify=LEFT).grid(padx=5, pady=5, row=3,column=0, columnspan=3,sticky=W)
-        Label(self.second_gui, text='eg:D:\python\python.exe', width=30, bg='LightYellow', justify=LEFT).grid(padx=5, pady=10, row=4,column=0,columnspan=2, sticky=W)
-        Button(self.second_gui, text='发送文件', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.SendWeChat_Files)). \
-            grid(padx=5, row=6, pady=30, column=0, sticky=W)
-        Button(self.second_gui, text='关闭', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.CloseToplevel)).grid(padx=1, pady=30, row=6, column=1,sticky=E)
-    def AddWeChatContacts(self):
-        self.SecondGui('添加联系人')
-        Label(self.second_gui, text='输入联系人微信号：', width=15, bg='LightYellow', justify=LEFT).grid(padx=5, pady=20, row=0,column=0, sticky=W)
-        Entry(self.second_gui, width=30, textvariable=self.wechat_contents[3][1], justify=LEFT).grid(padx=1, pady=20, row=0,column=1, sticky=W)
-        Button(self.second_gui, text='添加', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.AddWeChat_Contacts)). \
-            grid(padx=5, row=4, pady=180, column=0, sticky=W)
-        Button(self.second_gui, text='关闭', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.CloseToplevel)).grid(padx=1, pady=180, row=4, column=1,sticky=E)
+        Label(self.second_gui, text='eg:D:\python\python.exe', width=20, bg='LightYellow', justify=LEFT).grid(padx=5, pady=5, row=4,column=1,sticky=W)
+        Button(self.second_gui, text='发送文件', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.SendWeChat_Files,self.second_gui)). \
+            grid(padx=5, row=4, pady=5, column=0, sticky=W)
     def GetWeChatMessages(self):
         self.SecondGui('获取消息')
-        Label(self.second_gui, text='输入联系人姓名：', width=13, bg='LightYellow', justify=LEFT).grid(padx=5, pady=20, row=0,column=0, sticky=W)
+        Label(self.second_gui, text='输入联系人姓名：', width=13, bg='LightYellow', justify=LEFT).grid(padx=5, pady=10, row=0,column=0, sticky=W)
         Entry(self.second_gui, width=30, textvariable=self.wechat_contents[4][1], justify=LEFT).grid(padx=1, pady=20, row=0,column=1, sticky=W)
-        Button(self.second_gui, text='获取人', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.GetWeChat_Messages(0))).\
-            grid(padx=5, row=4, pady=180, column=0, sticky=W)
-        Button(self.second_gui, text='关闭', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.CloseToplevel)).\
-            grid(padx=1, pady=180, row=4, column=1,sticky=E)
-    def CancelWeChat(self):
-        self.SecondGui('注销')
-        Button(self.second_gui, text='注销当前账号', width=10, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.CancelWeChat_LoginOut)). \
-            grid(padx=10, pady=280, row=0, column=0, sticky=W)
-        Button(self.second_gui, text='关闭', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.CloseToplevel)).\
-            grid(padx=170, pady=280, row=0, column=1,sticky=W)
-        time.sleep(30)
-        self.second_gui.destroy()
+        Button(self.second_gui, text='开始获取', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.GetWeChat_Messages,0,self.second_gui)).\
+            grid(padx=5, row=1, pady=10, column=0, sticky=W)
+    #酷狗音乐
+    def PlayMusicMore(self):
+        self.SecondGui('更多选择')
+        Label(self.second_gui, text="音乐名称:", width=7, bg='LightYellow', justify=LEFT).grid(padx=5,pady=2,row=0, column=0,sticky=W)
+        Entry(self.second_gui, width=20, textvariable=self.frame_v[4][1],justify = LEFT).grid(padx=1,pady=2,row=0, column=1, columnspan=2,sticky=W)
+        text_music = Listbox(self.second_gui, selectmode=BROWSE, font=("Consolas", 10), width=47, height=12)
+        text_music.grid(padx=5,pady=2,row=2, column=0,columnspan=7)
+        Button(self.second_gui,width=4,text='搜索',state='normal',bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.PlayMusic_More,self.second_gui,text_music,0)).\
+            grid(padx=3,pady=2,row=0,column=3,sticky=W)
+        Button(self.second_gui, width=4, text='播放', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.PlayMusic_More,self.second_gui,text_music,1)). \
+            grid(padx=3, pady=2, row=0, column=4, sticky=W)
+        Button(self.second_gui, width=4, text='下载', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.PlayMusic_More, self.second_gui,text_music,2)). \
+            grid(padx=3, pady=2, row=0, column=5, sticky=W)
+        Button(self.second_gui, width=5, text='上一曲', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.PlayMusic_More, self.second_gui, text_music,7)). \
+            grid(padx=5, pady=2, row=1, column=0, sticky=W)
+        Button(self.second_gui, width=5, text='下一曲', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.PlayMusic_More, self.second_gui, text_music,8)). \
+            grid(padx=1, pady=2, row=1, column=1, sticky=W)
+        Button(self.second_gui, width=8, text='清空列表', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.PlayMusic_More, self.second_gui,text_music,3)). \
+            grid(padx=1, pady=2, row=1, column=2, sticky=W)
+        Button(self.second_gui, width=4, text='暂停', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.PlayMusic_More, self.second_gui, text_music,6)). \
+            grid(padx=3, pady=2, row=1, column=3, sticky=W)
+        Button(self.second_gui, width=4, text='停止', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.PlayMusic_More, self.second_gui, text_music,5)). \
+            grid(padx=3, pady=2, row=1, column=4, sticky=W)
+        Button(self.second_gui, width=4, text='帮助', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.PlayMusic_More, self.second_gui,text_music,4)). \
+            grid(padx=3, pady=2, row=1, column=5, sticky=W)
+
+
+
 
 
 if __name__ == '__main__':

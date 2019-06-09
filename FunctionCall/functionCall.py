@@ -10,6 +10,7 @@ class FunctionCall:
         self.inter_fun_mon = Resource_Monitor()
         self.function_baidusearch = BaiDuSearch()
         self.function_LoginWechat = WeiChat()
+        self.play_Music_Name_Kugou = KuGouMusic()
 
     def BaiduSearch(self):
         baidu_object = self.overall.get_value(0)
@@ -43,43 +44,42 @@ class FunctionCall:
         self.function_LoginWechat.LoginWechat(default_Login_User_num)
 
     #交互
-    def LoginWeChat_Sweepcode(self):
+    def LoginWeChat_Sweepcode(self,top):
         LoginWeChat_Sweepcode_object = self.overall.get_value(3)
         LoginWeChat_Sweepcode_num = self.otherjob_fun.get_entryContent(LoginWeChat_Sweepcode_object[0])
-        self.function_LoginWechat.LoginWeChat_Sweepcode_Method(LoginWeChat_Sweepcode_num)
-    def SearchWeChat_Contacts(self):
+        self.function_LoginWechat.LoginWeChat_Sweepcode_Method(LoginWeChat_Sweepcode_num,top)
+    def SearchWeChat_Contacts(self,top):
         search_contacts_result_object = self.overall.get_wechat_info(0)
         search_contacts_result = self.otherjob_fun.get_entryContent(search_contacts_result_object[1])
-        self.function_LoginWechat.SearchWeChat_Contacts_Method(search_contacts_result)
-    def SendWeChat_Messages(self):
+        self.function_LoginWechat.SearchWeChat_Contacts_Method(search_contacts_result,top)
+    def SendWeChat_Messages(self,top):
         sendwechat_msg_object = self.overall.get_wechat_info(1)
         Contacts_name = self.otherjob_fun.get_entryContent(sendwechat_msg_object[0])
         Send_contents = self.otherjob_fun.get_entryContent(sendwechat_msg_object[1])
-        self.function_LoginWechat.SendWeChat_Messages_Method(Contacts_name,Send_contents)
-    def ChoiseWeChat_Files(self):
-        pass
-    def SendWeChat_Files(self):
+        self.function_LoginWechat.SendWeChat_Messages_Method(Contacts_name,Send_contents,top)
+    def ChoiseWeChat_Files(self,top,text):
+        self.function_LoginWechat.ChoiseWeChat_Files_Method(top,text)
+    def SendWeChat_Files(self,top):
         sendwechat_files_object = self.overall.get_wechat_info(2)
         Contacts_name = self.otherjob_fun.get_entryContent(sendwechat_files_object[0])
         Send_contents = self.otherjob_fun.get_entryContent(sendwechat_files_object[1])
-        self.function_LoginWechat.SendWeChat_Files_Method(Contacts_name, Send_contents)
-
-    def AddWeChat_Contacts(self):
-        add_wechat_contents_object = self.overall.get_wechat_info(3)
-        Contacts_name_num = self.otherjob_fun.get_entryContent(add_wechat_contents_object[1])
-        self.function_LoginWechat.AddWeChat_Contacts_Methon(Contacts_name_num)
-    def GetWeChat_Messages(self,tpye):
+        self.function_LoginWechat.SendWeChat_Files_Method(Contacts_name, Send_contents,top)
+    def GetWeChat_Messages(self,tpye,top):
         add_wechat_contents_object = self.overall.get_wechat_info(4)
         Contacts_name_get = self.otherjob_fun.get_entryContent(add_wechat_contents_object[1])
-        self.function_LoginWechat.GetWeChat_Messages_Method(Contacts_name_get,tpye)
-    def CancelWeChat_LoginOut(self):
-        self.function_LoginWechat.CancelWeChat_LoginOut_Method()
+        self.function_LoginWechat.GetWeChat_Messages_Method(Contacts_name_get,tpye,top)
+    def CancelWeChat_LoginOut(self,top):
+        self.function_LoginWechat.CancelWeChat_LoginOut_Method(top)
 
-    def PlayMusic(self):
+    def PlayMusic(self,type):
+        self.play_Music_Name_Kugou.play_Music_Name(type)
+    def PlayMusic_More(self,top,text_music,type):
         play_Music_Name_object = self.overall.get_value(4)
         play_Music_Name_Names = self.otherjob_fun.get_entryContent(play_Music_Name_object)
-        play_Music_Name_Kugou = KuGouMusic()
-        play_Music_Name_Kugou.play_Music_Name(play_Music_Name_Names)
+        self.play_Music_Name_Kugou.Play_Music_More_Method(top,play_Music_Name_Names,text_music,type)
+
+
+
     def Garbage_Clear(self):
         garbage_Clear_object = self.overall.get_value(5)
         Garbage_Clear_Value = self.otherjob_fun.get_entryContent(garbage_Clear_object)

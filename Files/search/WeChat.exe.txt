@@ -1,5 +1,5 @@
 Filename,Size,Date Modified,Date Created,Attributes
 "E:\软件\WeChat\WeChat.exe",492744,131754599641879092,,0
-"C:\Windows\Prefetch\WECHAT.EXE-2147393C.pf",10569,132039604079424588,,0
-"D:\Python\HoutianTools\Files\search\WeChat.exe.txt",371,132041420604757811,,0
-"C:\Users\Admin\AppData\Roaming\Microsoft\Windows\Recent\WeChat.exe.txt.lnk",927,132041420604752804,,0
+"C:\Windows\Prefetch\WECHAT.EXE-2147393C.pf",29950,132044764714035401,,0
+"D:\Python\HoutianTools\Files\search\WeChat.exe.txt",509,132045308469704435,,0
+"C:\Users\Admin\AppData\Roaming\Microsoft\Windows\Recent\WeChat.exe.txt.lnk",927,132045308469919996,,0
