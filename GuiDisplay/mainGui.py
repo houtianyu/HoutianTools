@@ -10,8 +10,9 @@ class MainGui:
         self.otherJob = OtherJobs(self.root)
         self.functioncall = FunctionCall()
         self.overall = OverAll()
-        self.wechat_contents = [[0,'v_Contacts'], [1,'v_Contacts_m', 'v_send_content'], [2,'v_Contacts_f', 'v_file_path'],[3,'v_Contacts_num'], [4,'v_Contacts_get']]
-        for input_ss in self.wechat_contents:
+        self.wechat_mails_web_contents = [[0,'v_Contacts'], [1,'v_Contacts_m', 'v_send_content'], [2,'v_Contacts_f', 'v_file_path'],[3,'v_Contacts_num'],\
+                                [4,'v_Contacts_get'],[5,'v_mail_subject'],[6,'v_contents'],[7,'v_enclosure']]
+        for input_ss in self.wechat_mails_web_contents:
             if len(input_ss) == 3:
                 input_ss[1] = StringVar()
                 input_ss[2] = StringVar()
@@ -123,7 +124,9 @@ class MainGui:
         mailmenu.add_radiobutton(label="126",variable=self.frame_v[6][1][2], selectcolor="Crimson",activebackground='Pink',value=2)
         mailmenu.add_radiobutton(label="QQ",variable=self.frame_v[6][1][2], selectcolor="Crimson",activebackground='Pink',value=3)
         member.config(menu=mailmenu)
-        Button(self.frame_v[6][2], text="登录", state='normal', width=8,bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.LoginEmail)). \
+        Button(self.frame_v[2][2],text='发送邮件',state='normal',width=8,bg='LightGreen',command=lambda:self.otherJob.thread_add(self.Mails_Operate_More)).\
+            grid(padx=1,row=6,column=6,sticky=W)
+        Button(self.frame_v[6][2], text="Web登陆", state='normal', width=8,bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.LoginEmail)). \
             grid(padx=1,row=6, column=7, sticky=W)
         #磁盘、内存、CPU、邮件
         Button(self.frame_v[7][2], text="磁盘占用", state='normal', width=8,bg='PowderBlue',command=lambda: self.otherJob.thread_add(self.functioncall.Disk_Used)). \
@@ -154,8 +157,8 @@ class MainGui:
             grid(padx=1, row=9, column=7, sticky=NW)
         mainloop()
     def getvalru(self):#测试使用
-        print(self.wechat_contents[0])
-        aa = self.wechat_contents[0][1].get()
+        print(self.wechat_mails_web_contents[0])
+        aa = self.wechat_mails_web_contents[0][1].get()
         print(aa)
         print('qqqq')
     def SecondGui(self,title,height=330):
@@ -180,7 +183,7 @@ class MainGui:
     def SearchWeChatContacts(self):
         self.SecondGui('查看联系人')
         Label(self.second_gui, text='输入联系人姓名：',width=13,bg='LightYellow',justify=LEFT).grid(padx=5,pady=10,row=0,column=0,sticky=W)
-        Entry(self.second_gui,width=22,textvariable=self.wechat_contents[0][1],justify=LEFT).grid(padx=1,pady=10,row=0,column=1,sticky=W)
+        Entry(self.second_gui,width=22,textvariable=self.wechat_mails_web_contents[0][1],justify=LEFT).grid(padx=1,pady=10,row=0,column=1,sticky=W)
         Button(self.second_gui,text='查找',width=8,state='normal',bg='LightGreen',command=lambda :self.otherJob.thread_add(self.functioncall.SearchWeChat_Contacts,self.second_gui)).\
             grid(padx=8,pady=10,row=0,column=2,sticky=W)
         # functioncall.SearchWeChat_Contacts
@@ -191,28 +194,28 @@ class MainGui:
     def SendWeChatMessages(self):
         self.SecondGui('发送消息')
         Label(self.second_gui, text='输入联系人姓名：', width=13, bg='LightYellow', justify=LEFT).grid(padx=5, pady=10, row=0,column=0, sticky=W)
-        Entry(self.second_gui, width=22, textvariable=self.wechat_contents[1][1], justify=LEFT).grid(padx=1, pady=10, row=0,column=1, sticky=W)
+        Entry(self.second_gui, width=22, textvariable=self.wechat_mails_web_contents[1][1], justify=LEFT).grid(padx=1, pady=10, row=0,column=1, sticky=W)
         Label(self.second_gui, text='输入发送的内容：', width=13, bg='LightYellow', justify=LEFT).grid(padx=5, pady=10, row=1,column=0, sticky=W)
-        Entry(self.second_gui, width=40, textvariable=self.wechat_contents[1][2], justify=LEFT).grid(padx=5, pady=10, row=2,column=0, columnspan=3,sticky=W)
+        Entry(self.second_gui, width=40, textvariable=self.wechat_mails_web_contents[1][2], justify=LEFT).grid(padx=5, pady=10, row=2,column=0, columnspan=3,sticky=W)
         Button(self.second_gui, text='发送消息', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.SendWeChat_Messages,self.second_gui)). \
             grid(padx=5, row=3, pady=10,column=0, sticky=W)
     def SendWeChatFiles(self):
         self.SecondGui('发送文件')
         Label(self.second_gui, text='输入联系人姓名：', width=13, bg='LightYellow', justify=LEFT).grid(padx=5, pady=10, row=0,column=0, sticky=W)
-        Entry(self.second_gui, width=22, textvariable=self.wechat_contents[2][1], justify=LEFT).grid(padx=1, pady=10, row=0,column=1, sticky=W)
+        Entry(self.second_gui, width=22, textvariable=self.wechat_mails_web_contents[2][1], justify=LEFT).grid(padx=1, pady=10, row=0,column=1, sticky=W)
         upload_files = Text(self.second_gui, width=30,height=5)
         upload_files.grid(padx=1, row=1, column=1,columnspan=2, sticky=W)
         Button(self.second_gui, text='选择文件', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.ChoiseWeChat_Files,self.second_gui,upload_files)). \
             grid(padx=5, row=1, pady=10, column=0, sticky=W)
         Label(self.second_gui, text='输入发送文件的路径：', width=17, bg='LightYellow', justify=LEFT).grid(padx=5, pady=10, row=2,column=0, columnspan=2,sticky=W)
-        Entry(self.second_gui, width=40, textvariable=self.wechat_contents[2][2], justify=LEFT).grid(padx=5, pady=5, row=3,column=0, columnspan=3,sticky=W)
+        Entry(self.second_gui, width=40, textvariable=self.wechat_mails_web_contents[2][2], justify=LEFT).grid(padx=5, pady=5, row=3,column=0, columnspan=3,sticky=W)
         Label(self.second_gui, text='eg:D:\python\python.exe', width=20, bg='LightYellow', justify=LEFT).grid(padx=5, pady=5, row=4,column=1,sticky=W)
         Button(self.second_gui, text='发送文件', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.SendWeChat_Files,self.second_gui)). \
             grid(padx=5, row=4, pady=5, column=0, sticky=W)
     def GetWeChatMessages(self):
         self.SecondGui('获取消息')
         Label(self.second_gui, text='输入联系人姓名：', width=13, bg='LightYellow', justify=LEFT).grid(padx=5, pady=10, row=0,column=0, sticky=W)
-        Entry(self.second_gui, width=30, textvariable=self.wechat_contents[4][1], justify=LEFT).grid(padx=1, pady=20, row=0,column=1, sticky=W)
+        Entry(self.second_gui, width=30, textvariable=self.wechat_mails_web_contents[4][1], justify=LEFT).grid(padx=1, pady=20, row=0,column=1, sticky=W)
         Button(self.second_gui, text='开始获取', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.GetWeChat_Messages,0,self.second_gui)).\
             grid(padx=5, row=1, pady=10, column=0, sticky=W)
     #酷狗音乐
@@ -247,7 +250,18 @@ class MainGui:
             grid(padx=5, row=0,pady=10, column=0, sticky=W)
         Button(self.second_gui, text="开使清理", state='normal', width=8, bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Garbage_Delete,self.second_gui)). \
             grid(padx=200,row=0,pady=10,column=1, sticky=W)
-
+    #邮件操作
+    def Mails_Operate_More(self):
+        self.SecondGui('发送邮件')
+        Label(self.second_gui, text="邮件主题:", width=7, bg='LightYellow', justify=LEFT).grid(padx=5, pady=2, row=0,column=0, sticky=W)
+        Entry(self.second_gui, width=20, textvariable=self.wechat_mails_web_contents[5][1], justify=LEFT).grid(padx=1, pady=2, row=0,column=1, columnspan=3,sticky=W)
+        Label(self.second_gui,text='邮件正文:',width=7,bg='LightYellow',justify=LEFT).grid(padx=5,pady=2,row=1,column=0,sticky=W)
+        Entry(self.second_gui,width=47,textvariable=self.wechat_mails_web_contents[6][1],justify=LEFT).grid(padx=5,pady=2,row=2,column=0,columnspan=8,sticky=W)
+        Button(self.second_gui,text='选择附件',width=7,state='normal',bg='LightGreen',command=lambda:self.otherJob.thread_add(self.functioncall.ChoiseMails_Files_Fun,self.second_gui)).\
+            grid(padx=5,pady=10,row=3,column=0,sticky=W)
+        Entry(self.second_gui,width=30,textvariable=self.wechat_mails_web_contents[7][1],justify=LEFT).grid(padx=1,pady=2,row=3,column=1,columnspan=3,sticky=W)
+        Button(self.second_gui,text='发送',width=7,bg='LightYellow',state='normal',command=lambda:self.otherJob.thread_add(self.functioncall.Send_mails_Fun,self.second_gui)).\
+            grid(padx=5,pady=10,row=4,column=0,sticky=W)
 
 
 

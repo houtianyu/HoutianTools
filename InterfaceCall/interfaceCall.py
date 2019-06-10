@@ -17,7 +17,6 @@ import tkinter.messagebox
 from lxml import etree
 from urllib.request import urlretrieve
 from tkinter.filedialog import askdirectory
-import json
 import requests,urllib.request,json
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -266,7 +265,7 @@ class WeiChat:
             pass
         v_monitor = StringVar()
         v_monitor.set(contents)
-        textlabel = Message(top, textvariable=v_monitor, justify=LEFT, width=347, font=("华康少女字体", 10),fg="red")
+        textlabel = Message(top, textvariable=v_monitor, justify=LEFT, width=325, font=("华康少女字体", 10),fg="red")
         textlabel.grid(padx=5, pady=1, row=row, column=0, columnspan=3, sticky=W)
     def LoginWeChat_Sweepcode_Method(self,num,top):
         def close_QR_img():
@@ -637,10 +636,10 @@ class KuGouMusic:
                 last_music()
             elif type == 8:
                 next_music()
-
 class LaJiQingLi:
     def __init__(self):
         self.inter_other_Garbage = OtherJobs()
+        self.LaJiQingLi_show = WeiChat()
         self.del_info = {}
         self.del_file_paths = []
         self.total_size = 0
@@ -656,7 +655,7 @@ class LaJiQingLi:
             '.xlk': 'Excel备份文件',
             '.bak': '临时备份文件bak'
         }
-        self.wx_path = 'C:\\Users\\AT\\Documents\\WeChat Files\\yuwei927furui\\'
+        self.wx_path = self.inter_other_Garbage.Get_Config_Info('file_name','weixin_userinfo')
         self.del_userprofile = ['Files', 'FileStorage', 'HDHeadImage', 'Image', 'Video', 'Attachment']
         SYS_DRIVE = os.environ['systemdrive'] + '\\'
         USER_PROFILE = os.environ['userprofile']
@@ -669,12 +668,13 @@ class LaJiQingLi:
         print(value)
         win32process.CreateProcess(qh360_grabage_path, '', None, None, 0, win32process.CREATE_NO_WINDOW, None, None, \
                                    win32process.STARTUPINFO())
-    def FormatSize(self):
+    def FormatSize(self,top):
         try:
             self.total_size = float(self.total_size)
             kb = self.total_size / 1024
         except:
-            print("传入的字节格式不对")
+            print("传入的字节格式不对!")
+            self.LaJiQingLi_show.Show_Msg_WeChat(top,'传入的字节格式不对!',1)
             return "Error"
         if kb >= 1024:
             M = kb / 1024
@@ -685,20 +685,23 @@ class LaJiQingLi:
                 return "%fM" % (M)
         else:
             return "%fkb" % (kb)
-    def Del_dir_or_file(self,root):
+    def Del_dir_or_file(self,root,top):
         try:
             if os.path.isfile(root):
                 # 删除文件
                 os.remove(root)
                 print('文件: ' + root + ' 已经删除！')
+                self.LaJiQingLi_show.Show_Msg_WeChat(top,('文件: ' + root + ' 已经删除！'),1)
             elif os.path.isdir(root):
                 # 删除文件夹
                 shutil.rmtree(root)
                 print('目录： ' + root + ' 已经删除！')
+                self.LaJiQingLi_show.Show_Msg_WeChat(top,('目录： ' + root + ' 已经删除！'),1)
         except WindowsError:
             print('错误: ' + root + " 删除失败！")
+            self.LaJiQingLi_show.Show_Msg_WeChat(top,('错误: ' + root + " 删除失败！"),1)
             self.del_faliue_file.append(root)
-    def Scan_Workspace_Method(self):
+    def Scan_Workspace_Method(self,top):
         for dirs_p in self.scan_path:
             for roots, dirs, files in os.walk(dirs_p, topdown=False):
                 # 生成并展开以 root 为根目录的目录树，参数 topdown 设定展开方式从底层到顶层
@@ -710,21 +713,24 @@ class LaJiQingLi:
                         # 文件完整路径
                         file_full_path = os.path.join(roots, file_item)
                         print('完成扫描%s 的路径' % file_full_path)
+                        self.LaJiQingLi_show.Show_Msg_WeChat(top,('完成扫描%s 的路径' % file_full_path), 1)
                         self.del_file_paths.append(file_full_path)
                         self.del_info[file_extension]['count'] += 1
                         self.total_size += os.path.getsize(file_full_path)
             print('%s 目录扫描完成！' % dirs_p)
+            self.LaJiQingLi_show.Show_Msg_WeChat(top,('%s 目录扫描完成！' % dirs_p), 1)
         for dirs_wx in self.del_userprofile:
             wx_dirs_path_all = self.wx_path + dirs_wx
-            print(wx_dirs_path_all)
             for roots,dirs,files in os.walk(wx_dirs_path_all,topdown=False):
                 for wx_file_item in files:
                     wx_file_full_path = os.path.join(roots, wx_file_item)
                     print('完成扫描%s 的路径' % wx_file_full_path)
+                    self.LaJiQingLi_show.Show_Msg_WeChat(top,('完成扫描%s 的路径' % wx_file_full_path), 1)
                     self.del_file_paths.append(wx_file_full_path)
                     self.del_all_files_num += 1
                     self.total_size += os.path.getsize(wx_file_full_path)
             print('%s 目录扫描完成！' % wx_dirs_path_all)
+            self.LaJiQingLi_show.Show_Msg_WeChat(top,('%s 目录扫描完成！' % wx_dirs_path_all), 1)
         #print(json.dumps(self.del_info, indent=4, ensure_ascii=False))
         print('.tmp格式的%s数：%s,._mp格式的%s数：%s,.log格式的%s数：%s,.gid格式的%s数：%s,.chk格式的%s数：%s,.old格式的%s数：%s,.xlk格式的%s数：%s,.bak格式的%s数：%s' \
             % (self.del_info['.tmp']['name'], self.del_info['.tmp']['count'], self.del_info['._mp']['name'],self.del_info['._mp']['count'], \
@@ -733,16 +739,19 @@ class LaJiQingLi:
                self.del_info['.xlk']['name'], self.del_info['.xlk']['count'], self.del_info['.bak']['name'],self.del_info['.bak']['count']))
         self.del_all_files_num = self.del_all_files_num + self.del_info['.tmp']['count'] + self.del_info['._mp']['count'] + self.del_info['.gid']['count'] + self.del_info['.log']['count'] + self.del_info['.old']['count'] + \
                                  self.del_info['.chk']['count'] + self.del_info['.xlk']['count'] + self.del_info['.bak']['count']
-        print('总共删除%s个文件,删除可节省:%s 空间' % (self.del_all_files_num,self.FormatSize()))
-    def Delete_Files_Method(self):
+        print('总共可删除%s个文件,删除可节省:%s 空间' % (self.del_all_files_num,self.FormatSize(top)))
+        self.LaJiQingLi_show.Show_Msg_WeChat(top,('总共可删除%s个文件,删除可节省:%s 空间' % (self.del_all_files_num,self.FormatSize(top))), 1)
+    def Delete_Files_Method(self,top):
         if self.del_file_paths:
             for i in self.del_file_paths:
                 print('正在删除%s 文件或目录！' % i)
-                self.Del_dir_or_file(i)
+                self.LaJiQingLi_show.Show_Msg_WeChat(top,('正在删除%s 文件或目录！' % i), 1)
+                self.Del_dir_or_file(i,top)
         else:
             print('请先扫描需要清理的文件！')
+            self.LaJiQingLi_show.Show_Msg_WeChat(top,'请先扫描需要清理的文件！', 1)
         print('删除失败文件：%s' % self.del_faliue_file)
-
+        self.LaJiQingLi_show.Show_Msg_WeChat(top,'请先扫描需要清理的文件！', 1)
 class Mails_operate:
     def __init__(self):
         self.inter_other_mails = OtherJobs()

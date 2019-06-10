@@ -93,6 +93,10 @@ class FunctionCall:
         login_email_mailType = self.otherjob_fun.get_entryContent(login_email_object[2])
         login_eamil_mail_operate = Mails_operate()
         login_eamil_mail_operate.LoginEmail(login_email_mailType,login_email_user,login_email_passwd)
+    def ChoiseMails_Files_Fun(self):
+        pass
+    def Send_mails_Fun(self):
+        pass
     def Disk_Used(self):
         self.otherjob_fun.Resource_show('请等待。。。')
         tt_disk_used = self.otherjob_fun.thread_add(self.otherjob_fun.Count_Down,15)
