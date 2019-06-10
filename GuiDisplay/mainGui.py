@@ -102,8 +102,10 @@ class MainGui:
         Button(self.frame_v[4][2], text="更多", state='normal', width=8, bg='LightGreen',command=lambda: self.otherJob.thread_add(self.PlayMusicMore)). \
             grid(padx=1, row=4, column=7, sticky=W)
         #垃圾清理
-        Label(self.frame_v[5][2], text="默认360垃圾清理！", width=16,bg='LightYellow',justify = LEFT).grid(padx=5,row=5, column=0,columnspan=2,sticky=W)
-        Button(self.frame_v[5][2], text="开始清理", state='normal', width=8,bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Garbage_Clear)). \
+        Label(self.frame_v[5][2], text="默认360垃圾清理！", width=15,bg='LightYellow',justify = LEFT).grid(padx=5,row=5, column=0,columnspan=2,sticky=W)
+        Button(self.frame_v[5][2], text="开启360", state='normal', width=8, bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Garbage_Clear)). \
+            grid(padx=1, row=5, column=1, sticky=N+S)
+        Button(self.frame_v[5][2], text="手动清理", state='normal', width=8,bg='LightGreen',command=lambda: self.otherJob.thread_add(self.Garbage_Clear_Ui)). \
             grid(padx=1,row=5, column=7, sticky=W)
         #登录邮件
         Label(self.frame_v[6][2], text="用户名称:", width=8,bg='LightYellow',justify = LEFT).grid(padx=5,row=6, column=0, sticky=W)
@@ -238,7 +240,13 @@ class MainGui:
             grid(padx=3, pady=2, row=1, column=4, sticky=W)
         Button(self.second_gui, width=4, text='帮助', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.PlayMusic_More, self.second_gui,text_music,4)). \
             grid(padx=3, pady=2, row=1, column=5, sticky=W)
-
+    #垃圾清理
+    def Garbage_Clear_Ui(self):
+        self.SecondGui('垃圾清理')
+        Button(self.second_gui, text="开始扫描", state='normal', width=8, bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Garbage_Scan,self.second_gui)). \
+            grid(padx=5, row=0,pady=10, column=0, sticky=W)
+        Button(self.second_gui, text="开使清理", state='normal', width=8, bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Garbage_Delete,self.second_gui)). \
+            grid(padx=200,row=0,pady=10,column=1, sticky=W)
 
 
 

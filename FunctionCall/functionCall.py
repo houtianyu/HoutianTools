@@ -11,7 +11,7 @@ class FunctionCall:
         self.function_baidusearch = BaiDuSearch()
         self.function_LoginWechat = WeiChat()
         self.play_Music_Name_Kugou = KuGouMusic()
-
+        self.Garbage_Clear = LaJiQingLi()
     def BaiduSearch(self):
         baidu_object = self.overall.get_value(0)
         baidu_object_content = self.otherjob_fun.get_entryContent(baidu_object)
@@ -78,13 +78,14 @@ class FunctionCall:
         play_Music_Name_Names = self.otherjob_fun.get_entryContent(play_Music_Name_object)
         self.play_Music_Name_Kugou.Play_Music_More_Method(top,play_Music_Name_Names,text_music,type)
 
-
-
     def Garbage_Clear(self):
         garbage_Clear_object = self.overall.get_value(5)
         Garbage_Clear_Value = self.otherjob_fun.get_entryContent(garbage_Clear_object)
-        Garbage_Clear_360 = LaJiQingLi()
-        Garbage_Clear_360.Clear_All(Garbage_Clear_Value)
+        self.Garbage_Clear.Clear_All(Garbage_Clear_Value)
+    def Garbage_Scan(self,top):
+        self.Garbage_Clear.Scan_Workspace_Method(top)
+    def Garbage_Delete(self,top):
+        self.Garbage_Clear.Delete_Files_Method(top)
     def LoginEmail(self):
         login_email_object = self.overall.get_value(6)
         login_email_user = self.otherjob_fun.get_entryContent(login_email_object[0])
