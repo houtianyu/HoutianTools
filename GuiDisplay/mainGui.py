@@ -11,7 +11,7 @@ class MainGui:
         self.functioncall = FunctionCall()
         self.overall = OverAll()
         self.wechat_mails_web_contents = [[0,'v_Contacts'], [1,'v_Contacts_m', 'v_send_content'], [2,'v_Contacts_f', 'v_file_path'],[3,'v_Contacts_num'],\
-                                [4,'v_Contacts_get'],[5,'v_mail_subject'],[6,'v_contents'],[7,'v_enclosure']]
+                                [4,'v_Contacts_get'],[5,'v_mail_subject'],[6,'v_contents'],[7,'v_enclosure'],[8,'v_receive_addr']]
         for input_ss in self.wechat_mails_web_contents:
             if len(input_ss) == 3:
                 input_ss[1] = StringVar()
@@ -19,7 +19,7 @@ class MainGui:
                 self.overall.set_wechat_info([input_ss[1], input_ss[2]])
             else:
                 input_ss[1] = StringVar()
-                self.overall.set_wechat_info(input_ss)
+                self.overall.set_wechat_info(input_ss[1])
     def MainPageGui(self):
         self.root.title('HoutianTools_v1.0')
         width=850
@@ -254,14 +254,23 @@ class MainGui:
     def Mails_Operate_More(self):
         self.SecondGui('发送邮件')
         Label(self.second_gui, text="邮件主题:", width=7, bg='LightYellow', justify=LEFT).grid(padx=5, pady=2, row=0,column=0, sticky=W)
-        Entry(self.second_gui, width=20, textvariable=self.wechat_mails_web_contents[5][1], justify=LEFT).grid(padx=1, pady=2, row=0,column=1, columnspan=3,sticky=W)
+        Entry(self.second_gui, width=38, textvariable=self.wechat_mails_web_contents[5][1], justify=LEFT).grid(padx=1, pady=2, row=0,column=1, columnspan=3,sticky=W)
         Label(self.second_gui,text='邮件正文:',width=7,bg='LightYellow',justify=LEFT).grid(padx=5,pady=2,row=1,column=0,sticky=W)
-        Entry(self.second_gui,width=47,textvariable=self.wechat_mails_web_contents[6][1],justify=LEFT).grid(padx=5,pady=2,row=2,column=0,columnspan=8,sticky=W)
-        Button(self.second_gui,text='选择附件',width=7,state='normal',bg='LightGreen',command=lambda:self.otherJob.thread_add(self.functioncall.ChoiseMails_Files_Fun,self.second_gui)).\
-            grid(padx=5,pady=10,row=3,column=0,sticky=W)
-        Entry(self.second_gui,width=30,textvariable=self.wechat_mails_web_contents[7][1],justify=LEFT).grid(padx=1,pady=2,row=3,column=1,columnspan=3,sticky=W)
-        Button(self.second_gui,text='发送',width=7,bg='LightYellow',state='normal',command=lambda:self.otherJob.thread_add(self.functioncall.Send_mails_Fun,self.second_gui)).\
-            grid(padx=5,pady=10,row=4,column=0,sticky=W)
+        Entry(self.second_gui, width=47, textvariable=self.wechat_mails_web_contents[6][1]).grid(padx=5, pady=2, row=2,column=0, columnspan=4,sticky=W)
+        #contents_mail = Text(self.second_gui, width=47, height=6)
+        #contents_mail.grid(padx=5, pady=2,row=2, column=0, columnspan=4, sticky=W)
+        upload_files_mail = Text(self.second_gui, width=38, height=2)
+        upload_files_mail.grid(padx=1, pady=2,row=3, column=1, columnspan=3, sticky=W)
+        Button(self.second_gui,text='选择附件',width=7,state='normal',bg='LightGreen',command=lambda:self.otherJob.thread_add(self.functioncall.ChoiseMails_Files_Fun,self.second_gui,upload_files_mail)).\
+            grid(padx=5,pady=2,row=3,column=0,sticky=SW)
+        Label(self.second_gui,text="附件路径:",width=7,bg='LightYellow',justify=LEFT).grid(padx=5,pady=2,row=4,column=0,sticky=W)
+        Entry(self.second_gui,width=38,textvariable=self.wechat_mails_web_contents[7][1],justify=LEFT).grid(padx=1,pady=2,row=4,column=1,columnspan=3,sticky=W)
+        Label(self.second_gui, text="收件地址:", width=7, bg='LightYellow', justify=LEFT).grid(padx=5, pady=2, row=5,column=0, sticky=W)
+        Entry(self.second_gui, width=28, textvariable=self.wechat_mails_web_contents[8][1], justify=LEFT).grid(padx=1,pady=2,row=5,column=1,columnspan=2,sticky=W)
+        Button(self.second_gui, text='确认', width=7, bg='LightYellow', state='normal',command=lambda: self.otherJob.thread_add(self.functioncall.Send_mails_Fun, self.second_gui,0)). \
+            grid(padx=5, pady=2, row=6, column=0, sticky=W)
+        Button(self.second_gui,text='发送',width=7,bg='LightYellow',state='normal',command=lambda:self.otherJob.thread_add(self.functioncall.Send_mails_Fun,self.second_gui,1)).\
+            grid(padx=215,pady=2,row=6,column=2,sticky=W)
 
 
 

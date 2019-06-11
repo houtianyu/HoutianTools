@@ -20,6 +20,16 @@ from tkinter.filedialog import askdirectory
 import requests,urllib.request,json
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+import email.mime.multipart,smtplib,subprocess,email.mime.text
+from email.header import Header
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.mime.image import MIMEImage
+from email.mime.multipart import MIMEMultipart
+import smtplib,poplib,email,base64,imaplib, string
+from email.mime.application import MIMEApplication
+from io import StringIO
+from email.parser import Parser
 
 class BaiDuSearch:
     def __init__(self):
@@ -347,6 +357,7 @@ class WeiChat:
                 print('联系人昵称不存在')
                 self.Show_Msg_WeChat(top, '联系人昵称不存在', 4)
     def ChoiseWeChat_Files_Method(self,top,text):
+        self.text_contents = []
         selectFiles = tk.filedialog.askopenfilenames(title='可选择1个或多个文件')  # askopenfilename 1次上传1个；askopenfilenames1次上传多个
         for selectFile in selectFiles:
             text.insert(tk.END, selectFile + '\n')  # 更新text中内容
@@ -756,6 +767,8 @@ class Mails_operate:
     def __init__(self):
         self.inter_other_mails = OtherJobs()
         self.other_job_log_mail_operate = Logs()
+        self.mails_enclosure_text_contents = []
+        self.mails_tips_enclosure = ''
     def LoginEmail(self, mail_addr, user_name, user_passwd):
         if not user_name or not user_passwd:
             tips_mail_content_empty = '未输入邮箱或者密码！'
@@ -835,7 +848,76 @@ class Mails_operate:
                 else:
                     time.sleep(600)
                     dr.close()
+    def ChoiseMails_Files_Method(self,top,text):
+        self.mails_enclosure_text_contents = []
+        selectFiles = tk.filedialog.askopenfilenames(title='可选择1个或多个文件')  # askopenfilename 1次上传1个；askopenfilenames1次上传多个
+        for selectFile in selectFiles:
+            text.insert(tk.END, selectFile + '\n')  # 更新text中内容
+            text.update()
+        mails_text_contents = text.get('0.0', 'end').split('\n')[0:-2]
+        self.mails_enclosure_text_contents = mails_text_contents
+        print(self.mails_enclosure_text_contents)
+    def Send_mails_Fun_Method(self,mail_addr,from_username_f,from_passwd_f,to_username_f,subject_f,contents_f,type,mail_enclosure_addr_f):
+        att_filename = []
+        mail_addr_type = ''
+        def send_mail(from_username,from_passwd,smtp_server_addr,smtp_server_port,to_username,alert_info,detail_info,file_enclosure):
+            msgRoot = MIMEMultipart('related')
+            # 主题
+            msgRoot['Subject'] = Header(alert_info, 'utf-8')
+            # 构造附件
+            for file_path_addr in file_enclosure:
+                file_name = file_path_addr.split('\\')[-1]
+                print(file_name)
+                file_name = MIMEText(open(file_path_addr, 'rb').read(), 'base64', 'utf-8')
+                att_filename.append(file_name)
+            txt = email.mime.text.MIMEText(detail_info)
+            msgRoot['From'] = from_username
+            msgRoot['To'] = ','.join(to_username)  # Header("所有人", 'utf-8')
+            for att in att_filename:
+                att['Content-Type'] = 'application/octet-stream'
+                att['Content-Disposition'] = 'attachment;filename =' + str(att)
+                msgRoot.attach(att)
+            msgRoot.attach(txt)
+            smtp = smtplib.SMTP()
+            smtp.connect(smtp_server_addr,smtp_server_port)
+            smtp.login(from_username, from_passwd)
+            smtp.sendmail(from_username,to_username, msgRoot.as_string())
+            smtp.quit()
+            tips_send_mail_content = '邮件：' + alert_info + '发送成功！'
+            print(tips_send_mail_content)
+        global smtp_server_addr_f, smtp_server_port_f
+        if int(mail_addr) == 1:#yeah
+            smtp_server_addr_f = self.inter_other_mails.Get_Config_Info('mails_info', 'yeah_smtp_server_addr')  #
+            smtp_server_port_f = self.inter_other_mails.Get_Config_Info('mails_info', 'yeah_smtp_server_port')
+            mail_addr_type = 'yeah'
+        elif int(mail_addr) == 2:#126
+            smtp_server_addr_f = self.inter_other_mails.Get_Config_Info('mails_info', '126_smtp_server_addr')  #
+            smtp_server_port_f = self.inter_other_mails.Get_Config_Info('mails_info', '126_smtp_server_port')
+            mail_addr_type = '126'
+        else:#qq
+            #from_passwd_f = 'jafkuwbbyaxfbbgh'
+            smtp_server_addr_f = self.inter_other_mails.Get_Config_Info('mails_info', 'qq_smtp_server_addr')  #
+            smtp_server_port_f = self.inter_other_mails.Get_Config_Info('mails_info', 'qq_smtp_server_port')
+            mail_addr_type = 'qq'
 
+        if not mail_enclosure_addr_f and not self.mails_enclosure_text_contents:
+            self.mails_tips_enclosure = '未选择附件，请确认！'
+            print(self.mails_tips_enclosure)
+        elif not mail_enclosure_addr_f and self.mails_enclosure_text_contents:
+            self.mails_tips_enclosure = str(self.mails_enclosure_text_contents).split('[[')[-1].split(']]')[0]
+
+        elif mail_enclosure_addr_f and not self.mails_enclosure_text_contents:
+            self.mails_tips_enclosure = str(mail_enclosure_addr_f)
+            self.mails_enclosure_text_contents.append(mail_enclosure_addr_f)
+        else:
+            self.mails_tips_enclosure = "'" + str(mail_enclosure_addr_f) + "'," + str(self.mails_enclosure_text_contents).split('[[')[-1].split(']]')[0]
+            self.mails_enclosure_text_contents.append(mail_enclosure_addr_f)
+        self.mails_enclosure_text_contents= list(set(self.mails_enclosure_text_contents))
+        if int(type) == 0:
+            tips_msg = '请确认：此封' + mail_addr_type + '邮件发件人：' + from_username_f + '，收件人：' + to_username_f + '，主题：' + subject_f + '，邮件正问内容：' + contents_f + '，附件：<' + self.mails_tips_enclosure + '>。'
+            print(tips_msg)
+        else:
+            send_mail(from_username_f, from_passwd_f, smtp_server_addr_f, smtp_server_port_f, to_username_f,subject_f, contents_f, mail_enclosure_addr_f)
 class Resource_Monitor:
     def __init__(self):
         self.resource_monitor = OtherJobs()

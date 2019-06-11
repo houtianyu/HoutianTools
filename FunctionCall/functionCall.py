@@ -12,6 +12,7 @@ class FunctionCall:
         self.function_LoginWechat = WeiChat()
         self.play_Music_Name_Kugou = KuGouMusic()
         self.Garbage_Clear = LaJiQingLi()
+        self.login_eamil_mail_operate = Mails_operate()
     def BaiduSearch(self):
         baidu_object = self.overall.get_value(0)
         baidu_object_content = self.otherjob_fun.get_entryContent(baidu_object)
@@ -91,12 +92,24 @@ class FunctionCall:
         login_email_user = self.otherjob_fun.get_entryContent(login_email_object[0])
         login_email_passwd = self.otherjob_fun.get_entryContent(login_email_object[1])
         login_email_mailType = self.otherjob_fun.get_entryContent(login_email_object[2])
-        login_eamil_mail_operate = Mails_operate()
-        login_eamil_mail_operate.LoginEmail(login_email_mailType,login_email_user,login_email_passwd)
-    def ChoiseMails_Files_Fun(self):
-        pass
-    def Send_mails_Fun(self):
-        pass
+        self.login_eamil_mail_operate.LoginEmail(login_email_mailType,login_email_user,login_email_passwd)
+    def ChoiseMails_Files_Fun(self,top,text):
+        self.login_eamil_mail_operate.ChoiseMails_Files_Method(top,text)
+    def Send_mails_Fun(self,top,type):
+        login_email_object = self.overall.get_value(6)
+        send_mail_subject_object = self.overall.get_wechat_info(5)
+        send_mail_contets_object = self.overall.get_wechat_info(6)
+        send_mail_enclosure_object = self.overall.get_wechat_info(7)
+        receive_mail_enclosure_object = self.overall.get_wechat_info(8)
+        login_email_user = self.otherjob_fun.get_entryContent(login_email_object[0])
+        login_email_passwd = self.otherjob_fun.get_entryContent(login_email_object[1])
+        login_email_mailType = self.otherjob_fun.get_entryContent(login_email_object[2])
+        send_mail_subject = self.otherjob_fun.get_entryContent(send_mail_subject_object)
+        send_mail_contents = self.otherjob_fun.get_entryContent(send_mail_contets_object)
+        send_mail_enclosure_addr = self.otherjob_fun.get_entryContent(send_mail_enclosure_object)
+        receive_mail_addr = self.otherjob_fun.get_entryContent(receive_mail_enclosure_object)
+        self.login_eamil_mail_operate.Send_mails_Fun_Method(login_email_mailType,login_email_user,login_email_passwd,receive_mail_addr,send_mail_subject,send_mail_contents,type,send_mail_enclosure_addr)
+
     def Disk_Used(self):
         self.otherjob_fun.Resource_show('请等待。。。')
         tt_disk_used = self.otherjob_fun.thread_add(self.otherjob_fun.Count_Down,15)
