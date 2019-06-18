@@ -13,6 +13,7 @@ class FunctionCall:
         self.play_Music_Name_Kugou = KuGouMusic()
         self.Garbage_Clear = LaJiQingLi()
         self.login_eamil_mail_operate = Mails_operate()
+        self.function_respurce_mon = Resource_Monitor()
     def BaiduSearch(self):
         baidu_object = self.overall.get_value(0)
         baidu_object_content = self.otherjob_fun.get_entryContent(baidu_object)
@@ -101,14 +102,13 @@ class FunctionCall:
         send_mail_contets_object = self.overall.get_wechat_info(6)
         send_mail_enclosure_object = self.overall.get_wechat_info(7)
         receive_mail_enclosure_object = self.overall.get_wechat_info(8)
-        login_email_user = self.otherjob_fun.get_entryContent(login_email_object[0])
-        login_email_passwd = self.otherjob_fun.get_entryContent(login_email_object[1])
-        login_email_mailType = self.otherjob_fun.get_entryContent(login_email_object[2])
+        send_mail_userinfo_type_object= self.overall.get_wechat_info(9)
+        send_mail_userinfos = self.otherjob_fun.get_entryContent(send_mail_userinfo_type_object)
         send_mail_subject = self.otherjob_fun.get_entryContent(send_mail_subject_object)
         send_mail_contents = self.otherjob_fun.get_entryContent(send_mail_contets_object)
         send_mail_enclosure_addr = self.otherjob_fun.get_entryContent(send_mail_enclosure_object)
         receive_mail_addr = self.otherjob_fun.get_entryContent(receive_mail_enclosure_object)
-        self.login_eamil_mail_operate.Send_mails_Fun_Method(login_email_mailType,login_email_user,login_email_passwd,receive_mail_addr,send_mail_subject,send_mail_contents,type,send_mail_enclosure_addr)
+        self.login_eamil_mail_operate.Send_mails_Fun_Method(top,send_mail_userinfos,receive_mail_addr,send_mail_subject,send_mail_contents,type,send_mail_enclosure_addr)
 
     def Disk_Used(self):
         self.otherjob_fun.Resource_show('请等待。。。')
@@ -127,12 +127,34 @@ class FunctionCall:
         self.otherjob_fun.Resource_show('请等待。。。')
         mem_used_msg = self.inter_fun_mon.GetMemory()
         self.otherjob_fun.Resource_show(mem_used_msg)
-    def Mails_Unread(self):
+    def Mails_Unread(self,type):
         self.otherjob_fun.Resource_show('请等待。。。')
         tt_mails_unread = self.otherjob_fun.thread_add(self.otherjob_fun.Count_Down, 30)
-        mails_used_msg = self.inter_fun_mon.Get_Unreadmails_Num()
+        mails_used_msg = self.inter_fun_mon.Get_Unreadmails_Num(type)
         self.otherjob_fun.Resource_show(mails_used_msg)
         self.otherjob_fun.Stop_Thread_add(tt_mails_unread)
+        return mails_used_msg
+    def Get_Mails_Detailed(self,top,row):
+        unread_mails_info_lists = self.overall.get_unread_mails_info(0)
+        mails_user_object = self.overall.get_unread_mails_info(1)
+        mails_user_infos = self.otherjob_fun.get_entryContent(mails_user_object)
+        self.otherjob_fun.Show_Result_Lists(top,unread_mails_info_lists,row,mails_user_infos,0)
+    def Open_Mails_Detailed(self):
+        mails_user_object = self.overall.get_unread_mails_info(1)
+        mails_user_infos = self.otherjob_fun.get_entryContent(mails_user_object)
+        username = ''
+        passwd = ''
+        if int(mails_user_infos) == 1:
+            username = self.otherjob_fun.Get_Config_Info('users_login_info','user_login_yeah_houtian').split(',')[0]
+            passwd = self.otherjob_fun.Get_Config_Info('users_login_info','user_login_yeah_houtian').split(',')[-1]
+        self.login_eamil_mail_operate.LoginEmail(mails_user_infos,username,passwd)
+    def Get_Resource_Monitor_System_Result(self,top,type_resouce):
+        print('请等待。。。')
+        tt_get_resource = self.otherjob_fun.thread_add(self.otherjob_fun.Count_Down, 60)
+        test_listbox = self.function_respurce_mon.Get_Resource_Monitor_System_Result(top,type_resouce)
+        self.otherjob_fun.Stop_Thread_add(tt_get_resource)
+        Button(top, width=8, text='结束程序', state='normal', bg='LightGreen',command=lambda: self.otherjob_fun.thread_add(self.function_respurce_mon.Get_Resource_Monitor_content,top,test_listbox)). \
+            grid(padx=160, pady=10, row=2, column=1,columnspan=2,sticky=W)
     def Up_Monitor(self):
         up_monitor_job = '监控进程已经启动！'
         self.otherjob_fun.Resource_show(up_monitor_job)
@@ -141,9 +163,12 @@ class FunctionCall:
     def Open_Websit(self):
         open_websuit_object = self.overall.get_value(8)
         open_websuilt_type = self.otherjob_fun.get_entryContent(open_websuit_object)
-        print('111')
-        print(open_websuilt_type)
         self.function_baidusearch.open_websuit_com(open_websuilt_type)
+    def Websit_More_Operate(self,top):
+        open_websuit_object = self.overall.get_value(8)
+        open_websuilt_type = self.otherjob_fun.get_entryContent(open_websuit_object)
+        if int(open_websuilt_type) == 1:
+            pass
     def Init_Config(self):
         print('准备初始化，请确保配置文件中Everything路径的准确性！')
         self.otherjob_fun.Resource_show('准备初始化，请确保配置文件中Everything路径的准确性！')

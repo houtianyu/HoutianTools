@@ -22,7 +22,7 @@ class OtherJobs:
         while (count < b):
             ncount = b - count
             print(msg + '请等待··· %s' % ncount)
-            self.Resource_show(msg + '请等待··· %s' % ncount)
+            self.Resource_show(msg + '请等待··· %s秒。' % ncount)
             time.sleep(1)
             count += 1
     def thread_add(self,func,*args):
@@ -156,29 +156,24 @@ class OtherJobs:
         login_click_yeah_element = self.Get_Config_Info('element_xpath', 'click_login_button_yeah')
         username_yeah = self.Get_Config_Info('users_login_info', 'user_login_yeah_houtian').split(',')[0]  #
         passwd_yeah = self.Get_Config_Info('users_login_info', 'user_login_yeah_houtian').split(',')[-1]
-        unread_element = self.Get_Config_Info('element_xpath','unread_mails_yeah')
-        global unread_num
-        unread_num = ''
+        get_login_state_yeah = self.Get_Config_Info('element_xpath', 'get_login_state_yeah')
+        element_xpath_get_unread_num = self.Get_Config_Info('element_xpath', 'unread_mails_yeah')
         if os.path.exists(cookies_name):
             pass
         else:
-            #dr = webdriver.Chrome()
+            status = 1
             dr.get(url)
             get_cookies_tips = self.Get_Config_Info('tips', 'get_cookies')  #
             try:
+                time.sleep(0.1)
+                dr.find_element_by_xpath(get_login_state_yeah).click()
+                time.sleep(0.5)
                 elementi = dr.find_element_by_xpath(login_frame_yeah_element)
                 dr.switch_to_frame(elementi)  # 切换frame
                 dr.find_element_by_xpath(login_username_yeah_element).send_keys(username_yeah)
                 dr.find_element_by_xpath(login_passwd_yeah_element).send_keys(passwd_yeah)
                 dr.find_element_by_xpath(login_click_yeah_element).click()
-                time.sleep(1.5)
-                try:
-                    unread_num = dr.find_element_by_xpath(unread_element).text
-                except Exception as msg:
-                    tips_get_unread_mail_num_err = '未读邮件初次获取失败！'
-                    print(msg)
-                    self.other_job_log.LogsSave(msg)
-                    self.other_job_log.LogsSave(tips_get_unread_mail_num_err)
+                unread_mails_num = dr.find_element_by_xpath(element_xpath_get_unread_num).text
             except Exception as msg:
                 print(msg)
                 tips_auto_get_cookies_err = '自动获取yeah邮箱登陆cookies失败！'
@@ -186,19 +181,28 @@ class OtherJobs:
                 self.other_job_log.LogsSave(msg)
                 self.other_job_log.LogsSave(tips_auto_get_cookies_err)
                 dr.close()
+                time.sleep(0.5)
                 dr = webdriver.Chrome()
                 dr.get(url)
+                time.sleep(0.1)
+                dr.find_element_by_xpath(get_login_state_yeah).click()
+                time.sleep(0.5)
+                elementi = dr.find_element_by_xpath(login_frame_yeah_element)
+                dr.switch_to_frame(elementi)  # 切换frame
+                dr.find_element_by_xpath(login_username_yeah_element).send_keys(username_yeah)
+                dr.find_element_by_xpath(login_passwd_yeah_element).send_keys(passwd_yeah)
                 self.other_job_log.LogsSave(get_cookies_tips)
                 input(get_cookies_tips)
+            time.sleep(1.2)
             # 获取cookie并通过json模块将dict转换成str
             dictCookies = dr.get_cookies()  # 核心
             jsonCookies = json.dumps(dictCookies)
             # 登录完成后将cookie保存到本地文件
             with open(cookies_name, 'w') as f:
                 f.write(jsonCookies)
-            time.sleep(1)
+            time.sleep(0.1)
             dr.close()
-            return unread_num
+            return status
     def Read_Cookies(self, dr, cookies_name):
         with open(cookies_name, 'r', encoding='utf8') as f:
             listCookies = json.loads(f.read())
@@ -224,6 +228,53 @@ class OtherJobs:
         textlabel = Message(frame_monitor, textvariable=v_monitor, justify=LEFT, width=800, font=("华康少女字体", 10),fg="red")
         self.other_all.set_label_value(textlabel)
         textlabel.grid(padx=5, pady=1, row=9, column=0, columnspan=9, sticky=W)
+    def Show_Result_Lists(self,top,data_lists,row_chose,user_infos,list_type,height=12):
+        text_show = Listbox(top, selectmode=EXTENDED, font=("Consolas", 10), width=47, height=height)
+        text_show.grid(padx=8, pady=2, row=row_chose, column=0, columnspan=2)
+        text_show.delete(0, END)
+        i = 0
+        if list_type == 0:
+            mails_user_infos = self.Return_Mail_Name(int(user_infos))
+            details_tips = mails_user_infos + '邮箱总共未读' + str(len(data_lists)) + '封邮件,详细信息如下：'
+            for data_list in data_lists:
+                if i ==0:
+                    text_show.insert(END, details_tips)
+                details_tips_contents = '>发件人：' + data_list['发件人']+ '，主题：' + data_list['主题'] + '，发件时间：' + data_list['发件时间']
+                text_show.insert(END,details_tips_contents)
+                text_show.see(END)
+                text_show.update()
+                i += 1
+        elif list_type == 1:
+            if not user_infos:
+                details_tips = '无内存使用较多进程。'
+                text_show.insert(END, details_tips)
+            else:
+                details_tips = '总共' + str(user_infos) + '个应用程序内存使用较高，详细信息如下：'
+                for data_list in data_lists:
+                    if i == 0:
+                        text_show.insert(END,details_tips)
+                    details_tips_contents = '>ID:' + str(data_list['pid']) + ',NAME:' + data_list['name'] + ',MEMPT:' + str(round(data_list['MemPercent'],2)) + '%,MEMPT_SIZE:' + \
+                                            str(round(float(data_list['MemPercent']) / 100 * 8115,2)) + 'MB,MKTIME:' + str(time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(data_list['CreateTime']))) + '。'
+                    text_show.insert(END,details_tips_contents)
+                    text_show.see(END)
+                    text_show.update()
+                    i += 1
+        elif list_type == 2:
+            if not user_infos:
+                details_tips = '无CPU使用较多进程。'
+                text_show.insert(END, details_tips)
+            else:
+                details_tips = '总共' + str(user_infos) + '个应用程序CPU使用率较高，详细信息如下：'
+                for data_list in data_lists:
+                    if i == 0:
+                        text_show.insert(END,details_tips)
+                    details_tips_contents = '>ID:' + str(data_list['pid']) + ',NAME:' + data_list['name'] + ',CPUPT:' + str(round(data_list['MemPercent'],2)) + \
+                                            '%,MKTIME:' + time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(data_list['CreateTime'])) + '。'
+                    text_show.insert(END,details_tips_contents)
+                    text_show.see(END)
+                    text_show.update()
+                    i += 1
+        return text_show
     def Init_Exe_Path(self):
         init_infos = {'kugou_music_path':'KuGou.exe','qh360_grabage_path':'360Safe.exe','wechat_path':'WeChat.exe'}
         for search_content_info,search_content in init_infos.items():
@@ -292,6 +343,20 @@ class OtherJobs:
                 subprocess.Popen(search_close_cmd)
     #def Display_login_Sweepcode(self):
         #os.path.dirname(os.path.dirname(__file__)) + '\\GuiDisplay\\QR.png'
-
+    def End_Program(self,program_name):
+        cmd = 'taskkill /F /IM ' + program_name
+        os.system(cmd)
+    def Return_Mail_Name(self,i):
+        mail_info = ''
+        if i == 1:
+            mail_info = 'houtian_yu@yeah.net'
+        elif i ==2:
+            mail_info = 'weiyutc1688@126.com'
+        elif i ==3:
+            mail_info = '719476964@qq.com'
+        return mail_info
+    def Stop_Exe_Program(self,program_name):
+        cmd = 'taskkill /IM ' + program_name + ' /F'
+        os.system(cmd)
 if __name__ == '__main__':
     a = OtherJobs()

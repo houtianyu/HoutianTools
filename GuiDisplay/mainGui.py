@@ -11,15 +11,32 @@ class MainGui:
         self.functioncall = FunctionCall()
         self.overall = OverAll()
         self.wechat_mails_web_contents = [[0,'v_Contacts'], [1,'v_Contacts_m', 'v_send_content'], [2,'v_Contacts_f', 'v_file_path'],[3,'v_Contacts_num'],\
-                                [4,'v_Contacts_get'],[5,'v_mail_subject'],[6,'v_contents'],[7,'v_enclosure'],[8,'v_receive_addr']]
+                                [4,'v_Contacts_get'],[5,'v_mail_subject'],[6,'v_contents'],[7,'v_enclosure'],[8,'v_receive_addr'],[9,'v_commonly_mails_info']]
         for input_ss in self.wechat_mails_web_contents:
             if len(input_ss) == 3:
                 input_ss[1] = StringVar()
                 input_ss[2] = StringVar()
                 self.overall.set_wechat_info([input_ss[1], input_ss[2]])
+            if input_ss[0] == 9:
+                input_ss[1] = StringVar()
+                input_ss[1].set(1)
             else:
                 input_ss[1] = StringVar()
                 self.overall.set_wechat_info(input_ss[1])
+        self.resource_monitor_contents = [[0,'v_open_mails_info']]
+        for select in self.resource_monitor_contents:
+            if select[0] == 0:
+                select[1] = StringVar()
+                select[1].set(1)
+                self.overall.set_unread_mails_info_value(select[1],1)#0往后存放其他信息，0存放邮件内容
+            else:
+                select[1] = StringVar()
+                self.overall.set_unread_mails_info_value(select[1],1)
+        self.websute_operate_contents = [[0,'v_blog_subject'],[1,'v_bilibili_contens'],[2,'v_jxxiaofang_contents'],[3,'v_mukewang_contents'],[4,'v_github_warehouse'],\
+                                         [5,'v_baidu_translate']]
+        for contents in self.websute_operate_contents:
+            contents[1] = StringVar()
+            self.overall.set_unread_mails_info_value(contents[1], 1)
     def MainPageGui(self):
         self.root.title('HoutianTools_v1.0')
         width=850
@@ -135,8 +152,15 @@ class MainGui:
             grid(padx=1, row=7, column=1, sticky=W)
         Button(self.frame_v[7][2], text="内存占用", state='normal', width=8,bg='PowderBlue',command=lambda: self.otherJob.thread_add(self.functioncall.Mem_Used)). \
             grid(padx=1, row=7, column=2, sticky=W)
-        Button(self.frame_v[7][2], text="未读邮件", state='normal', width=8,bg='PowderBlue',command=lambda: self.otherJob.thread_add(self.functioncall.Mails_Unread)). \
-            grid(padx=1, row=7, column=3, sticky=W)
+        Button(self.frame_v[7][2], text="详细资源", state='normal', width=8,bg='PowderBlue',command=lambda: self.otherJob.thread_add(self.Resource_Monitor_System_More)).\
+            grid(padx=1, row=7, column=5, sticky=W)
+
+        unread_mails_member = Menubutton(self.frame_v[7][2],text='»未读邮件(默认)', relief=RAISED, bg='LightYellow',activebackground='Bisque', justify=LEFT)
+        unread_mails_member.grid(padx=1,row=7, column=3, columnspan=2, sticky=W)
+        unread_mails_menu = Menu(unread_mails_member, tearoff=False)
+        unread_mails_menu.add_radiobutton(label='houtian_yu@yeah.net', variable=self.resource_monitor_contents[0][1],command=lambda: self.otherJob.thread_add(self.Resource_Monitor_Mails_More,1),selectcolor="Crimson", activebackground='Pink', value=1)
+        unread_mails_member.config(menu=unread_mails_menu)
+
         Button(self.frame_v[7][2], text="启动监控", state='normal', width=8,bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Up_Monitor)). \
             grid(padx=1, row=7, column=7, sticky=W)
         #常用网站
@@ -150,6 +174,8 @@ class MainGui:
         website_menu.add_radiobutton(label='GitHub',variable=self.frame_v[8][1],selectcolor="Crimson",activebackground='Pink',value=5)
         website_menu.add_radiobutton(label='百度翻译',variable=self.frame_v[8][1],selectcolor="Crimson",activebackground='Pink',value=6)
         website_member.config(menu=website_menu)
+        Button(self.frame_v[8][2], text='更多操作', state='normal', width=8, bg='LightGreen',command=lambda: self.otherJob.thread_add(self.Websit_More_Operate_Ui)). \
+            grid(padx=1, row=8, column=1, sticky=N+S)
         Button(self.frame_v[8][2],text='打开网站',state='normal',width=8,bg='LightGreen',command=lambda:self.otherJob.thread_add(self.functioncall.Open_Websit)).\
             grid(padx=1,row=8,column=7,sticky=W)#functioncall.Open_Websit
         #初始化配置
@@ -248,7 +274,7 @@ class MainGui:
         self.SecondGui('垃圾清理')
         Button(self.second_gui, text="开始扫描", state='normal', width=8, bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Garbage_Scan,self.second_gui)). \
             grid(padx=5, row=0,pady=10, column=0, sticky=W)
-        Button(self.second_gui, text="开使清理", state='normal', width=8, bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Garbage_Delete,self.second_gui)). \
+        Button(self.second_gui, text="开始清理", state='normal', width=8, bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Garbage_Delete,self.second_gui)). \
             grid(padx=200,row=0,pady=10,column=1, sticky=W)
     #邮件操作
     def Mails_Operate_More(self):
@@ -267,10 +293,96 @@ class MainGui:
         Entry(self.second_gui,width=38,textvariable=self.wechat_mails_web_contents[7][1],justify=LEFT).grid(padx=1,pady=2,row=4,column=1,columnspan=3,sticky=W)
         Label(self.second_gui, text="收件地址:", width=7, bg='LightYellow', justify=LEFT).grid(padx=5, pady=2, row=5,column=0, sticky=W)
         Entry(self.second_gui, width=28, textvariable=self.wechat_mails_web_contents[8][1], justify=LEFT).grid(padx=1,pady=2,row=5,column=1,columnspan=2,sticky=W)
+
+        commonly_used_mails_member = Menubutton(self.second_gui, text="常用邮箱", relief=GROOVE, bg='LightYellow',activebackground='Bisque', justify=LEFT)
+        commonly_used_mails_member.grid(padx=5, pady=2,row=6, column=0, sticky=W)
+        commonly_used_mails_mailmenu = Menu(commonly_used_mails_member, tearoff=False)
+        commonly_used_mails_mailmenu.add_radiobutton(label="yeah_houtian", variable=self.wechat_mails_web_contents[9][1], selectcolor="Crimson",activebackground='Pink', value=1)
+        commonly_used_mails_mailmenu.add_radiobutton(label="126_weiyutc", variable=self.wechat_mails_web_contents[9][1], selectcolor="Crimson",activebackground='Pink', value=2)
+        commonly_used_mails_mailmenu.add_radiobutton(label="qq_719", variable=self.wechat_mails_web_contents[9][1], selectcolor="Crimson",activebackground='Pink', value=3)
+        commonly_used_mails_member.config(menu=commonly_used_mails_mailmenu)
+
         Button(self.second_gui, text='确认', width=7, bg='LightYellow', state='normal',command=lambda: self.otherJob.thread_add(self.functioncall.Send_mails_Fun, self.second_gui,0)). \
-            grid(padx=5, pady=2, row=6, column=0, sticky=W)
+            grid(padx=5, pady=2, row=7, column=0, sticky=W)
         Button(self.second_gui,text='发送',width=7,bg='LightYellow',state='normal',command=lambda:self.otherJob.thread_add(self.functioncall.Send_mails_Fun,self.second_gui,1)).\
-            grid(padx=215,pady=2,row=6,column=2,sticky=W)
+            grid(padx=215,pady=2,row=7,column=2,sticky=W)
+    def Resource_Monitor_Mails_More(self,type):
+        def more_info():
+            self.SecondGui('未读邮件信息！')
+            Button(self.second_gui, width=8, text='详细信息', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Get_Mails_Detailed, self.second_gui, 2)). \
+                grid(padx=10, pady=5, row=1, column=0, sticky=W)
+            Button(self.second_gui, width=8, text='打开邮箱', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Open_Mails_Detailed)). \
+                grid(padx=190, pady=5, row=1, column=1, columnspan=3, sticky=W)
+        self.functioncall.Mails_Unread(type)
+        Button(self.frame_v[7][2], text="更多", state='normal', width=8, bg='PowderBlue',command=lambda: self.otherJob.thread_add(more_info)). \
+                    grid(padx=1, row=7, column=4, sticky=W)
+    def Resource_Monitor_System_More(self):
+        self.SecondGui('系统资源')
+        Button(self.second_gui, width=10, text='内存占用信息', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Get_Resource_Monitor_System_Result, self.second_gui, 0)). \
+            grid(padx=10, pady=5, row=0, column=0, sticky=W)
+        Button(self.second_gui, width=10, text='CPU占用信息', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Get_Resource_Monitor_System_Result, self.second_gui, 1)). \
+            grid(padx=160, pady=5, row=0, column=1,columnspan=3, sticky=W)
+    def Websit_More_Operate_Ui(self):
+        open_websuilt_type_num = self.frame_v[8][1].get()
+        if not open_websuilt_type_num:
+            print('请选择需要打开的网站！')
+        else:
+            self.SecondGui('详细操作')
+            if int(open_websuilt_type_num) == 1:
+                Label(self.second_gui, text='博文标题：', width=8, bg='LightYellow', justify=LEFT).grid(padx=5, pady=10,row=0, column=0,sticky=W)
+                Entry(self.second_gui, width=37, textvariable=self.websute_operate_contents[0][1], justify=LEFT).grid(padx=1, pady=10, row=0, column=1,columnspan=2,sticky=W)
+                Button(self.second_gui, width=4, text='搜索', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate,self.second_gui, 1)). \
+                    grid(padx=5, pady=5, row=1, column=0,sticky=W)
+                Button(self.second_gui, width=8, text='打开博文', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate, self.second_gui,1)). \
+                    grid(padx=200, pady=5, row=1, column=2, sticky=W)
+                #listbox
+            elif int(open_websuilt_type_num) == 2:
+                Label(self.second_gui, text='视频名称：', width=8, bg='LightYellow', justify=LEFT).grid(padx=5, pady=10,row=0, column=0,sticky=W)
+                Entry(self.second_gui, width=37, textvariable=self.websute_operate_contents[1][1], justify=LEFT).grid(padx=1, pady=10, row=0, column=1, columnspan=2, sticky=W)
+                Button(self.second_gui, width=4, text='搜索', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate, self.second_gui,1)). \
+                    grid(padx=5, pady=5, row=1, column=0, sticky=W)
+                Button(self.second_gui, width=8, text='打开视频', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate, self.second_gui,1)). \
+                    grid(padx=200, pady=5, row=1, column=2, sticky=W)
+                # listbox
+            elif int(open_websuilt_type_num) == 3:
+                Label(self.second_gui, text='课程名称：', width=8, bg='LightYellow', justify=LEFT).grid(padx=5, pady=10,row=0, column=0,sticky=W)
+                Entry(self.second_gui, width=37, textvariable=self.websute_operate_contents[2][1], justify=LEFT).grid(padx=1, pady=10, row=0, column=1, columnspan=2, sticky=W)
+                Button(self.second_gui, width=4, text='搜索', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate, self.second_gui,1)). \
+                    grid(padx=5, pady=5, row=1, column=0, sticky=W)
+                Button(self.second_gui, width=8, text='打开课程', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate, self.second_gui,1)). \
+                    grid(padx=200, pady=5, row=1, column=2, sticky=W)
+                # listbox
+            elif int(open_websuilt_type_num) == 4:
+                Label(self.second_gui, text='课程名称：', width=8, bg='LightYellow', justify=LEFT).grid(padx=5, pady=10,row=0, column=0,sticky=W)
+                Entry(self.second_gui, width=37, textvariable=self.websute_operate_contents[3][1], justify=LEFT).grid(padx=1, pady=10, row=0, column=1, columnspan=2, sticky=W)
+                Button(self.second_gui, width=4, text='搜索', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate, self.second_gui,1)). \
+                    grid(padx=5, pady=5, row=1, column=0, sticky=W)
+                Button(self.second_gui, width=8, text='打开课程', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate, self.second_gui,1)). \
+                    grid(padx=200, pady=5, row=1, column=2, sticky=W)
+                # listbox
+            elif int(open_websuilt_type_num) == 5:
+                Label(self.second_gui, text='仓库名称：', width=8, bg='LightYellow', justify=LEFT).grid(padx=5, pady=10,row=0, column=0,sticky=W)
+                Entry(self.second_gui, width=37, textvariable=self.websute_operate_contents[4][1], justify=LEFT).grid(padx=1, pady=10, row=0, column=1, columnspan=2, sticky=W)
+                Button(self.second_gui, width=4, text='搜索', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate, self.second_gui,1)). \
+                    grid(padx=5, pady=5, row=1, column=0, sticky=W)
+                Button(self.second_gui, width=8, text='打开仓库', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate, self.second_gui,1)). \
+                    grid(padx=200, pady=5, row=1, column=2, sticky=W)
+                # listbox
+            elif int(open_websuilt_type_num) == 6:
+                Label(self.second_gui, text='原文内容：', width=8, bg='LightYellow', justify=LEFT).grid(padx=5, pady=10,row=0, column=0,sticky=W)
+                Entry(self.second_gui, width=47, textvariable=self.websute_operate_contents[5][1], justify=LEFT).grid(padx=5, pady=5, row=1, column=0,columnspan=3, sticky=W)
+                Label(self.second_gui, text='翻译内容：', width=8, bg='LightYellow', justify=LEFT).grid(padx=5, pady=5,row=2, column=0,sticky=W)
+                text_translate = Text(self.second_gui, font=("Consolas", 10), width=47, height=4)
+                text_translate.grid(padx=5, pady=5, row=3, column=0, columnspan=3,sticky=W)
+                Button(self.second_gui, width=4, text='翻译', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate, self.second_gui,1)). \
+                    grid(padx=5, pady=5, row=4, column=0, sticky=W)
+                Button(self.second_gui, width=8, text='打开翻译', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate, self.second_gui,1)). \
+                    grid(padx=200, pady=5, row=4, column=2, sticky=W)
+                # listbox
+
+
+
+
 
 
 

@@ -1,5 +1,6 @@
 # coding: utf-8
 from selenium import webdriver
+from OverAll.overAll import OverAll
 from OtherJobs.otherJob import *
 from Logs.logs import Logs
 import os,sys,win32process,win32gui,time,win32con,collections,psutil
@@ -279,9 +280,6 @@ class WeiChat:
         textlabel.grid(padx=5, pady=1, row=row, column=0, columnspan=3, sticky=W)
     def LoginWeChat_Sweepcode_Method(self,num,top):
         def close_QR_img():
-            hld_QR = win32gui.FindWindow('Windows.UI.Core.CoreWindow', None)
-            print(hld_QR)
-            win32gui.SendMessage(hld_QR, win32con.WM_CLOSE, 0, 0)
             #creat_time_2 = os.path.getctime(wechat_qr_path)
             #print(wechat_qr_path)
             #if creat_time_1 != creat_time_2:
@@ -291,6 +289,7 @@ class WeiChat:
             userinfo = itchat.web_init()
             print('登陆完成！账号为：%s!' % userinfo['User']['NickName'])
             self.Show_Msg_WeChat(top,('登陆完成！账号为：%s!' % userinfo['User']['NickName']),1)
+            self.inter_other_wc.End_Program('Microsoft.Photos.exe')
         def loginout_img():
             print('已退出登录！')
             self.Show_Msg_WeChat(top, '登陆完成！', 1)
@@ -300,6 +299,7 @@ class WeiChat:
             value = False
         #wechat_qr_path = os.path.dirname(os.path.dirname(__file__)) + '\\GuiDisplay\\QR.png'
         #creat_time_1 = os.path.getctime(wechat_qr_path)
+        print('请扫码登陆！')
         itchat.auto_login(hotReload=value,loginCallback=close_QR_img,exitCallback=loginout_img)#hotReload=True,
         itchat.run()
     def SearchWeChat_Contacts_Method(self,Contacts_name,top):
@@ -450,13 +450,13 @@ class KuGouMusic:
         self.music_download_path = os.path.dirname(os.path.dirname(__file__)) + '\\files\\music_download\\'
         self.music_status = None
     def play_Music_Name(self,type):
+        global status
         kugou_music_path = self.inter_other_kugou.Get_Config_Info('file_name','kugou_music_path')
         if type == 0:
             win32process.CreateProcess(kugou_music_path, '', None, None, 0, win32process.CREATE_NO_WINDOW, None, None,win32process.STARTUPINFO())
             time.sleep(2)
             self.inter_other_kugou.mouse_input_remote_on([18,116])
             self.inter_other_kugou.mouse_input_remote_up([18,116])
-            global status
             status = 0
         elif type == 1:
             if status == 0:
@@ -545,7 +545,7 @@ class KuGouMusic:
                                     num_cu = num
                                 elif num_cu_type == 0:
                                     if num == 0:
-                                        mp3_name1 = text_music.get(0)[3:]
+                                        mp3_name1 = text_music.get(0)[2:]
                                         print('当前%s是第一首歌，无法进行上一曲！' % mp3_name1)
                                         self.Show_Msg_Kugou_Music(top,('当前%s是第一首歌，无法进行上一曲！' % mp3_name1), 3)
                                         num_cu = num
@@ -553,7 +553,7 @@ class KuGouMusic:
                                         num_cu = num - 1
                                 else:
                                     if num == 29:
-                                        mp3_name1 = text_music.get(29)[3:]
+                                        mp3_name1 = text_music.get(29)[2:]
                                         print('当前%s是最后一首歌，无法进行下一曲！' % mp3_name1)
                                         self.Show_Msg_Kugou_Music(top,('当前%s是最后一首歌，无法进行下一曲！' % mp3_name1), 3)
                                         num_cu = num
@@ -624,10 +624,12 @@ class KuGouMusic:
             def last_music():
                 driver.close()
                 self.music_status = 2
+                self.inter_other_kugou.mouse_input_remote_onup(38)
                 start_music(0)
             def next_music():
                 driver.close()
                 self.music_status = 2
+                self.inter_other_kugou.mouse_input_remote_onup(40)
                 start_music(1)
             if type == 0:
                 show_music_result()
@@ -789,6 +791,7 @@ class Mails_operate:
             input_login_username_qq = self.inter_other_mails.Get_Config_Info('element_xpath', 'input_login_username_qq')
             input_login_password_qq = self.inter_other_mails.Get_Config_Info('element_xpath', 'input_login_password_qq')
             click_login_button_qq = self.inter_other_mails.Get_Config_Info('element_xpath', 'click_login_button_qq')
+            get_login_state_yeah = self.inter_other_mails.Get_Config_Info('element_xpath','get_login_state_yeah')
             dr = webdriver.Chrome()
             dr.maximize_window()
             if int(mail_addr) == 2:
@@ -816,6 +819,8 @@ class Mails_operate:
                 try:
                     mail_yeah_url = self.inter_other_mails.Get_Config_Info('mails_info', 'yeah_mail_url')
                     dr.get(mail_yeah_url)
+                    dr.find_element_by_xpath(get_login_state_yeah).click()
+                    time.sleep(0.5)
                     elementi = dr.find_element_by_xpath(get_frame_state_yeah)
                     dr.switch_to_frame(elementi)  # 切换frame
                     dr.find_element_by_xpath(input_login_username_yeah).send_keys(user_name)
@@ -857,7 +862,8 @@ class Mails_operate:
         mails_text_contents = text.get('0.0', 'end').split('\n')[0:-2]
         self.mails_enclosure_text_contents = mails_text_contents
         print(self.mails_enclosure_text_contents)
-    def Send_mails_Fun_Method(self,mail_addr,from_username_f,from_passwd_f,to_username_f,subject_f,contents_f,type,mail_enclosure_addr_f):
+    def Send_mails_Fun_Method(self,top,send_mail_userinfos,to_username_f,subject_f,contents_f,type,mail_enclosure_addr_f):
+        #判断选择是否正确
         att_filename = []
         mail_addr_type = ''
         def send_mail(from_username,from_passwd,smtp_server_addr,smtp_server_port,to_username,alert_info,detail_info,file_enclosure):
@@ -885,21 +891,26 @@ class Mails_operate:
             smtp.quit()
             tips_send_mail_content = '邮件：' + alert_info + '发送成功！'
             print(tips_send_mail_content)
-        global smtp_server_addr_f, smtp_server_port_f
-        if int(mail_addr) == 1:#yeah
+        global smtp_server_addr_f, smtp_server_port_f,from_username_f,from_passwd_f
+        if int(send_mail_userinfos) == 1:
+            from_username_f = self.inter_other_mails.Get_Config_Info('mails_login_info_client','user_login_yeah_houtian').split(',')[0]
+            from_passwd_f = self.inter_other_mails.Get_Config_Info('mails_login_info_client','user_login_yeah_houtian').split(',')[-1]
             smtp_server_addr_f = self.inter_other_mails.Get_Config_Info('mails_info', 'yeah_smtp_server_addr')  #
             smtp_server_port_f = self.inter_other_mails.Get_Config_Info('mails_info', 'yeah_smtp_server_port')
             mail_addr_type = 'yeah'
-        elif int(mail_addr) == 2:#126
+        elif int(send_mail_userinfos) == 2:
+            from_username_f = self.inter_other_mails.Get_Config_Info('mails_login_info_client', 'user_login_126_weiyu').split(',')[0]
+            from_passwd_f = self.inter_other_mails.Get_Config_Info('mails_login_info_client', 'user_login_126_weiyu').split(',')[-1]
             smtp_server_addr_f = self.inter_other_mails.Get_Config_Info('mails_info', '126_smtp_server_addr')  #
             smtp_server_port_f = self.inter_other_mails.Get_Config_Info('mails_info', '126_smtp_server_port')
             mail_addr_type = '126'
-        else:#qq
-            #from_passwd_f = 'jafkuwbbyaxfbbgh'
+        elif int(send_mail_userinfos) == 3:
+            from_username_f = self.inter_other_mails.Get_Config_Info('mails_login_info_client', 'user_login_qq_719').split(',')[0]
+            from_passwd_f = self.inter_other_mails.Get_Config_Info('mails_login_info_client', 'user_login_qq_719').split(',')[-1]
+            # from_passwd_f = 'jafkuwbbyaxfbbgh'
             smtp_server_addr_f = self.inter_other_mails.Get_Config_Info('mails_info', 'qq_smtp_server_addr')  #
             smtp_server_port_f = self.inter_other_mails.Get_Config_Info('mails_info', 'qq_smtp_server_port')
             mail_addr_type = 'qq'
-
         if not mail_enclosure_addr_f and not self.mails_enclosure_text_contents:
             self.mails_tips_enclosure = '未选择附件，请确认！'
             print(self.mails_tips_enclosure)
@@ -914,7 +925,7 @@ class Mails_operate:
             self.mails_enclosure_text_contents.append(mail_enclosure_addr_f)
         self.mails_enclosure_text_contents= list(set(self.mails_enclosure_text_contents))
         if int(type) == 0:
-            tips_msg = '请确认：此封' + mail_addr_type + '邮件发件人：' + from_username_f + '，收件人：' + to_username_f + '，主题：' + subject_f + '，邮件正问内容：' + contents_f + '，附件：<' + self.mails_tips_enclosure + '>。'
+            tips_msg = '请确认：此封' + mail_addr_type + '邮件发件人：' + from_username_f + '，收件人：' + to_username_f + '，主题：' + subject_f + '，邮件正文内容：' + contents_f + '，附件：<' + self.mails_tips_enclosure + '>。'
             print(tips_msg)
         else:
             send_mail(from_username_f, from_passwd_f, smtp_server_addr_f, smtp_server_port_f, to_username_f,subject_f, contents_f, mail_enclosure_addr_f)
@@ -922,6 +933,7 @@ class Resource_Monitor:
     def __init__(self):
         self.resource_monitor = OtherJobs()
         self.other_job_log_rm = Logs()
+        self.overall_RM = OverAll()
     def GetCpan(self):
         disk_used = collections.OrderedDict()
         for id in psutil.disk_partitions():
@@ -983,37 +995,151 @@ class Resource_Monitor:
                 self.other_job_log_rm.LogsSave(mem_alert)
                 self.resource_monitor.SendMail(mem_alert, memorycost)
             time.sleep(3600)
-    def Get_Unreadmails_Num(self):
-        global unread_mails_num_show
-        cookies_file_path = self.resource_monitor.Get_Config_Info('file_name', 'save_cookies_path')  #
-        cookies_file_path_all = os.path.dirname(os.path.dirname(__file__))+ cookies_file_path
-        yeah_url = self.resource_monitor.Get_Config_Info('mails_info', 'yeah_mail_url')  #
-        element_xpath_get_unread_num = self.resource_monitor.Get_Config_Info('element_xpath', 'unread_mails_yeah')  #
+    def Get_Unreadmails_Num(self,type):
+        cookies_file_path_all = ''
+        yeah_url = ''
+        element_xpath_get_unread_num = ''
+        if int(type) == 1:
+            cookies_file_path = self.resource_monitor.Get_Config_Info('file_name', 'save_cookies_path')  #
+            cookies_file_path_all = os.path.dirname(os.path.dirname(__file__))+ cookies_file_path + '_yeah'
+            yeah_url = self.resource_monitor.Get_Config_Info('mails_info', 'yeah_mail_url')  #
+            element_xpath_get_unread_num = self.resource_monitor.Get_Config_Info('element_xpath', 'unread_mails_yeah')  #
         chrome_options = Options()
         chrome_options.add_argument('--headless')
         chrome_options.add_argument('--disable-gpu')
         dr = webdriver.Chrome(chrome_options=chrome_options)
         #dr = webdriver.Chrome()
-        unread_num = self.resource_monitor.Save_Cookies(dr,cookies_file_path_all, yeah_url)
-        if unread_num:
-            unread_mails_num_show = 'houtian_yu@yeah.com的未读邮件：' + unread_num + '条。'
+        status = self.resource_monitor.Save_Cookies(dr,cookies_file_path_all, yeah_url)
+        time.sleep(0.1)
+        if status:
+            dr = webdriver.Chrome(chrome_options=chrome_options)
+            #dr = webdriver.Chrome()
+        dr.get(yeah_url)
+        #dr.maximize_window()
+        self.resource_monitor.Read_Cookies(dr, cookies_file_path_all)
+        try:
+            time.sleep(0.5)
+            unread_mails_num = dr.find_element_by_xpath(element_xpath_get_unread_num).text
+        except Exception as msg:
+            print(msg)
+            cookies_noused = self.resource_monitor.Get_Config_Info('tips','cookies_noused')
+            print(cookies_noused)
+            dr.close()
+            self.other_job_log_rm.LogsSave(cookies_noused)
+            os.remove(cookies_file_path_all)
+            self.Get_Unreadmails_Num()
         else:
-            dr.get(yeah_url)
-            #dr.maximize_window()
-            self.resource_monitor.Read_Cookies(dr, cookies_file_path_all)
-            try:
-                time.sleep(0.5)
-                unread_mails_num = dr.find_element_by_xpath(element_xpath_get_unread_num).text
-            except Exception as msg:
-                print(msg)
-                cookies_noused = self.resource_monitor.Get_Config_Info('tips','cookies_noused')
-                print(cookies_noused)
-                self.other_job_log_rm.LogsSave(cookies_noused)
-                os.remove(cookies_file_path_all)
-                self.Get_Unreadmails_Num()
-            else:
-                unread_mails_num_show = 'houtian_yu@yeah.com的未读邮件：' + unread_mails_num + '条。'
-                time.sleep(2)
-                dr.close()
-        self.other_job_log_rm.LogsSave(unread_mails_num_show)
+            cookies_url = dr.current_url
+            sid = cookies_url.split('=')[1].split('#')[0]
+            cookies_url = 'https://mail.yeah.net/js6/s?sid=' + sid + '&func=mbox:listMessages&YxInboxBottomShow=deptId=1|projectId=117&mbox_title_unread=folder'
+            dr.get(cookies_url)
+            time.sleep(0.5)
+            dictCookies = dr.get_cookies()
+            #转换ccokies
+            cookie = [item["name"] + "=" + item["value"] for item in dictCookies]
+            cookiestr = ';'.join(item for item in cookie)
+            unread_mails_num = self.Get_Unreadmails_infos(cookies_url,cookiestr)
+            time.sleep(0.1)
+            dr.close()
+        return unread_mails_num
+    def Get_Unreadmails_infos(self,url,cookies):
+        data = {'var': '<?xml version="1.0"?><object><array name="fids"><int>1</int></array><object name="filter"><object name=\
+        "flags"><boolean name="read">false</boolean></object></object><string name="order">date</string><boolean name="desc">true\
+        </boolean><int name="limit">20</int><int name="start">0</int><boolean name="skipLockedFolders">false</boolean><boolean name=\
+        "returnTag">true</boolean><boolean name="returnTotal">true</boolean></object>'}
+        header = {'Accept': 'text/javascript','Accept-Encoding': 'gzip, deflate, br','Accept-Language': 'zh-CN,zh;q=0.9','Connection': 'keep-alive',
+                    'Content-Length': '663',
+                    'Content-type': 'application/x-www-form-urlencoded',
+                    'Cookie':cookies,
+                    'Host': 'mail.yeah.net',
+                    'Origin': 'https://mail.yeah.net',
+                    'Referer': "https://mail.yeah.net/js6/main.jsp?sid=hAbVnMNKwbXeJAJQlJKKneHIwMiMPFrq&df=mail163_letter",
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'}
+        unread_info_all = []
+        unread_mails_from = ''
+        unread_mails_subject = ''
+        sendtime = ''
+        timeOut = 10
+        r = requests.post(url,data=data,headers=header,timeout=timeOut,allow_redirects=True, verify=False)
+        res = r.content.decode('utf-8')
+        res_lists = res.split('\'var\':')[-1].split('},\n{')
+        for res_list_every in res_lists:
+            if 'from' in res_list_every:
+                unread_mails_from = res_list_every.split('\n')[4].split(':')[-1].split('\'')[1]
+            if 'subject' in res_list_every:
+                unread_mails_subject = res_list_every.split('\n')[6].split(':')[-1].split('\'')[1]
+            if 'sentDate' in res_list_every:
+                sendtime = res_list_every.split('\n')[7].split(':')[-1].split('(')[-1].split('),')[0].replace(',',':')
+            unread_info_dic = {'发件人':unread_mails_from,'主题':unread_mails_subject,'发件时间':sendtime}
+            unread_info_all.append(unread_info_dic)
+        print(unread_info_all)
+        self.overall_RM.set_unread_mails_info_value(unread_info_all,0)
+        unread_mails_num_show = 'houtian_yu@yeah.com的未读邮件：' + str(len(unread_info_all)) + '条。'
         return unread_mails_num_show
+    def Get_Resource_Monitor_System_Result(self,top,type_resouce):
+        proc_mem_percent, cmdlines, cpu_percent = '', '', ''
+        proc, all_processes = [], psutil.process_iter()
+        for items in all_processes:
+            try:
+                procinfo = items.as_dict(attrs=["pid", "name"])
+                try:
+                    # the process start path
+                    p_path_cwd = items.cwd().encode('utf-8')
+                    # p_path_cwd = items.exe()
+                    # the process accounts for system memory uasge
+                    proc_mem_percent = items.memory_percent()
+                    # the process starts cmdline content
+                    cmdlines = str(items.cmdline())
+                    # the process accounts for system CPU usage
+                    cpu_percent = items.cpu_percent(interval=1)
+                except Exception as e:
+                    # print(e)
+                    try:
+                        p_path_cwd = items.exe()
+                    except Exception as e:
+                        p_path_cwd = e.name
+                p_status, p_create_time, proc_user, proc_io_info = items.status(), items.create_time(), items.username(), {}
+                try:
+                    proc_io = items.io_counters()
+                    proc_io_info["ReadCount"] = proc_io.read_count
+                    proc_io_info["WriteCount"] = proc_io.write_count
+                    proc_io_info["ReadBytes"] = proc_io.read_bytes
+                    proc_io_info["WriteBytes"] = proc_io.write_bytes
+                except Exception as e:
+                    pass
+                procinfo.update({"path": p_path_cwd,
+                                 "cmdline": cmdlines,
+                                 "cpu_percent": cpu_percent,
+                                 "status": p_status,
+                                 "CreateTime": p_create_time,
+                                 "MemPercent": proc_mem_percent,
+                                 "user": proc_user,
+                                 "DiskIo": proc_io_info})
+            except Exception as e:
+                pass
+            finally:
+                proc.append(procinfo)
+        cpuhigh_percent_data, Memhigh_Percent_data = [], []
+        for proc_list in proc:
+            try:
+                if float(proc_list['cpu_percent']) >= 5.0:
+                    cpuhigh_percent_data.append(proc_list)
+            except Exception as msg:
+                pass
+            try:
+                if float(proc_list['MemPercent']) >= 1.2:
+                    Memhigh_Percent_data.append(proc_list)
+            except Exception as msg:
+                pass
+        text_listbox = ''
+        if int(type_resouce) == 0:
+            text_listbox = self.resource_monitor.Show_Result_Lists(top,Memhigh_Percent_data,1,len(Memhigh_Percent_data),1,10)
+        elif int(type_resouce) == 1:
+            text_listbox = self.resource_monitor.Show_Result_Lists(top,cpuhigh_percent_data,1,len(cpuhigh_percent_data),2,10)
+        return text_listbox
+    def Get_Resource_Monitor_content(self,top,listbox):
+        num_list = listbox.curselection()
+        for num in num_list:
+            userhigh_info = listbox.get(num)[1:]
+            program_name = userhigh_info.split(',')[1].split(':')[-1]
+            self.resource_monitor.Stop_Exe_Program(program_name)
