@@ -20,7 +20,7 @@ class OverAll:
         else:
             _global_unread_mails_info.append(value)
     def set_websuite_contents(self,value):
-        _global_unread_mails_info.append(value)
+        _global_websuite_contents.append(value)
     def get_value(self,i, defValue=None):
         """ 获得一个全局变量,不存在则返回默认值 """
         #try:

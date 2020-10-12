@@ -14,26 +14,33 @@ class FunctionCall:
         self.Garbage_Clear = LaJiQingLi()
         self.login_eamil_mail_operate = Mails_operate()
         self.function_respurce_mon = Resource_Monitor()
-    def BaiduSearch(self):
+        self.function_newfile = NewFiles()
+    def BaiduSearch(self,type):
         baidu_object = self.overall.get_value(0)
         baidu_object_content = self.otherjob_fun.get_entryContent(baidu_object)
-        self.function_baidusearch.baidu_search(baidu_object_content)
-    def BaiduSearch_Auto(self):
+        self.function_baidusearch.baidu_search(baidu_object_content,type)
+    def BaiduSearch_Auto(self,search_type,gui=None):
+        tt_search_used = None
+        if search_type == 0:
+            self.otherjob_fun.Resource_show('请等待。。。')
+            tt_search_used = self.otherjob_fun.thread_add(self.otherjob_fun.Count_Down, 15)
         baidu_auto_object = self.overall.get_value(0)
         baidu_object_content = self.otherjob_fun.get_entryContent(baidu_auto_object)
-        self.function_baidusearch.baidu_search_title_auto(baidu_object_content)
-
+        self.function_baidusearch.baidu_search_title_auto(baidu_object_content,search_type,gui)
+        if search_type == 0:
+            self.otherjob_fun.Resource_show('搜索完成！')
+            self.otherjob_fun.Stop_Thread_add(tt_search_used)
     def OpenFiles(self):
         openfile_object = self.overall.get_value(1)
         openfile_object_content = self.otherjob_fun.get_entryContent(openfile_object)
-        function_newfile = NewFiles()
-        function_newfile.open_file(openfile_object_content)
+        self.function_newfile.open_file(openfile_object_content)
     def OpenDirWindows(self):
         openfile_object = self.overall.get_value(1)
         openfile_object_content = self.otherjob_fun.get_entryContent(openfile_object)
         function_newfile = NewFiles()
         function_newfile.open_dir_windows(openfile_object_content)
-
+    def Display_file_Contents_fun(self,gui):
+        self.function_newfile.display_file_contents(gui)
     def SearchFiles(self):
         searchfile_object = self.overall.get_value(2)
         searchfile_object_content = self.otherjob_fun.get_entryContent(searchfile_object)
@@ -96,6 +103,8 @@ class FunctionCall:
         self.login_eamil_mail_operate.LoginEmail(login_email_mailType,login_email_user,login_email_passwd)
     def ChoiseMails_Files_Fun(self,top,text):
         self.login_eamil_mail_operate.ChoiseMails_Files_Method(top,text)
+    def Choisefanyi_Files_Fun(self, top, text):
+        self.function_baidusearch.Choisefanyi_Files_Method(top, text)
     def Send_mails_Fun(self,top,type):
         login_email_object = self.overall.get_value(6)
         send_mail_subject_object = self.overall.get_wechat_info(5)
@@ -164,11 +173,27 @@ class FunctionCall:
         open_websuit_object = self.overall.get_value(8)
         open_websuilt_type = self.otherjob_fun.get_entryContent(open_websuit_object)
         self.function_baidusearch.open_websuit_com(open_websuilt_type)
-    def Websit_More_Operate(self,top):
-        open_websuit_object = self.overall.get_value(8)
-        open_websuilt_type = self.otherjob_fun.get_entryContent(open_websuit_object)
-        if int(open_websuilt_type) == 1:
-            pass
+    def Websit_More_Operate_Find(self,top,open_websuilt_type_num,search_type):
+        open_websuilt_type = open_websuilt_type_num -1
+        open_websuit_object = self.overall.get_websuite_contents(open_websuilt_type)
+        open_websuilt_contens = self.otherjob_fun.get_entryContent(open_websuit_object)
+        if int(open_websuilt_type_num) == 1:
+            self.function_baidusearch.websute_houtian_blog(top, open_websuilt_contens, search_type)
+        elif int(open_websuilt_type_num) == 2:
+            self.function_baidusearch.websute_bilibili_search(top, open_websuilt_contens, search_type)
+        elif int(open_websuilt_type_num) == 3:
+            self.function_baidusearch.websute_jianxue_search(top, open_websuilt_contens, search_type)
+        elif int(open_websuilt_type_num) == 4:
+            self.function_baidusearch.websute_mokewang(top,open_websuilt_contens,search_type)
+        elif int(open_websuilt_type_num) == 5:
+            self.function_baidusearch.websute_git_search(top, open_websuilt_contens, search_type)
+        elif int(open_websuilt_type_num) == 6:
+            self.function_baidusearch.websute_baidu_translate(top, open_websuilt_contens, search_type)
+    def Open_Websit_More_Operate(self,top,open_websuilt_type_num):
+        open_websuilt_type = open_websuilt_type_num - 1
+        open_websuit_object = self.overall.get_websuite_contents(open_websuilt_type)
+        open_websuilt_contens = self.otherjob_fun.get_entryContent(open_websuit_object)
+        self.function_baidusearch.Open_Websit_More_Operate_Method(top,open_websuilt_contens,open_websuilt_type_num)
     def Init_Config(self):
         print('准备初始化，请确保配置文件中Everything路径的准确性！')
         self.otherjob_fun.Resource_show('准备初始化，请确保配置文件中Everything路径的准确性！')

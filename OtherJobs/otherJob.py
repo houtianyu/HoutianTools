@@ -10,6 +10,7 @@ from win32gui import *
 from win32api import *
 from win32process import *
 from win32con import *
+from tkinter.scrolledtext import ScrolledText
 class OtherJobs:
     def __init__(self,tk=None):
         self.i = 0
@@ -17,6 +18,7 @@ class OtherJobs:
         self.other_all = OverAll()
         self.other_job_log = Logs()
         self.cf = configparser.ConfigParser()
+        self.textlabel = None
     def Count_Down(self,b,msg=' '):
         count = 0
         while (count < b):
@@ -218,36 +220,45 @@ class OtherJobs:
         dr.refresh()  # 读取完cookie刷新页面
     def Resource_show(self,msg):
         try:
-            textlabel = self.other_all.get_label_value(0)
-            textlabel.grid_forget()
+            self.textlabel = self.other_all.get_label_value(0)
+            self.textlabel.grid_forget()
         except Exception as msgs:
             pass
         v_monitor = StringVar()
         frame_monitor = Frame(self.tk,height=5,relief=GROOVE).grid(padx=5,row=9,column=0,columnspan=9,sticky=W)
         v_monitor.set(msg)
-        textlabel = Message(frame_monitor, textvariable=v_monitor, justify=LEFT, width=800, font=("华康少女字体", 10),fg="red")
-        self.other_all.set_label_value(textlabel)
-        textlabel.grid(padx=5, pady=1, row=9, column=0, columnspan=9, sticky=W)
+        self.textlabel = Message(frame_monitor, textvariable=v_monitor, justify=LEFT, width=800, font=("华康少女字体", 10),fg="red")
+        self.other_all.set_label_value(self.textlabel)
+        self.textlabel.grid(padx=5, pady=1, row=9, column=0, columnspan=9, sticky=W)
     def Show_Result_Lists(self,top,data_lists,row_chose,user_infos,list_type,height=12):
+        #frame_top = Frame(top,relief="ridge",width=350,).grid(padx=1, row=row_chose, column=0,columnspan=4, sticky=W)
         text_show = Listbox(top, selectmode=EXTENDED, font=("Consolas", 10), width=47, height=height)
-        text_show.grid(padx=8, pady=2, row=row_chose, column=0, columnspan=2)
+        text_show.grid(padx=8, pady=2, row=row_chose, column=0, columnspan=4,sticky=W)
         text_show.delete(0, END)
         i = 0
         if list_type == 0:
-            mails_user_infos = self.Return_Mail_Name(int(user_infos))
-            details_tips = mails_user_infos + '邮箱总共未读' + str(len(data_lists)) + '封邮件,详细信息如下：'
-            for data_list in data_lists:
-                if i ==0:
-                    text_show.insert(END, details_tips)
-                details_tips_contents = '>发件人：' + data_list['发件人']+ '，主题：' + data_list['主题'] + '，发件时间：' + data_list['发件时间']
-                text_show.insert(END,details_tips_contents)
+            if not user_infos:
+                details_tips = '无内存使用较多进程。'
+                text_show.insert(END, details_tips)
                 text_show.see(END)
                 text_show.update()
-                i += 1
+            else:
+                mails_user_infos = self.Return_Mail_Name(int(user_infos))
+                details_tips = mails_user_infos + '邮箱总共未读' + str(len(data_lists)) + '封邮件,详细信息如下：'
+                for data_list in data_lists:
+                    if i ==0:
+                        text_show.insert(END, details_tips)
+                    details_tips_contents = '>发件人：' + data_list['发件人']+ '，主题：' + data_list['主题'] + '，发件时间：' + data_list['发件时间']
+                    text_show.insert(END,details_tips_contents)
+                    text_show.see(END)
+                    text_show.update()
+                    i += 1
         elif list_type == 1:
             if not user_infos:
                 details_tips = '无内存使用较多进程。'
                 text_show.insert(END, details_tips)
+                text_show.see(END)
+                text_show.update()
             else:
                 details_tips = '总共' + str(user_infos) + '个应用程序内存使用较高，详细信息如下：'
                 for data_list in data_lists:
@@ -263,6 +274,8 @@ class OtherJobs:
             if not user_infos:
                 details_tips = '无CPU使用较多进程。'
                 text_show.insert(END, details_tips)
+                text_show.see(END)
+                text_show.update()
             else:
                 details_tips = '总共' + str(user_infos) + '个应用程序CPU使用率较高，详细信息如下：'
                 for data_list in data_lists:
@@ -274,7 +287,113 @@ class OtherJobs:
                     text_show.see(END)
                     text_show.update()
                     i += 1
+        elif list_type == 3:
+            if not user_infos:
+                details_tips = '未查询到结果,请缩小查询的关键字！'
+                text_show.insert(END, details_tips)
+                text_show.see(END)
+                text_show.update()
+            else:
+                details_tips = '总共查询出' + str(user_infos) + '个博客，详细信息如下：'
+                for data_list in data_lists:
+                    if i == 0:
+                        text_show.insert(END, details_tips)
+                    i += 1
+                    details_tips_contents = '博客：'+ data_list
+                    text_show.insert(END, details_tips_contents)
+                    text_show.see(END)
+                    text_show.update()
+        elif list_type == 4:
+            if not user_infos:
+                details_tips = '未查询到结果,请缩小查询的关键字,或重新输入!'
+                text_show.insert(END, details_tips)
+                text_show.see(END)
+                text_show.update()
+            else:
+                details_tips = '总共查询出' + str(user_infos) + '个相关视频，详细信息如下：'
+                for data_list in data_lists:
+                    if i == 0:
+                        text_show.insert(END, details_tips)
+                    i += 1
+                    details_tips_contents = '视频：'+ data_list
+                    text_show.insert(END, details_tips_contents)
+                    text_show.see(END)
+                    text_show.update()
+        elif list_type == 5:
+            if not user_infos:
+                details_tips = '未查询到结果,请缩小查询的关键字,或重新输入!'
+                text_show.insert(END, details_tips)
+                text_show.see(END)
+                text_show.update()
+            else:
+                details_tips = '总共查询出' + str(user_infos) + '个相关课程，详细信息如下：'
+                for data_list in data_lists:
+                    if i == 0:
+                        text_show.insert(END, details_tips)
+                    i += 1
+                    details_tips_contents = '课程：'+ data_list
+                    text_show.insert(END, details_tips_contents)
+                    text_show.see(END)
+                    text_show.update()
+        elif list_type == 6:
+            if not user_infos:
+                details_tips = '未查询到结果。'
+                text_show.insert(END, details_tips)
+                text_show.see(END)
+                text_show.update()
+            else:
+                details_tips = '总共查询出' + str(user_infos) + '个课程视频，详细信息如下：'
+                for data_list in data_lists:
+                    if i == 0:
+                        text_show.insert(END, details_tips)
+                    i += 1
+                    details_tips_contents = '课程：'+ data_list
+                    text_show.insert(END, details_tips_contents)
+                    text_show.see(END)
+                    text_show.update()
+        elif list_type == 7:
+            if not user_infos:
+                details_tips = '未查询到结果。'
+                text_show.insert(END, details_tips)
+                text_show.see(END)
+                text_show.update()
+            else:
+                details_tips = '总共查询出' + str(user_infos) + '个相关仓库，详细信息如下：'
+                for data_list in data_lists:
+                    if i == 0:
+                        text_show.insert(END, details_tips)
+                    i += 1
+                    details_tips_contents = '仓库名：'+ data_list
+                    text_show.insert(END, details_tips_contents)
+                    text_show.see(END)
+                    text_show.update()
+        elif list_type == 8:
+            if not user_infos:
+                details_tips = '未查询到结果。'
+                text_show.insert(END, details_tips)
+                text_show.see(END)
+                text_show.update()
+            else:
+                details_tips = '总共查询出' + str(user_infos) + '个相关内容，详细信息如下：'
+                for data_list in data_lists:
+                    if i == 0:
+                        text_show.insert(END, details_tips)
+                    i += 1
+                    details_tips_contents = '标题：'+ str(data_list.keys()).split("(['")[-1].split("'])")[0]
+                    text_show.insert(END, details_tips_contents)
+                    text_show.see(END)
+                    text_show.update()
+
         return text_show
+    def Show_Top_Msg(self,top,row,msg):
+        try:
+            self.textlabel.grid_forget()
+        except Exception as msgs:
+            pass
+        v_monitor = StringVar()
+        v_monitor.set(msg)
+        self.textlabel = Message(top, textvariable=v_monitor, justify=LEFT, width=326, font=("华康少女字体", 10),fg="red")
+        self.textlabel.grid(padx=5, pady=1, row=row, column=0, columnspan=9, sticky=W)
     def Init_Exe_Path(self):
         init_infos = {'kugou_music_path':'KuGou.exe','qh360_grabage_path':'360Safe.exe','wechat_path':'WeChat.exe'}
         for search_content_info,search_content in init_infos.items():
@@ -358,5 +477,18 @@ class OtherJobs:
     def Stop_Exe_Program(self,program_name):
         cmd = 'taskkill /IM ' + program_name + ' /F'
         os.system(cmd)
+    def Show_Messages(self,top,conntent_lists,type,row=0,col=0):
+        contents = ''
+        for conntent_list in conntent_lists:
+            title = str(conntent_list[0]).translate(str.maketrans('', '', '\n')).translate(str.maketrans('', '', '\r')).strip()
+            keywords = str(conntent_list[1]).translate(str.maketrans('', '', '\n')).translate(str.maketrans('', '', '\r')).strip()
+            description = str(conntent_list[2]).translate(str.maketrans('', '', '\n')).translate(str.maketrans('', '', '\r')).strip()
+            all_contents= str(conntent_list[3]).translate(str.maketrans('', '', '\n')).translate(str.maketrans('', '', '\r')).strip()
+            all_contents = re.sub('[a-zA-Z]','',all_contents)
+            contents = contents + '标题：' + title + '\n简要：' + keywords + '\n描述：' + description + '\n其他信息：\n' + all_contents
+        #text = Text(top,width=82,height=37,bg='Cornsilk',relief='sunken',fg='DarkTurquoise',font=("楷体", 10))
+        text = ScrolledText(top, width=80, height=37,bg='Cornsilk',relief='sunken',fg='DarkTurquoise',font=("楷体",10))
+        text.insert('insert',contents)
+        text.grid(padx=12, pady=5, row=row, column=col)
 if __name__ == '__main__':
     a = OtherJobs()

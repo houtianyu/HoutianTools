@@ -36,7 +36,7 @@ class MainGui:
                                          [5,'v_baidu_translate']]
         for contents in self.websute_operate_contents:
             contents[1] = StringVar()
-            self.overall.set_unread_mails_info_value(contents[1], 1)
+            self.overall.set_websuite_contents(contents[1])
     def MainPageGui(self):
         self.root.title('HoutianTools_v1.0')
         width=850
@@ -71,17 +71,17 @@ class MainGui:
                 value[2] = Frame(self.root,height=30,relief="ridge", bd=1,width=850,bg='SkyBlue').grid(padx=1,row=value[0],column=0,columnspan=8,sticky=W)
         #百度
         Entry(self.frame_v[0][2],width=80,textvariable=self.frame_v[0][1],justify = LEFT).grid(padx=5,row=0,column=0,columnspan=5,sticky=W)
-        Button(self.frame_v[0][2],text="手动搜索",state='normal',width=8,bg='LightGreen',command=lambda:self.otherJob.thread_add(self.functioncall.BaiduSearch)).\
+        Button(self.frame_v[0][2],text="手动搜索",state='normal',width=8,bg='LightGreen',command=lambda:self.otherJob.thread_add(self.functioncall.BaiduSearch,0)).\
             grid(padx=1,row=0,column=7,sticky=W)
-        Button(self.frame_v[0][2], text="自动搜索", state='normal', width=8, bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.BaiduSearch_Auto)). \
+        Button(self.frame_v[0][2], text="自动搜索", state='normal', width=8, bg='LightGreen',command=lambda: self.otherJob.thread_add(self.Baidu_Search_Auto)). \
             grid(padx=1, row=0, column=6, sticky=W)
         #打开文件
         Label(self.frame_v[1][2],text="文件路径:",width=8,bg='LightYellow',justify = LEFT).grid(padx=5,row=1,column=0,sticky=W)
         Entry(self.frame_v[1][2],width=45,textvariable=self.frame_v[1][1],justify = LEFT).grid(padx=1,row=1,column=1,columnspan=3,sticky=W)
         Label(self.frame_v[1][2], text="eg: D:/Python/test.txt",bg='LightYellow',justify = LEFT).grid(padx=1, row=1, column=4, columnspan=3,sticky=W)
-        Button(self.frame_v[1][2],text="打开文件",state='normal',width=8,bg='LightGreen',command=lambda:self.otherJob.thread_add(self.functioncall.OpenFiles)).\
+        Button(self.frame_v[1][2],text="更多操作",state='normal',width=8,bg='LightGreen',command=lambda:self.otherJob.thread_add(self.Open_files_contents)).\
             grid(padx=1,row=1,column=7,sticky=W)
-        Button(self.frame_v[1][2], text="打开目录", state='normal', width=8, bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.OpenDirWindows)). \
+        Button(self.frame_v[1][2], text="快速打开", state='normal', width=8, bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.OpenDirWindows)). \
             grid(padx=1, row=1, column=6, sticky=W)
         #本地搜索
         Label(self.frame_v[2][2], text="文件名称:", width=8,bg='LightYellow',justify = LEFT).grid(padx=5,row=2, column=0, sticky=W)
@@ -196,6 +196,20 @@ class MainGui:
         screenheight = self.root.winfo_screenheight()
         alignstr = '%dx%d+%d+%d' % (width, height, (screenwidth - width) / 2 + 420 , (screenheight - height) / 2 - 100)
         self.second_gui.geometry(alignstr)
+    def Third_Gui(self,title,width=600,height=500):
+        self.third_gui = Toplevel(bg='LightYellow')
+        self.third_gui.title(title)
+        screenwidth = self.root.winfo_screenwidth()
+        screenheight = self.root.winfo_screenheight()
+        local = '%dx%d+%d+%d' % (width,height,(screenwidth - width)/2,(screenheight - height)/2 - 50)
+        self.third_gui.geometry(local)
+    def Baidu_Search_Auto(self):
+        self.SecondGui('搜索结果')
+        Button(self.second_gui, text='打印内容', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.BaiduSearch_Auto_Third_Gui,0)). \
+            grid(padx=5, pady=5, row=0, column=0, sticky=W)
+        Button(self.second_gui, text='打开网站', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.BaiduSearch_Auto_Third_Gui,1)). \
+            grid(padx=170, pady=5, row=0, column=3, sticky=E)
+        self.functioncall.BaiduSearch_Auto(0,self.second_gui)
     def CloseToplevel(self):
         self.second_gui.destroy()
     def LoginWeChatGui(self):
@@ -331,57 +345,76 @@ class MainGui:
             if int(open_websuilt_type_num) == 1:
                 Label(self.second_gui, text='博文标题：', width=8, bg='LightYellow', justify=LEFT).grid(padx=5, pady=10,row=0, column=0,sticky=W)
                 Entry(self.second_gui, width=37, textvariable=self.websute_operate_contents[0][1], justify=LEFT).grid(padx=1, pady=10, row=0, column=1,columnspan=2,sticky=W)
-                Button(self.second_gui, width=4, text='搜索', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate,self.second_gui, 1)). \
+                Button(self.second_gui, width=4, text='搜索', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate_Find,self.second_gui, 1,0)). \
                     grid(padx=5, pady=5, row=1, column=0,sticky=W)
-                Button(self.second_gui, width=8, text='打开博文', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate, self.second_gui,1)). \
+                Button(self.second_gui, width=8, text='打开博文', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Open_Websit_More_Operate, self.second_gui,1)). \
                     grid(padx=200, pady=5, row=1, column=2, sticky=W)
                 #listbox
             elif int(open_websuilt_type_num) == 2:
                 Label(self.second_gui, text='视频名称：', width=8, bg='LightYellow', justify=LEFT).grid(padx=5, pady=10,row=0, column=0,sticky=W)
                 Entry(self.second_gui, width=37, textvariable=self.websute_operate_contents[1][1], justify=LEFT).grid(padx=1, pady=10, row=0, column=1, columnspan=2, sticky=W)
-                Button(self.second_gui, width=4, text='搜索', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate, self.second_gui,1)). \
+                Button(self.second_gui, width=4, text='搜索', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate_Find,self.second_gui, 2,0)). \
                     grid(padx=5, pady=5, row=1, column=0, sticky=W)
-                Button(self.second_gui, width=8, text='打开视频', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate, self.second_gui,1)). \
+                Button(self.second_gui, width=8, text='打开视频', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Open_Websit_More_Operate, self.second_gui,2)). \
                     grid(padx=200, pady=5, row=1, column=2, sticky=W)
                 # listbox
             elif int(open_websuilt_type_num) == 3:
                 Label(self.second_gui, text='课程名称：', width=8, bg='LightYellow', justify=LEFT).grid(padx=5, pady=10,row=0, column=0,sticky=W)
                 Entry(self.second_gui, width=37, textvariable=self.websute_operate_contents[2][1], justify=LEFT).grid(padx=1, pady=10, row=0, column=1, columnspan=2, sticky=W)
-                Button(self.second_gui, width=4, text='搜索', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate, self.second_gui,1)). \
+                Button(self.second_gui, width=4, text='搜索', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate_Find, self.second_gui, 3,0)). \
                     grid(padx=5, pady=5, row=1, column=0, sticky=W)
-                Button(self.second_gui, width=8, text='打开课程', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate, self.second_gui,1)). \
+                Button(self.second_gui, width=8, text='打开课程', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Open_Websit_More_Operate, self.second_gui, 3)). \
                     grid(padx=200, pady=5, row=1, column=2, sticky=W)
                 # listbox
-            elif int(open_websuilt_type_num) == 4:
-                Label(self.second_gui, text='课程名称：', width=8, bg='LightYellow', justify=LEFT).grid(padx=5, pady=10,row=0, column=0,sticky=W)
-                Entry(self.second_gui, width=37, textvariable=self.websute_operate_contents[3][1], justify=LEFT).grid(padx=1, pady=10, row=0, column=1, columnspan=2, sticky=W)
-                Button(self.second_gui, width=4, text='搜索', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate, self.second_gui,1)). \
-                    grid(padx=5, pady=5, row=1, column=0, sticky=W)
-                Button(self.second_gui, width=8, text='打开课程', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate, self.second_gui,1)). \
-                    grid(padx=200, pady=5, row=1, column=2, sticky=W)
+            elif int(open_websuilt_type_num) == 4:#慕课网
+                Label(self.second_gui, text='课程名称：', width=8, bg='LightYellow', justify=LEFT).grid(padx=5, pady=5,row=0, column=0,sticky=W)
+                Entry(self.second_gui, width=30, textvariable=self.websute_operate_contents[3][1], justify=LEFT).grid(padx=1, pady=1, row=0, column=1, columnspan=2, sticky=W)
+                Button(self.second_gui, width=4, text='搜索', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate_Find, self.second_gui,4,0)). \
+                    grid(padx=10, pady=1, row=0, column=3, sticky=W)
+                Button(self.second_gui, width=4, text='详细', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate_Find,self.second_gui, 4,1)). \
+                    grid(padx=5, pady=1, row=1, column=0, sticky=W)
+                Button(self.second_gui, width=8, text='播放课程', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Open_Websit_More_Operate, self.second_gui,4)). \
+                    grid(padx=200, pady=1, row=1, column=2,columnspan=3,sticky=W)
                 # listbox
             elif int(open_websuilt_type_num) == 5:
                 Label(self.second_gui, text='仓库名称：', width=8, bg='LightYellow', justify=LEFT).grid(padx=5, pady=10,row=0, column=0,sticky=W)
                 Entry(self.second_gui, width=37, textvariable=self.websute_operate_contents[4][1], justify=LEFT).grid(padx=1, pady=10, row=0, column=1, columnspan=2, sticky=W)
-                Button(self.second_gui, width=4, text='搜索', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate, self.second_gui,1)). \
+                Button(self.second_gui, width=4, text='搜索', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate_Find,self.second_gui, 5,1)). \
                     grid(padx=5, pady=5, row=1, column=0, sticky=W)
-                Button(self.second_gui, width=8, text='打开仓库', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate, self.second_gui,1)). \
+                Button(self.second_gui, width=8, text='打开仓库', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Open_Websit_More_Operate, self.second_gui,5)). \
                     grid(padx=200, pady=5, row=1, column=2, sticky=W)
                 # listbox
             elif int(open_websuilt_type_num) == 6:
                 Label(self.second_gui, text='原文内容：', width=8, bg='LightYellow', justify=LEFT).grid(padx=5, pady=10,row=0, column=0,sticky=W)
+
                 Entry(self.second_gui, width=47, textvariable=self.websute_operate_contents[5][1], justify=LEFT).grid(padx=5, pady=5, row=1, column=0,columnspan=3, sticky=W)
                 Label(self.second_gui, text='翻译内容：', width=8, bg='LightYellow', justify=LEFT).grid(padx=5, pady=5,row=2, column=0,sticky=W)
                 text_translate = Text(self.second_gui, font=("Consolas", 10), width=47, height=4)
                 text_translate.grid(padx=5, pady=5, row=3, column=0, columnspan=3,sticky=W)
-                Button(self.second_gui, width=4, text='翻译', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate, self.second_gui,1)). \
+                upload_files_fanyi = Text(self.second_gui, width=37, height=2)
+                upload_files_fanyi.grid(padx=1, pady=2, row=4, column=1, columnspan=3, sticky=W)
+                Button(self.second_gui, width=6, text='选择文件', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Choisefanyi_Files_Fun(self.second_gui, upload_files_fanyi))). \
                     grid(padx=5, pady=5, row=4, column=0, sticky=W)
-                Button(self.second_gui, width=8, text='打开翻译', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate, self.second_gui,1)). \
-                    grid(padx=200, pady=5, row=4, column=2, sticky=W)
+                Button(self.second_gui, width=6, text='翻译', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Websit_More_Operate_Find,self.second_gui, 6,text_translate)). \
+                    grid(padx=5, pady=5, row=5, column=0, sticky=W)
+                Button(self.second_gui, width=8, text='打开翻译', state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.Open_Websit_More_Operate, self.second_gui,6)). \
+                    grid(padx=200, pady=5, row=5, column=2, sticky=W)
                 # listbox
-
-
-
+    def BaiduSearch_Auto_Third_Gui(self,type):
+        if type == 0 :
+            self.Third_Gui('详细信息')
+            self.functioncall.BaiduSearch_Auto(1,self.third_gui)
+        elif type == 1:
+            self.functioncall.BaiduSearch_Auto(2)
+    def Open_files_contents(self):
+        def open_file_contents():
+            self.Third_Gui('编辑模式')
+            self.functioncall.Display_file_Contents_fun(self.third_gui)
+        self.SecondGui('Files Operation')
+        Button(self.second_gui, text='快速编辑', width=8, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(open_file_contents())). \
+            grid(padx=5, pady=5, row=0, column=0, sticky=W)
+        Button(self.second_gui, text='打开', width=6, state='normal', bg='LightGreen',command=lambda: self.otherJob.thread_add(self.functioncall.OpenFiles)). \
+            grid(padx=216, pady=5, row=0, column=3, sticky=W)
 
 
 

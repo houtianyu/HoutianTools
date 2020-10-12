@@ -18,7 +18,7 @@ import tkinter.messagebox
 from lxml import etree
 from urllib.request import urlretrieve
 from tkinter.filedialog import askdirectory
-import requests,urllib.request,json
+import requests,urllib.request,json,ssl
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import email.mime.multipart,smtplib,subprocess,email.mime.text
@@ -31,12 +31,35 @@ import smtplib,poplib,email,base64,imaplib, string
 from email.mime.application import MIMEApplication
 from io import StringIO
 from email.parser import Parser
+import execjs,js2py
+from win32com import client as wc
 
 class BaiDuSearch:
     def __init__(self):
         self.inter_other_baidu = OtherJobs()
         self.other_job_log_baidu = Logs()
-    def baidu_search(self,contents):
+        self.houtian_blog = self.inter_other_baidu.Get_Config_Info('url_info', 'houtian_blog')
+        self.bilibili = self.inter_other_baidu.Get_Config_Info('url_info', 'bilibili')
+        self.jinxuexiaofang = self.inter_other_baidu.Get_Config_Info('url_info', 'jinxuexiaofang')
+        self.mokecom = self.inter_other_baidu.Get_Config_Info('url_info', 'mokecom')
+        self.github = self.inter_other_baidu.Get_Config_Info('url_info', 'github')
+        self.baidufanyi = self.inter_other_baidu.Get_Config_Info('url_info', 'baidufanyi')
+        self.title_list_result = []
+        self.title_list_result_link = []
+        self.contents_list_result = []
+        self.num_list_moke = []
+        self.blog_result = []
+        self.bilibili_search_list = []
+        self.github_result_list = []
+        self.jianxue_result_all_list = []
+        self.jianxue_result_search = []
+        self.num_list_baidu_at = None
+        self.title_all_list = []
+        self.two_contents_list = {}
+        self.text_listbox = None
+        self.text_listbox_b = None
+        self.fanyi_enclosure_text_contents = ''
+    def baidu_search(self,contents,type):
         if not contents:
             tips_baidu = '未输入百度搜索内容。'
             self.inter_other_baidu.Resource_show(tips_baidu)
@@ -51,6 +74,11 @@ class BaiDuSearch:
                 dr.maximize_window()
                 dr.find_element_by_id(baidu_input).send_keys(contents)
                 dr.find_element_by_id(baidu_click).click()
+                if type == 1:
+                    time.sleep(2)
+                    click_content = str(self.title_all_list[self.num_list_baidu_at[-1] - 1 ].keys()).split("(['")[-1].split("'])")[0]
+                    print(click_content)
+                    dr.find_element_by_partial_link_text(click_content)
             except Exception as msg:
                 print(msg)
                 self.other_job_log_baidu.LogsSave(msg)
@@ -69,81 +97,595 @@ class BaiDuSearch:
             self.other_job_log_baidu.LogsSave(msg)
             self.other_job_log_baidu.LogsSave(msg)
         else:
-            houtian_blog = self.inter_other_baidu.Get_Config_Info('url_info','houtian_blog')
-            bilibili=self.inter_other_baidu.Get_Config_Info('url_info','bilibili')
-            jinxuexiaofang = self.inter_other_baidu.Get_Config_Info('url_info', 'jinxuexiaofang')
-            mokecom = self.inter_other_baidu.Get_Config_Info('url_info', 'mokecom')
-            github = self.inter_other_baidu.Get_Config_Info('url_info', 'github')
-            baidufanyi = self.inter_other_baidu.Get_Config_Info('url_info', 'baidufanyi')
             dr = webdriver.Chrome()
             dr.maximize_window()
             if int(num) == 1:
                 tips_houtian_blog = '正在打开后天博客网站！'
                 self.inter_other_baidu.Resource_show(tips_houtian_blog)
                 self.other_job_log_baidu.LogsSave(tips_houtian_blog)
-                dr.get(houtian_blog)
+                dr.get(self.houtian_blog)
             elif int(num) == 2:
                 tips_bilibili = '正在打开哔哩哔哩网站！'
                 self.inter_other_baidu.Resource_show(tips_bilibili)
                 self.other_job_log_baidu.LogsSave(tips_bilibili)
-                dr.get(bilibili)
+                dr.get(self.bilibili)
             elif int(num) == 3:
                 tips_jinxuexiaofang = '正在打开简学消防网站！'
                 self.inter_other_baidu.Resource_show(tips_jinxuexiaofang)
                 self.other_job_log_baidu.LogsSave(tips_jinxuexiaofang)
-                dr.get(jinxuexiaofang)
+                dr.get(self.jinxuexiaofang)
             elif int(num) == 4:
                 tips_mokecom = '正在打开慕课网站！'
                 self.inter_other_baidu.Resource_show(tips_mokecom)
                 self.other_job_log_baidu.LogsSave(tips_mokecom)
-                dr.get(mokecom)
+                dr.get(self.mokecom)
             elif int(num) == 5:
                 tips_github = '正在打开github网站！'
                 self.inter_other_baidu.Resource_show(tips_github)
                 self.other_job_log_baidu.LogsSave(tips_github)
-                dr.get(github)
+                dr.get(self.github)
             elif int(num) == 6:
                 tips_baidufanyi = '正在打开github网站！'
                 self.inter_other_baidu.Resource_show(tips_baidufanyi)
                 self.other_job_log_baidu.LogsSave(tips_baidufanyi)
-                dr.get(baidufanyi)
-    def baidu_search_title_auto(self,contents):
-        title_all = {}
+                dr.get(self.baidufanyi)
+    def baidu_search_title_auto(self,contents,search_type,gui):
+        def check_select():
+            while 1:
+                try:
+                    self.num_list_baidu_at = self.text_listbox_b.curselection()
+                except Exception as msg:
+                    pass
+                if self.num_list_baidu_at:
+                    break
+                else:
+                    time.sleep(0.5)
+        def get_contents(url):
+            #text_music.get(0)[2:]
+            header = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36'}
+            resp = requests.get(url, headers=header, timeout=30)
+            resp.encoding = resp.apparent_encoding  # 设置解码方式
+            htmls = resp.text
+            return htmls
+        def filter_contents(content_search,html):
+            return re.findall(content_search,html)
+        def get_current_url(url):
+            chrome_options = Options()
+            chrome_options.add_argument('--headless')
+            chrome_options.add_argument('--disable-gpu')
+            dr = webdriver.Chrome(chrome_options=chrome_options)
+            #dr = webdriver.Chrome()
+            dr.get(url)
+            time.sleep(1)
+            current_url = dr.current_url
+            dr.close()
+            return current_url
+        def get_html_code(url):
+            res = requests.get(url)
+            code_type = res.encoding
+            return code_type
+        ssl._create_default_https_context = ssl._create_unverified_context
+        search_title = ''
+        kerwords_ = ''
+        description = ''
+        tkd_list = []
+        html_s = ''
         if not contents:
             tips_baidu = '未输入百度搜索内容。'
             self.inter_other_baidu.Resource_show(tips_baidu)
             self.other_job_log_baidu.LogsSave(tips_baidu)
-        user_agents_baidu_search_auto = self.inter_other_baidu.Get_Config_Info('other_info','user_agents_baidu_search_auto')
-        #user_agents_baidu_search_auto = dict(user_agents_baidu_search_auto)
-        url_baidu_search_auto = self.inter_other_baidu.Get_Config_Info('url_info','url_baidu_search_auto')
-        for i in range(2):
-            url_baidu_search__auto_format = url_baidu_search_auto + urllib.parse.quote(contents) + '&pn=' + str(i*100)
-            req = urllib.request.Request(url_baidu_search__auto_format)#,None,headers=user_agents_baidu_search_auto
-            response = urllib.request.urlopen(req, None, 30)  # 设置超时时间
-            try:
-                html = response.read().decode('utf-8')
-            except Exception as msg:
-                print('获取失败,请重试！ %s'% msg)
-                self.inter_other_baidu.Resource_show('获取失败,请重试！ %s'% msg)
-                self.other_job_log_baidu.LogsSave('获取失败,请重试！ %s'% msg)
-            else:
-                # 提取搜索结果SERP的标题
-                soup = BeautifulSoup(''.join(html))
-                for i in soup.findAll("h3"):
-                    title = i.text
-                    if '百度' in title:
+        else:
+            if search_type == 0:
+                user_agents_baidu_search_auto = self.inter_other_baidu.Get_Config_Info('other_info','user_agents_baidu_search_auto')
+                url_baidu_search_auto = self.inter_other_baidu.Get_Config_Info('url_info','url_baidu_search_auto')
+                for i in range(2):
+                    url_baidu_search__auto_format = url_baidu_search_auto + urllib.parse.quote(contents) + '&pn=' + str(i*100)
+                    req = urllib.request.Request(url_baidu_search__auto_format)#,None,headers=user_agents_baidu_search_auto
+                    response = urllib.request.urlopen(req, None, 30)  # 设置超时时间
+                    try:
+                        html = response.read().decode('utf-8')
+                    except Exception as msg:
+                        print('获取失败,请重试！ %s'% msg)
+                        self.inter_other_baidu.Resource_show('获取失败,请重试！ %s'% msg)
+                        self.other_job_log_baidu.LogsSave('获取失败,请重试！ %s'% msg)
+                    else:
+                        # 提取搜索结果SERP的标题
+                        soup = BeautifulSoup(''.join(html))
+                        for i in soup.findAll("h3"):
+                            title = i.text
+                            url_i = i.find('a').get('href')
+                            title = title.translate(str.maketrans('', '', '\n'))
+                            if '百度' in title:
+                                try:
+                                    title = title.split('\n')[1]
+                                except Exception as msg:
+                                    pass
+                                title_all = {title:url_i}
+                                self.other_job_log_baidu.LogsSave(title)
+                            else:
+                                title_all = {title:url_i}
+                                self.other_job_log_baidu.LogsSave(title)
+                                self.title_all_list.append(title_all)
+                            title_all = {}
+                self.text_listbox_b = self.inter_other_baidu.Show_Result_Lists(gui,self.title_all_list,1,len(self.title_all_list),8,height=14)
+                self.other_job_log_baidu.LogsSave(self.title_all_list)
+                self.inter_other_baidu.thread_add(check_select)
+            elif search_type == 1:
+                if not self.num_list_baidu_at:
+                    print('请先选择要查看的内容！')
+                else:
+                    self.num_list_baidu_at = self.text_listbox_b.curselection()
+                    print(self.num_list_baidu_at)
+                    for num in self.num_list_baidu_at:
+                        url_num = str(self.title_all_list[num - 1].values()).split("(['")[-1].split("'])")[0]
+                        url_current = str(get_current_url(url_num))
                         try:
-                            title = title.split('\n')[1]
+                            html_s = get_contents(url_current)
+                        except Exception as msg:
+                            print(msg)
+                            print('网页内容获取失败，请重试')
+                        else:
+                            print(url_current)
+                            soup = BeautifulSoup(''.join(html_s))
+                            for i in soup.findAll("head"):
+                                search_title = i.find('title').text#.encode('utf-8')
+                                for k in i.findAll('meta'):
+                                    if k.get('name') == "Keywords" or k.get('name') == "keywords":
+                                        kerwords_ = k.get('content')#.encode('utf-8')
+                                    if k.get('name') == "Description" or k.get('name') == "description" :
+                                        description = k.get('content')#.encode('utf-8')
+                            all_contents = ''
+                            for j in soup.findAll('div'):
+                                all_contents = all_contents + ' '+ j.text
+                            tkd_list.append([search_title, kerwords_, description,all_contents])
+                            self.inter_other_baidu.Show_Messages(gui,tkd_list,0)
+            elif search_type == 2:
+                if not self.num_list_baidu_at:
+                    print('请先选择要查看的内容！')
+                else:
+                    self.num_list_baidu_at = self.text_listbox_b.curselection()
+                    for num in self.num_list_baidu_at:
+                        #self.inter_other_baidu.Show_Top_Msg(top,3,self.contents_list_result[(num-1)])
+                        url_num = str(self.title_all_list[num -1].values()).split("(['")[-1].split("'])")[0]
+                        dr = webdriver.Chrome()
+                        dr.maximize_window()
+                        dr.get(url_num)
+    def websute_mokewang(self,top,open_websuilt_contens,search_type):
+        if not open_websuilt_contens:
+            tips_websuilt_contens = '未输入搜索课程内容。'
+            print(tips_websuilt_contens)
+        else:
+            if search_type == 0:
+                url_mokewang_search_subject = self.inter_other_baidu.Get_Config_Info('url_info','url_mokewang_search_subject')
+                url_baidu_search_auto_format = url_mokewang_search_subject + urllib.parse.quote(open_websuilt_contens)
+                req = urllib.request.Request(url_baidu_search_auto_format)
+                response = urllib.request.urlopen(req, None, 30)  # 设置超时时间
+                html = response.read().decode('utf-8')
+                title = r"class='course-detail-title'>\n(\t\t\t\t.*)"
+                contents = r"</a>\n\t\t\t<p>(.*)"
+                title_list = re.findall(title, html)
+                contents_list = re.findall(contents, html)
+                if len(title_list) == len(contents_list):
+                    for i in title_list:
+                        self.title_list_result_link.append(i)
+                        i = i.strip().lstrip()
+                        i = i.replace(u"<span  class='highlight'>",'')
+                        i = i.replace(u'</span>','')
+                        self.title_list_result.append(i)
+                    for i in contents_list:
+                        i = i.replace(u'</p>', '')
+                        i = i.strip().lstrip()
+                        i = i.replace(u"<span  class='highlight'>", '')
+                        i = i.replace(u'</span>', '')
+                        self.contents_list_result.append(i)
+                    self.text_listbox = self.inter_other_baidu.Show_Result_Lists(top, self.title_list_result, 2,len(self.title_list_result), 6, 10)
+                    while 1:
+                        try:
+                            self.num_list_moke = self.text_listbox.curselection()
                         except Exception as msg:
                             pass
-                        title_all[title] = '内容需要完善'
-                        self.other_job_log_baidu.LogsSave(title)#需要修改
+                        if self.num_list_moke:
+                            break
+                        else:
+                            time.sleep(0.5)
+                else:
+                    print('数据获取可能不正确。')
+            elif search_type == 1:
+                if not self.contents_list_result:
+                    print('请先点击搜索按钮！')
+                else:
+                    self.num_list_moke = self.text_listbox.curselection()
+                    for num in self.num_list_moke:
+                        self.inter_other_baidu.Show_Top_Msg(top,3,self.contents_list_result[(num-1)])
+    def websute_houtian_blog(self,top,open_websuilt_contens,search_type):
+        def find_result(url,blog_content_search):
+            req = urllib.request.Request(url)
+            response = urllib.request.urlopen(req,None,30)
+            html = response.read().decode('utf-8')
+            blog_contents_list = re.findall(blog_content_search, html)
+            return blog_contents_list
+        blog_result_dic = {}
+        blog_content_result_list = []
+        if not open_websuilt_contens:
+            print('请输入查询内容！')
+        else:
+            url_blog_houtian = self.inter_other_baidu.Get_Config_Info('url_info','url_blog_houtian')
+            url = url_blog_houtian + '1.html'
+            blog_content_search = r'title="" target="_blank" href="(h.*)">'
+            blog_content_search_page_num = r'共(.*)页'
+            blog_contents_page_num = str(find_result(url, blog_content_search_page_num))
+            page_num = int(blog_contents_page_num.split("'")[1])
+            for i in range(1,page_num+1):
+                url_c = url_blog_houtian + str(i) + '.html'
+                blog_contents_list = find_result(url_c,blog_content_search)
+                for list_url in blog_contents_list:
+                    list_search = r'class="titName SG_txta"(>.*)</h2>'
+                    blog_content_result = find_result(list_url,list_search)
+                    blog_content_result = str(blog_content_result).split('>')[-1].split("'")[0]
+                    if open_websuilt_contens in blog_content_result:
+                        blog_content_result_list.append(blog_content_result)
+                        blog_result_dic[blog_content_result] = list_url
+                        self.blog_result.append(blog_result_dic)
+                        blog_result_dic = {}
+        if not blog_content_result_list:
+            print('未找到内容！')
+        self.text_listbox_blog = self.inter_other_baidu.Show_Result_Lists(top,blog_content_result_list, 2,len(blog_content_result_list), 3,6)
+    def websute_bilibili_search(self,top,open_websuilt_contens,search_type):
+        bilibili_search_title_list = []
+        bilibili_search_url_list = []
+        bilibili_search_dic = {}
+        url_baidu_search_auto_format1 = self.inter_other_baidu.Get_Config_Info('url_info','url_baidu_search_auto_format1')
+        url_baidu_search_auto_format2 = self.inter_other_baidu.Get_Config_Info('url_info','url_baidu_search_auto_format2')
+        def find_result(url, blog_content_search):
+            req = urllib.request.Request(url)
+            response = urllib.request.urlopen(req, None, 30)
+            html = response.read().decode('utf-8')
+            blog_contents_list = re.findall(blog_content_search, html)
+            return blog_contents_list
+        if not open_websuilt_contens:
+            print('请输入查询内容！')
+        else:
+            url_baidu_search_auto_format = url_baidu_search_auto_format1 + urllib.parse.quote(open_websuilt_contens) + url_baidu_search_auto_format2
+            bilibili_search = r'</span><a title="(.*)" target="'
+            bilibili_search_contents = find_result(url_baidu_search_auto_format, bilibili_search)
+            for every_search in bilibili_search_contents:
+                bilibili_search_title = every_search.split('" href="//')[0]
+                bilibili_search_url = every_search.split('" href="//')[-1]
+                bilibili_search_title_list.append(bilibili_search_title)
+                bilibili_search_dic[bilibili_search_title] = bilibili_search_url
+                self.bilibili_search_list.append(bilibili_search_dic)
+                bilibili_search_dic = {}
+            if not bilibili_search_title_list:
+                print('未找到内容！')
+            self.text_listbox_bilibili = self.inter_other_baidu.Show_Result_Lists(top, bilibili_search_title_list, 2,len(bilibili_search_title_list), 4, 10)
+    def websute_jianxue_search(self,top,open_websuilt_contens,search_type):
+        contents_list_search = []
+        def post(url, data, header):
+            timeOut = 10
+            r = requests.post(url, data=data, headers=header, timeout=timeOut, allow_redirects=True, verify=False)
+            res = r.content.decode('utf-8')
+            return res
+        postdata = urllib.parse.urlencode({
+            "account": "18686524648",
+            "password": "18686524648",
+            "remeberMe": "true"
+        }).encode('utf-8')
+        getresult_data = urllib.parse.urlencode({
+            "classPackageId": "8592"
+        }).encode('utf-8')
+        header_login = {'Accept': 'application/json, text/javascript, */*; q=0.01',
+                        'Accept-Encoding': 'gzip, deflate',
+                        'Accept-Language': 'zh-CN,zh;q=0.9',
+                        'Connection': 'keep-alive',
+                        'Content-Length': '44',
+                        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                        'Cookie': 'acw_tc=d3a2a61815612160876231799e7bf3d951ba2398674fbb7022ae3b7735; SESSION=37c24aeb-7a30-46bc-90dc-9a56a479e03c; yunId=1f8f54870946ef11ba006d7000059b10; MEIQIA_VISIT_ID=1N0RajY3Ok8cUHWemccAiDjEeAe; account_=18686524648; account_www.jianxueedu.com.cn=18686524648; UM_distinctid=16b7fbb62a54ef-013d1626f3d084-e353165-e1000-16b7fbb62a660f; CNZZDATA1274666026=113334421-1561213183-http%253A%252F%252Fwww.jianxueedu.com.cn%252F%7C1561213183; JSESSIONID=2A9F078BB9C9CFB8AA879B40C070D02E; sec_tc=AQAAANlFeVt1JggAc7ct2/dJ9C+pRRY0',
+                        'Host': 'www.jianxueedu.com.cn',
+                        'Origin': 'http://www.jianxueedu.com.cn',
+                        'Referer': 'http://www.jianxueedu.com.cn/',
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
+                        'X-Requested-With': 'XMLHttpRequest'}
+        header_result = {
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Accept-Language": "zh-CN,zh;q=0.9",
+            "Connection": "keep-alive",
+            "Content-Length": "19",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "acw_tc=d3a2a61815612160876231799e7bf3d951ba2398674fbb7022ae3b7735; yunId=1f8f54870946ef11ba006d7000059b10; account_=18686524648; account_www.jianxueedu.com.cn=18686524648; UM_distinctid=16b7fbb62a54ef-013d1626f3d084-e353165-e1000-16b7fbb62a660f; cookie_user_=%7B%22companyId%22%3A72489%2C%22id%22%3A1323051%2C%22sign%22%3A%22D43978DD1FFF32539C8803CF30359AEA%22%2C%22time%22%3A%221561557595278%22%7D; SESSION=4e62b5ea-a892-4191-8b6e-9c82c1c5fa64; MEIQIA_VISIT_ID=1NBbmuxOhYPiehcUGMzd8gl0IRE; CNZZDATA1274666026=113334421-1561213183-http%253A%252F%252Fwww.jianxueedu.com.cn%252F%7C1561554100; JSESSIONID=8798E9D10C03ED984939EE4F5384359F; sec_tc=AQAAADwqGVFiFgQAc7ct21OE6FEwtJVO",
+            "Host": "www.jianxueedu.com.cn",
+            "Origin": "http://www.jianxueedu.com.cn",
+            "Referer": "http://www.jianxueedu.com.cn/classPackage/classPackageDetail/8592",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36",
+            "X-Requested-With": "XMLHttpRequest"
+        }
+        url = self.inter_other_baidu.Get_Config_Info('url_info','jianxue_login')
+        url_kecheng = self.inter_other_baidu.Get_Config_Info('url_info','jianxue_search')
+        post(url, postdata, header_login)
+        html = post(url_kecheng, getresult_data, header_result)
+        content_search = r'target="_blank">\n                                    (.*)\n'
+        url_one_search = r'<a href="(.*)" target="_blank"'
+        content_search_two = r'<p>(.*)</p>'
+        content_search_two_url = r''
+        contents_list = re.findall(content_search, html)
+        contents_list_urlone = list(set(re.findall(url_one_search, html)))
+        if len(contents_list) == len(contents_list_urlone):
+            for i in range(len(contents_list)):
+                self.jianxue_result_all_list.append(contents_list_urlone[i])
+                if open_websuilt_contens in contents_list[i]:
+                    contents_list_search.append(contents_list[i])
+                    self.jianxue_result_search.append(contents_list_urlone[i])
+        else:
+            print('查询错误！')
+        if open_websuilt_contens:
+            self.text_listbox_jianxue = self.inter_other_baidu.Show_Result_Lists(top, contents_list_search, 2,len(contents_list), 6, 6)
+        else:
+            self.text_listbox_jianxue = self.inter_other_baidu.Show_Result_Lists(top, contents_list, 2,len(contents_list), 6, 6)
+    def websute_git_search(self,top,open_websuilt_contens,search_type):
+        def post(url, data, header):
+            timeOut = 20
+            r = requests.post(url, data=data, headers=header, timeout=timeOut, allow_redirects=True, verify=False)
+            res = r.content.decode('utf-8')
+            return res
+        def find_result(url, content_search, data, header):
+            response = requests.get(url, params=data)
+            html = response.text
+            blog_contents_list = re.findall(content_search, html)
+            return blog_contents_list
+        header = {
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept-Language": "zh-CN,zh;q=0.9",
+            "Cache-Control": "max-age=0",
+            "Connection": "keep-alive",
+            "Content-Length": "205",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Cookie": "logged_in=no; _octo=GH1.1.60950074.1560874587; _ga=GA1.2.1830632947.1560879073; has_recent_activity=1; _gat=1; tz=Asia%2FShanghai; _gh_sess=SW9Kay9yVTdhUXVIcENzZllvcWpyYmZZbDBWbGdRNDNyZ3FpL3FseHFtakFOaC9MeSszKy9zR1M1dHFxL09hLzM4KzdSZUY1bGZZVE5ESXQ2cWtzT2tod3RtRjlPMVN6bzlTWm5QS1g5SFViTnNTbzRqNWt1YStNdW44bzVUbjFaNFo1dzhPVDBuNjZaM1ZjbGxiejNzVFFrWTRGTzhuWVYwaXB6MkdSd3dZTWZrY3d5aTJqVVFIMWQ5WDY1T1VuZDF1ZzVMVEJWMGRrNHVQSUZERHlEemhiaEJSY1BXeGo2MXN6bEY1cGZwMkNLZy9obzZ6d1RNR0R3QUk4N2wvSzRFN2ZhMlBXWVZDL0h1ejBIMTEwdGNsUTJLTWRscjJpU2J2bFZ6SUZxbFdwSnFtaXdtRWFpQ0RqN2tqVW5vaFAyVHgvd1JjOGhRbWcwb05TTGJYckZSb1JhQWJpOGsrd3FQa1JaZ3UyMVROWjV4dWZvWXA5cmtwYWllQ2dkWjhpRzJ5NjI5VXZlbFdYN0tFRHJna0pIdEl0RERENFlxZ2ZGTzdCd3NnRWFHR0w4YndUWUp4azFnY0t6L1FUb3o4ZGJPOUxOeDZwaFVtbzJvNzVLUjVIWmYyc2FhLy9EaGlCWGtqd3BDS3NLaGt1bkdhTk5iZ0p2allJc1poSm9OK2VkTjRCcTM1OFFRYnNPQjMxdUJHcFJwaUVvMk5TRDBDMC9MQWh3NUErMDRPMjNzSk1SZ0pCaDFnWVBFRHRCblZlRFJJMGlIUUdxRGpwdkpJZmhpemUyOWRueW4rdThCWkxyNnVadTZaejdzUnZBWmFwVFJiRE81WS9ScXI2VGdwYzJQYkFvYnRITU10b3VjRGljcTQ0Ymw1S3ZBTEZ4R29xUTB5R0EwUHBIS0FNRVFTak1NVTNQNUgwSXlENndoS3k5ZEhxeEN3aG9HM0x0c3A0K0hZdUtnPT0tLUUyNGV1a3lXTVU4UmpLaytmYW8relE9PQ%3D%3D--7969d1cb34cc28b49032cb1cbfeaf17635fad074",
+            "Host": "github.com",
+            "Origin": "https://github.com",
+            "Referer": "https://github.com/login?return_to=%2Fjoin",
+            "Upgrade-Insecure-Requests": "1",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36"
+        }
+        data = urllib.parse.urlencode({
+            "authenticity_token": "kwhRO7gSJlIRxpROIJOGSJ9nQ4PBllB9IiVxx5a+qjUcd5kQPqkmvlylhQMginWaq5ULN6eMf6qkEPSPJUoGAg==",
+            "login": "houtianyu",
+            "password": "yulei927623",
+            "webauthn-support": "unknown",
+            "commit": "Sign in"
+        }).encode('utf-8')
+        header_g = {
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept-Language": "zh-CN,zh;q=0.9",
+            "Cache-Control": "max-age=0",
+            "Connection": "keep-alive",
+            "Cookie": "_octo=GH1.1.60950074.1560874587; _ga=GA1.2.1830632947.1560879073; has_recent_activity=1; tz=Asia%2FShanghai; _device_id=857f8342a24f1e471d035ddaff539972; user_session=ikAm6VNDJY1sSLcx9D6OnriZxXcpUgmYvVWQrBiPFE42rl6Z; __Host-user_session_same_site=ikAm6VNDJY1sSLcx9D6OnriZxXcpUgmYvVWQrBiPFE42rl6Z; logged_in=yes; dotcom_user=houtianyu; _gh_sess=Z245N1dLemhLZHhYQjVvVDRQdDY1NCtBUXNHTlhVNG02U1hwbEZ5K3k0THEvd1pnZnQ2QkEyM0NDcFcybGVnQ20xa3VVajdFSmo2bG5Da2c0dmxwL0lSWDlwRGdDYXR2dkFMSW1FdStPNXJ4WXBXbmZsaittRmdubkpNQkl0V01USU9JK2F2ejBVcE8zL0N0bWxsaHhBM00rekIrZXI3NGRWT3gwdFZsVmNKZlN4NkE4WFpaajYyMloxWWY4VmFMOWJCK1VmSnlDQ0EvYkFDbFJZNEtKRGljS2R0bkRYL2hvS0c1QmxGZlFmYjloNFVkN0dvQlN5R3NOM1dma05YS1B6aXFhdis3SWVRRDdPamVtSVVQeG41bDEvMU4xS0pUakhFRWtDTStvdlhla0tpMzc2cFRZZEduNDVkL1BWMlFVQWV2VERpQWM4bmxGRUVDdUxiUUZRPT0tLVVOcWJjc0txMkRUNWo4UGRxWDBDK3c9PQ%3D%3D--81b156d5c9978050ebf19a7eaa10ef42794da5d9; _gat=1",
+            "Host": "github.com",
+            "If-None-Match": 'W/"354e92314934d94841e91f990eb05ad7"',
+            "Upgrade-Insecure-Requests": "1",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36"
+        }
+        data_g = urllib.parse.urlencode({
+            "tab": "repositories"
+        }).encode('utf-8')
+        url_baidu_search_github_session = self.inter_other_baidu.Get_Config_Info('url_info','url_baidu_search_github_session')
+        url_baidu_search_github_repositories = self.inter_other_baidu.Get_Config_Info('url_info','url_baidu_search_github_repositories')
+        content_search = r'" itemprop="name codeRepository" >\n(.*)</a>'
+        post(url_baidu_search_github_session, data, header)
+        if not open_websuilt_contens:
+            print('请输入查询内容！')
+        else:
+            for result in find_result(url_baidu_search_github_repositories, content_search, data_g, header_g):
+                if open_websuilt_contens in result:
+                    self.github_result_list.append(result.strip().lstrip())
+            if not self.github_result_list:
+                print('未找到内容！')
+            self.text_listbox_github = self.inter_other_baidu.Show_Result_Lists(top, self.github_result_list, 2,len(self.github_result_list), 7,6)
+    def websute_baidu_translate(self,top,open_websuilt_contens,text_translate):
+        def find_result(url,data):
+            header = {
+                "authority": "fanyi.baidu.com",
+                "method": "POST",
+                "path": "/v2transapi",
+                "scheme": "https",
+                "accept": "*/*",
+                "accept-encoding": "gzip, deflate, br",
+                "accept-language": "zh-CN,zh;q=0.9",
+                "content-length": "136",
+                "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+                "cookie": "BAIDUID=674189B37A88C987E365F832C2E5FA18:FG=1; PSTM=1560654964; BIDUPSID=322402D2E42B4CB2C5335FA59D41A0F1; BDUSS=UzRHpaNXZyUjI5VzlVaDRGNUZSODhsSkw2NXpWZWJyUH5Md1d2UTlEcjJKak5kSVFBQUFBJCQAAAAAAAAAAAEAAAA~-2Q50~DDq8fyNjg2OAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPaZC132mQtdej; H_PS_PSSID=29250_1431_21081_18560_29135_29238_28519_29098_29131_29368_28830_29220_26350; delPer=0; PSINO=1; locale=zh; Hm_lvt_64ecd82404c51e03dc91cb9e8c025574=1561474014; Hm_lpvt_64ecd82404c51e03dc91cb9e8c025574=1561474014; REALTIME_TRANS_SWITCH=1; FANYI_WORD_SWITCH=1; HISTORY_SWITCH=1; SOUND_SPD_SWITCH=1; SOUND_PREFER_SWITCH=1; yjs_js_security_passport=52cde8e76211af2f58df150d5af4c71a9e12c76b_1561474015_js; from_lang_often=%5B%7B%22value%22%3A%22en%22%2C%22text%22%3A%22%u82F1%u8BED%22%7D%2C%7B%22value%22%3A%22zh%22%2C%22text%22%3A%22%u4E2D%u6587%22%7D%5D; to_lang_often=%5B%7B%22value%22%3A%22zh%22%2C%22text%22%3A%22%u4E2D%u6587%22%7D%2C%7B%22value%22%3A%22en%22%2C%22text%22%3A%22%u82F1%u8BED%22%7D%5D",
+                "origin": "https://fanyi.baidu.com",
+                "referer": "https://fanyi.baidu.com/?aldtype=16047",
+                "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36",
+                "x-requested-with": "XMLHttpRequest"
+            }
+            timeOut = 20
+            r = requests.post(url, data=data,headers=header,timeout=timeOut, allow_redirects=True, verify=False)
+            res = json.loads(r.content.decode('utf-8'))
+            return res
+        def fanyi_content(open_websuilt_contents1,open_websuilt_contents2,type=0):
+            url = self.inter_other_baidu.Get_Config_Info('url_info','url_baidu_fanyi_api')
+            url_langedect = self.inter_other_baidu.Get_Config_Info('url_info', 'url_baidu_fanyi_langedect_api')
+            js_path = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+            js_hole_path = js_path + r'\Files\baidujs.js'
+            data_langdetect = {
+                "query": open_websuilt_contents1
+            }
+            from_fy = find_result(url_langedect,data_langdetect)['lan']
+            print(from_fy)
+            if from_fy == 'zh':
+                to_fy = 'en'
+            else:
+                to_fy = 'zh'
+            with open(js_hole_path,encoding='utf8') as f:
+                jsData = f.read()
+            run_js = js2py.EvalJs({})
+            run_js.execute(jsData)
+            sign = run_js.e(open_websuilt_contents2)
+            data_fy = {
+                "from": from_fy,
+                "to": to_fy,
+                "query": open_websuilt_contents2,
+                "transtype": "realtime",
+                "simple_means_flag": "3",
+                "sign": sign,
+                "token": "a19c31f26c6cbce5198765c20653af6d"
+            }
+            translate_result = find_result(url,data_fy)['trans_result']['data'][0]['dst']
+            if type == 0:
+                try:
+                    text_translate.delete(0, END)
+                except Exception as err:
+                    pass
+                text_translate.insert(tk.END, translate_result + '\n')  # 更新text中内容
+                text_translate.update()
+            return translate_result
+            #text_contents = text_translate.get('0.0', 'end').split('\n')[0:-2]
+        fanyi_string = ''
+        test_fanyi = ''
+        open_websuilt_contents1 = open_websuilt_contens
+        open_websuilt_contents2 = open_websuilt_contens
+        if open_websuilt_contens and not self.fanyi_enclosure_text_contents:
+            fanyi_content(open_websuilt_contents1,open_websuilt_contents2)
+        elif not open_websuilt_contens and self.fanyi_enclosure_text_contents:
+            for j in range(len(self.fanyi_enclosure_text_contents)):
+                p, f = os.path.split(self.fanyi_enclosure_text_contents[j])
+                if '.txt' not in f:
+                    word = wc.Dispatch('Word.Application')
+                    doc = word.Documents.Open(self.fanyi_enclosure_text_contents[j])
+                    txt_path = str(self.fanyi_enclosure_text_contents[j]).split('.')[0] + '.txt'
+                    try:
+                        doc.SaveAs(txt_path,4)
+                    except Exception as err:
+                        print(err)
+                        print('File type Error')
+                    doc.Close()
+                    word.Quit()
+                else:
+                    txt_path = self.fanyi_enclosure_text_contents[j]
+                for line in open(txt_path):
+                    if not test_fanyi:
+                        test_fanyi = str(line)[:9]
+                        fanyi_string = fanyi_string + str(line).translate(str.maketrans('', '', '\n'))
                     else:
-                        title_all[title] = '内容需要完善'
-                        self.other_job_log_baidu.LogsSave(title)#需要修改
-        print(title_all)
-        self.inter_other_baidu.Resource_show(title_all)
-        self.other_job_log_baidu.LogsSave(title_all)
+                        fanyi_string = fanyi_string + str(line).translate(str.maketrans('', '', '\n'))
+                if not fanyi_string:
+                    print('file empty')
+                else:
+                    fanyi_result = fanyi_content(test_fanyi,fanyi_string)
+                    file_name = str(txt_path).split('/')[-1].split('.')[0]
+                    fanyi_result_path = p + '/' + file_name + "_fanyi_result.txt"
+                    f = open(fanyi_result_path,mode='w+')
+                    f.write(fanyi_result)
+                    f.close()
+        elif not open_websuilt_contens and not self.fanyi_enclosure_text_contents:
+            print('Please choice file | translate contents.')
+        else:
+            fanyi_content(open_websuilt_contents1, open_websuilt_contents2)
+            for j in range(len(self.fanyi_enclosure_text_contents)):
+                p, f = os.path.split(self.fanyi_enclosure_text_contents[j])
+                if '.txt' not in f:
+                    word = wc.Dispatch('Word.Application')
+                    doc = word.Documents.Open(self.fanyi_enclosure_text_contents[j])
+                    txt_path2 = str(self.fanyi_enclosure_text_contents[j]).split('.')[0] + '.txt'
+                    try:
+                        doc.SaveAs(txt_path2,4)
+                    except Exception as err:
+                        print(err)
+                        print('File type Error')
+                    doc.Close()
+                    word.Quit()
+                else:
+                    txt_path2 = self.fanyi_enclosure_text_contents[j]
+                for line in open(txt_path2):
+                    if not test_fanyi:
+                        test_fanyi = str(line)[:9]
+                        fanyi_string = fanyi_string + str(line).translate(str.maketrans('', '', '\n'))
+                    else:
+                        fanyi_string = fanyi_string + str(line).translate(str.maketrans('', '', '\n'))
+                if not fanyi_string:
+                    print('file is empty')
+                else:
+                    fanyi_result = fanyi_content(test_fanyi,fanyi_string,1)
+                    file_name = str(txt_path2).split('/')[-1].split('.')[0]
+                    fanyi_result_path = p + '/' + file_name + "_fanyi_result.txt"
+                    f = open(fanyi_result_path,mode='w+')
+                    f.write(fanyi_result)
+                    f.close()
+        print('Translation completed.')
+    def Open_Websit_More_Operate_Method(self,top,open_websuilt_contens,open_websuilt_type_num):
+        def open_chrome(chrom_url):
+            dr = webdriver.Chrome()
+            dr.maximize_window()
+            dr.get(chrom_url)
+            return dr
+        if open_websuilt_type_num == 1:
+            num_list_blog = self.text_listbox_blog.curselection()
+            if not num_list_blog:
+                print('请选择需要打开的博客')
+            else:
+                for num in num_list_blog:
+                    content_url = self.blog_result[num-1].values()
+                    print(str(content_url).split("(['")[-1].split("'])")[0])
+                    open_chrome(str(content_url).split("(['")[-1].split("'])")[0])
+        elif open_websuilt_type_num == 2:
+            num_list_bilibili = self.text_listbox_bilibili.curselection()
+            bilibili_player = self.inter_other_baidu.Get_Config_Info('element_xpath','bilibiliPlayer')
+            if not num_list_bilibili:
+                print('请选择需要打开的视频！')
+            else:
+                for num in num_list_bilibili:
+                    content_url = self.bilibili_search_list[num - 1].values()
+                    dr =open_chrome('http://' + str(content_url).split("(['")[-1].split("'])")[0])
+                    time.sleep(0.5)
+                    dr.find_element_by_xpath(bilibili_player).click()
+        elif open_websuilt_type_num == 3:
+            url_jianxue_search_auto_format = ''
+            num_list_jianxue = self.text_listbox_jianxue.curselection()
+            if not num_list_jianxue:
+                print('请选择需要打开的课程内容!')
+            else:
+                for num in num_list_jianxue:
+                    print(num)
+                    url_jianxue_search_subject = self.inter_other_baidu.Get_Config_Info('url_info','jinxuexiaofang')
+                    if open_websuilt_contens:
+                        url_jianxue_search_auto_format = url_jianxue_search_subject + self.jianxue_result_search[num - 1]
+                    else:
+                        url_jianxue_search_auto_format = url_jianxue_search_subject + self.jianxue_result_all_list[num - 1]
+                    dr = open_chrome(url_jianxue_search_auto_format)
+        elif open_websuilt_type_num == 4:
+            if not self.num_list_moke :
+                print('请选择需要打开的课程内容!')
+            else:
+                for num in self.num_list_moke:
+                    url_mokewang_search_subject = self.inter_other_baidu.Get_Config_Info('url_info','url_mokewang_search_subject')
+                    url_baidu_search_auto_format = url_mokewang_search_subject + urllib.parse.quote(open_websuilt_contens)
+                    dr = open_chrome(url_baidu_search_auto_format)
+                    dr.find_element_by_partial_link_text(self.title_list_result_link[(num-1)].split('<')[0].strip().lstrip()).click()
+        elif open_websuilt_type_num == 5:
+            num_list_githut = self.text_listbox_github.curselection()
+            print(num_list_githut)
+            if not num_list_githut :
+                print('请选择需要打开的仓库内容!')
+            else:
+                for num in num_list_githut:
+                    print(num)
+                    url_github_search_subject = self.inter_other_baidu.Get_Config_Info('url_info','url_github_search_subject')
+                    url_github_search_auto_format = url_github_search_subject + self.github_result_list[num-1]
+                    dr = open_chrome(url_github_search_auto_format)
+        elif open_websuilt_type_num == 6:
+            baidufanyi = self.inter_other_baidu.Get_Config_Info('url_info','baidufanyi')
+            dr = open_chrome(baidufanyi)
+    def Choisefanyi_Files_Method(self,top,text):
+        self.fanyi_enclosure_text_contents = []
+        selectFiles = tk.filedialog.askopenfilenames(title='可选择1个或多个文件')  # askopenfilename 1次上传1个；askopenfilenames1次上传多个
+        for selectFile in selectFiles:
+            text.insert(tk.END, selectFile + '\n')  # 更新text中内容
+            text.update()
+        mails_text_contents = text.get('0.0', 'end').split('\n')[0:-2]
+        self.fanyi_enclosure_text_contents = mails_text_contents
+        print(self.fanyi_enclosure_text_contents)
 class NewFiles:
     def __init__(self):
         self.inter_newfile = OtherJobs()
@@ -174,6 +716,27 @@ class NewFiles:
         print('%s的目录下内容包括:%s' % (path, lists))
         self.other_job_log_newfile.LogsSave('%s的目录下内容包括:%s' % (path, lists))
         self.inter_newfile.Resource_show('%s的目录下内容包括:%s' % (path, lists))
+    def display_file_contents(self,gui):
+        def change_file_type(file_path):
+            txt_path = ''
+            p, f = os.path.split(file_path)
+            if '.txt' not in f:
+                word = wc.Dispatch('Word.Application')
+                doc = word.Documents.Open(file_path)
+                txt_path = str(file_path).split('.')[0] + '.txt'
+                try:
+                    doc.SaveAs(txt_path, 4)
+                except Exception as err:
+                    print(err)
+                    print('File type Error')
+                doc.Close()
+                word.Quit()
+            return txt_path
+        path = r'D:/Python/HoutianTools/Files/test/fanyitest.docx'
+        t_path = change_file_type(path)
+        with open(t_path) as f :
+            print(f.read())
+
 class LocateSearch:
     def __init__(self):
         self.inter_other = OtherJobs()
@@ -449,6 +1012,7 @@ class KuGouMusic:
         self.mp3_info = {} #全局变量，存放歌曲名和hash
         self.music_download_path = os.path.dirname(os.path.dirname(__file__)) + '\\files\\music_download\\'
         self.music_status = None
+        self.textlabel = None
     def play_Music_Name(self,type):
         global status
         kugou_music_path = self.inter_other_kugou.Get_Config_Info('file_name','kugou_music_path')
@@ -502,14 +1066,14 @@ class KuGouMusic:
             pass
     def Show_Msg_Kugou_Music(self,top,contents,row):
         try:
-            textlabel.grid_forget()
+            self.textlabel.grid_forget()
         except Exception as msg:
             print(msg)
             pass
         v_monitor = StringVar()
         v_monitor.set(contents)
-        textlabel = Message(top, textvariable=v_monitor, justify=LEFT, width=325, font=("华康少女字体", 10),fg="red")
-        textlabel.grid(padx=5, pady=10, row=row, column=0, columnspan=7, sticky=W)
+        self.textlabel = Message(top, textvariable=v_monitor, justify=LEFT, width=325, font=("华康少女字体", 10),fg="red")
+        self.textlabel.grid(padx=5, pady=10, row=row, column=0, columnspan=7, sticky=W)
     def Play_Music_More_Method(self,top,names,text_music,type):
         if not names:
             print('请输入需要播放的歌曲！')
